@@ -1,10 +1,10 @@
 # Welcome to Harbour
 [![License](https://img.shields.io/badge/license-GPLv2%20%2B%20Library%20Exception-blue.svg)](LICENSE.txt "License")
-[![Download](https://img.shields.io/badge/download-snapshot_3.4.0dev-f8981D.svg)](https://github.com/vszakats/harbour-core/releases "Download snapshot release")
+[![Download](https://img.shields.io/badge/download-snapshot_3.4.0dev-f84373.svg)](https://github.com/vszakats/harbour-core/releases "Download snapshot release")
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[![PayPal Donate](https://img.shields.io/badge/PayPal-donate-f8981D.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG "Donate")
+[![PayPal Donate](https://img.shields.io/badge/PayPal-donate-f84373.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG "Donate")
 <br />
-[![Build Status](https://travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core)
+[![Build Status](https://api.travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core)
 [![Build Status](https://ci.appveyor.com/api/projects/status/1kx6w3y6qasymah3/branch/master?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core/branch/master)
 [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208)
 [![Average time to resolve an Issue](https://isitmaintained.com/badge/resolution/vszakats/harbour-core.svg)](https://isitmaintained.com/project/vszakats/harbour-core "Average time to resolve an Issue")
@@ -1515,10 +1515,12 @@ Supported shells per host platforms:
          ([7.x](https://www.microsoft.com/en-us/download/details.aspx?id=8279) includes compilers for x86, x86-64 and IA-64)
      * MS Windows Mobile SDK [wce, free]
         * <https://www.microsoft.com/en-us/download/details.aspx?id=42>
-     * MS Visual Studio Express [win, free, closed-source]
-        * <https://www.visualstudio.com/en-US/products/visual-studio-express-vs>
+     * MS Visual C++ Build Tools [win, free, closed-source]
+        * <https://go.microsoft.com/fwlink/?LinkId=691126>
+     * MS Visual Studio Community [win, free, closed-source]
+        * <https://www.visualstudio.com/vs/visual-studio-express/>
      * MS Visual Studio [win, commercial, closed-source]
-        * <https://www.visualstudio.com/en-us>
+        * <https://www.visualstudio.com/>
      * Pelles C [win, wce, free, closed-source]
         * <http://smorgasbordet.com/pellesc/>
      * Borland/CodeGear/Embarcadero Compiler [win, free, closed-source]
@@ -1564,7 +1566,7 @@ Supported shells per host platforms:
      * Uncrustify (source formatter) [multi-platform, free, open-source]
         * <https://github.com/uncrustify/uncrustify>
      * UPX (executable compressor) [win, dos, \*nix, free, open-source]
-        * <https://duckduckgo.com/?q=upx>
+        * <https://upx.github.io/>
      * 7-Zip [multi-platform, free, open-source]
         * <http://7-zip.org/>
      * GNU Make
@@ -1629,16 +1631,14 @@ Supported shells per host platforms:
      * [Facebook](https://www.facebook.com/groups/harbour.project/)
      * [Twitter](https://twitter.com/harbourproject)
 
-  * Product-specific:
+  * Product-oriented:
      * [Harbour mainline development](https://groups.google.com/forum/#!forum/harbour-devel)
-     * [HMG](http://hmgforum.com/viewforum.php?f=7)
-     * [hbqt](https://groups.google.com/forum/#!forum/qtcontribs)
-     * [hwgui](https://sourceforge.net/p/hwgui/mailman/hwgui-developers/)
-     * [FiveWin](http://forums.fivetechsupport.com/viewforum.php?f=3)
-     * [xHarbour](https://groups.google.com/forum/#!forum/comp.lang.xharbour)
+     * [HMG (GUI)](http://hmgforum.com/viewforum.php?f=7)
+     * [hbqt (GUI)](https://groups.google.com/forum/#!forum/qtcontribs)
+     * [hwgui (GUI)](https://sourceforge.net/p/hwgui/mailman/hwgui-developers/)
+     * [xHarbour fork](https://groups.google.com/forum/#!forum/comp.lang.xharbour)
 
   * Translators:
-
      * [Bing Translator](https://www.bing.com/translator/)
      * [Google Translate](https://translate.google.com)
 
@@ -1673,16 +1673,14 @@ Supported shells per host platforms:
    If you feel you can make Harbour better: contribute.
    [See how](.github/CONTRIBUTING.md).
 
-   The information this document is subject to change without notice
-   and does not represent any future commitment by the participants
-   of the project.
+   Information in this document is subject to change without notice and does
+   not represent any future commitment by the participants of the project.
 
-   This and related documents use the term "recommended" for practices
-   and tools *tested most*, *focused on*, *used and deployed* by
-   the maintainer/developer of this fork. While this is strongly believed
-   to result in the best Harbour experience for most situations, it's
-   ultimately a subjective decision. If you don't like it, use anything
-   you feel the best.
+   This and related documents use the term "recommended" for practices and
+   tools *tested most*, *focused on*, *used and deployed* by the
+   maintainer/developer of this fork. While this is strongly believed to result
+   in the best Harbour experience for most situations, it's ultimately
+   a subjective decision. If you don't like it, use what you feel the best.
 
 ---
 This document Copyright &copy;&nbsp;2009&ndash;2016 Viktor Szakáts (vszakats.net/harbour)<br />
