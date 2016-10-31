@@ -1,8 +1,8 @@
 # Welcome to Harbour
 [![License](https://img.shields.io/badge/license-GPLv2%20%2B%20Library%20Exception-blue.svg)](LICENSE.txt "License")
-[![Download](https://img.shields.io/badge/download-snapshot_3.4.0dev-f84373.svg)](https://github.com/vszakats/harbour-core/releases "Download snapshot release")
+[![Download](https://img.shields.io/badge/download-snapshot_3.4.0dev-ff4500.svg)](https://github.com/vszakats/harbour-core/releases "Download snapshot release")
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[![PayPal Donate](https://img.shields.io/badge/PayPal-donate-f84373.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG "Donate")
+[![PayPal Donate](https://img.shields.io/badge/PayPal-donate-ff4500.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG "Donate")
 <br />
 [![Build Status](https://api.travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core)
 [![Build Status](https://ci.appveyor.com/api/projects/status/1kx6w3y6qasymah3/branch/master?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core/branch/master)
@@ -10,12 +10,11 @@
 [![Average time to resolve an Issue](https://isitmaintained.com/badge/resolution/vszakats/harbour-core.svg)](https://isitmaintained.com/project/vszakats/harbour-core "Average time to resolve an Issue")
 [![Percentage of Issues still open](https://isitmaintained.com/badge/open/vszakats/harbour-core.svg)](https://isitmaintained.com/project/vszakats/harbour-core "Percentage of Issues still open")
 
-Harbour is the open/free software implementation of a multi-platform,
-multi-threading, object-oriented, scriptable programming language,
-backwards compatible with xBase languages. Harbour consists of
-a compiler and runtime libraries with multiple UI and database
-backends, its own make system and a large collection of libraries
-and interfaces to popular APIs.
+Harbour is the open/free software implementation of a cross-platform,
+multi-threading, object-oriented, scriptable programming language, backwards
+compatible with xBase languages. Harbour consists of a compiler and runtime
+libraries with multiple UI, database and I/O backends, its own build system
+and a collection of libraries and bindings for popular APIs.
 
 # Table of Content
 
@@ -1656,7 +1655,7 @@ Supported shells per host platforms:
      * [ChangeLog](ChangeLog.txt?raw=true)
      * Comparing [Harbour with xHarbour](doc/xhb-diff.txt?raw=true)
      * CA-Cl*pper 5.3 [online documentation](https://harbour.github.io/ng/c53g01c/menu.html)
-     * Harbour [online documentation](https://vszakats.github.io/harbour-core/harbour.html)
+     * Harbour [online documentation](https://harbour.github.io/doc/)
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
      * [Stack Overflow](https://stackoverflow.com/questions/tagged/clipper)
@@ -1683,5 +1682,5 @@ Supported shells per host platforms:
    a subjective decision. If you don't like it, use what you feel the best.
 
 ---
-This document Copyright &copy;&nbsp;2009&ndash;2016 Viktor Szakáts (vszakats.net/harbour)<br />
+This document Copyright &copy;&nbsp;2009&ndash;2017 Viktor Szakáts (vszakats.net/harbour)<br />
 [![Creative Commons Attribution-ShareAlike 4.0](https://cdn.rawgit.com/cc-icons/cc-icons/master/fonts/cc-icons-svg/small.by-sa.svg)](https://creativecommons.org/licenses/by-sa/4.0/)

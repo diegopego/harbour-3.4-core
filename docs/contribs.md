@@ -2,119 +2,220 @@
 layout: default
 title: "Contribs"
 ---
-<div markdown="1" class="contribs">
+<div markdown="1" class="components">
 
-# Harbour Contribs
+# Harbour contrib packages
 
 Contribs are libraries or tools, which are independent from the language core,
 but bundled with the main Harbour distribution. These components are part of
 the Harbour source package.
 
-_Important: Common to all contribs is that you can download them freely, but
-please note the [licensing terms]({{ site.baseurl }}/about), which are
-included in the distribution folder._
+Common to all contribs is that you can download them freely, but please note
+that [licensing terms]({{ site.baseurl }}/terms) may vary for each contrib.
 
 See respective authors inside the [source code](https://github.com/{{ site.repo_slug }}/tree/master/contrib).
 
-## gtwvg
+## gtqtc
 
-This library can be used for pure console applications instead of `gtwvt`.
+Multi-platform QT based GUI console.
+
+## gtwvg (Windows-only)
+
+This library can be used for pure console applications instead of `GTWVT`.
 But if used with GUI extensions, an appealing Windows screens without
-sacrificing the Clipper syntax. Additionally `gtwvg` has a nice set of
+sacrificing the Clipper syntax. Additionally `GTWVG` has a nice set of
 `Wvt*()` classes which employ the common event loop.
 
 You can create high performance dialogs with multiple TBrowser, Reads,
 Bitmaps, Buttons, i.e. all GUI elements you can think of.
 
-## hbct
+{% if site.fork %}
+## [gtwvw](https://harbour.github.io/doc/gtwvw.html) (Windows-only)
+
+A `GTWVG` alternative with multi-window support.
+
+{% endif %}
+## hbamf
+
+AMF file format handling
+
+## hbblink
+
+Blinker compatibility
+
+## hbbz2
+
+bz2 bindings (compression)
+
+## hbcairo
+
+Cairo bindings (imaging)
+
+## hbcomm
+
+HBCOMM (xhb.com, MiniGUI) compatibility (serial communication)
+
+{% if site.fork %}
+## hbcrypto
+
+Collection of crypto functions supporting [bcrypt](https://en.wikipedia.org/wiki/Bcrypt)
+and [scrypt](https://en.wikipedia.org/wiki/Scrypt) password hashing functions,
+[BLAKE2](https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2) cryptographic
+hash functions, [SHA-3](https://en.wikipedia.org/wiki/SHA-3) secure hash
+functions, [ed25519](https://en.wikipedia.org/wiki/EdDSA) digital signature functions.
+
+{% endif %}
+## [hbct](https://harbour.github.io/doc/hbct.html)
 
 This library provides functions compatible with the famous Clipper Tools for
 CA-Clipper (`CT.LIB`).
 
+## hbcups (*nix-only)
+
+CUPS bindings (printing)
+
 ## hbcurl
 
-Harbour wrappers for libcurl. libcurl is a free and easy-to-use client-side
-URL transfer library, supporting SSL, HTTP GET/PUT/POST/forms, HTTP2, SCP,
-FTPS, SFTP, FTP, LDAP, LDAPS, SMTP, SMTPS, IMAP, IMAPS, POP3, POP3S, TFTP,
-TELNET, FILE/SMB, proxies, cookies, authentication (Basic, Digest, NTLM,
-Negotiate, Kerberos), file transfer resume, http proxy tunneling and more.<br>
-[More info](https://curl.haxx.se/libcurl/).
+libcurl bindings. libcurl is a free and easy-to-use client-side URL transfer
+library, supporting SSL, HTTP GET/PUT/POST/forms, HTTP2, SCP, FTPS, SFTP, FTP,
+LDAP, LDAPS, SMTP, SMTPS, IMAP, IMAPS, POP3, POP3S, TFTP, TELNET, FILE/SMB,
+proxies, cookies, authentication (Basic, Digest, NTLM, Negotiate, Kerberos),
+file transfer resume, http proxy tunneling and more.
+<span class="readmore-md">[Learn more](https://curl.haxx.se/libcurl/)</span>
+
+## hbexpat
+
+libexpat bindings (XML parser)
 
 ## hbfbird
 
-Harbour Low Level API for Firebird/Interbase RDBMS, including classes and
-functions to work with these RDBMS.
+Firebird/Interbase RDBMS API bindings, including classes and functions to work
+with these RDBMS.
 
 ## hbfimage
 
-FreeImage graphic library wrapper for Harbour.
-FreeImage is an Open Source library project for developers who would like to
-support popular graphics image formats like PNG, BMP, JPEG, TIFF and others
-as needed by today's multimedia applications.
+FreeImage graphic library bindings. FreeImage is an Open Source library project
+for developers who would like to support popular graphics image formats like
+PNG, BMP, JPEG, TIFF and others as needed by today's multimedia applications.
 
-FreeImage is easy to use, fast, multithreading safe and cross-platform
-(works on Windows, Linux and Mac).
+FreeImage is easy to use, fast, multithreading safe and cross-platform (works
+on Windows, Linux and Mac).
 
-## hbgd
+## hbformat
 
-`hbgd` is a Harbour wrapper for Thomas Boutell's GD Library version 2.x.
-The GD Library is a powerful graphic library, useful expecially under CGI
-environment. `hbgd` supports almost all GD functions, plus a set of
-functions and classes that extend and make it easier to work with this library.<br>
-[More info](https://libgd.github.io/).
+Harbour source code formatter.
 
-## hbgt
+## hbfoxpro
+
+FoxPro compatibility
+
+## hbfship
+
+FlagShip compatibility
+
+## [hbgd](https://harbour.github.io/doc/hbgd.html)
+
+Thomas Boutell's GD 2.x library bindings. GD Library is a powerful graphic
+library, useful expecially under CGI environment. `hbgd` supports almost all
+GD functions, plus a set of extra functions and classes that extend and make
+it easier to work with this library.
+<span class="readmore-md">[Learn more](https://libgd.github.io/)</span>
+
+## hbgs
+
+Ghostscript bindings (imaging)
+
+## [hbgt](https://harbour.github.io/doc/hbgt.html)
 
 Miscellaneous functions for manipulating strings.
 
 ## hbhpdf
 
-HaruLib wrappers for Harbour. Haru is a free, cross platform, open-sourced
-software library for generating PDF written in ANSI C.<br>
-[More info](https://github.com/libharu/libharu).
+Libharu bindings. Haru is a free, cross platform, open-source library for
+generating PDF, written in ANSI C.
+<span class="readmore-md">[Learn more](https://github.com/libharu/libharu)</span>
 
-## hbmisc
+## hbhttpd
+
+HTTP/HTTPS server
+
+## hbicu
+
+ICU bindings/puller
+
+## hblzf
+
+LZF bindings (compression)
+
+## hbmac (Mac-only)
+
+Apple Mac specific functions
+
+## hbmagic (*nix-only)
+
+libmagic bindings (file identification)
+
+## [hbmisc](https://harbour.github.io/doc/hbmisc.html)
 
 Miscellaneous functions for manipulating strings, numbers, type conversions,
 etc.
 
+## hbmlzo
+
+minilzo bindings (compression)
+
+## hbmxml
+
+minixml bindings (XML parser/generator)
+
 ## hbmysql
 
-Harbour MariaDB/MySQL client API wrappers and helper classes. Includes
-a `dbf2mysql.prg` utility to convert `.dbf` files into MariaDB/MySQL tables.
+MariaDB/MySQL client API bindings and helper classes. Includes a `dbf2mysql.prg`
+utility to convert `.dbf` files into MariaDB/MySQL tables.
 
 ## hbmzip
 
-Harbour wrappers for the minizip API, allowing to read and write `.zip` files.
+Minizip API bindings, allowing to read and write `.zip` files.
 
-## hbnf
+## [hbnf](https://harbour.github.io/doc/hbnf.html)
 
-A port to Harbour of the Nanforum Library for Clipper.
+A port of the Nanforum Library for Clipper.
 
 ## hbodbc
 
-Harbour ODBC Library. Includes wrappers and helper classes to work with
-various RDBMS.
+ODBC library. Includes bindings and helper classes to work with various RDBMS
+via ODBC.
+
+## hboslib
+
+OSLib (Dave Pearson's) compatibility
 
 ## hbpgsql
 
-Harbour Low Level API for PostgreSQL RDBMS. Includes a `dbf2pg.prg` utility to
+Low Level API bindings for PostgreSQL RDBMS. Includes a `dbf2pg.prg` utility to
 convert a `.dbf` file into a PostgreSQL table.
 
 ## hbsqlit3
 
-Harbour wrapper for SQLite version 3. This library allow access an SQLite
-database using Harbour.
+SQLite3 bindings. This library allow access an SQLite3 databases using Harbour.
+
+## hbsms
+
+SMS handling functions
 
 ## hbssl
 
-Harbour wrappers for OpenSSL. Supports SSL, SSL_CIPHER, SSL_CTX, RAND,
-SSL_SESSION (and more) modules.
+OpenSSL bindings. Supports SSL, SSL_CIPHER, SSL_CTX, RAND, SSL_SESSION (and
+more) modules.
+
+## hbtest
+
+Regression test framework
 
 ## hbtip
 
-Class-oriented internet protocol library for Harbour. Supports HTTP, HTTPS,
-SMTP, SMTPS, POP3, FTP and more.
+Object-oriented internet protocol library, written in Harbour. Supports HTTP,
+HTTPS, SMTP, SMTPS, POP3, FTP and more.
 
 ## hbtpathy
 
@@ -122,12 +223,11 @@ Telepath(y) emulation library. Telepath(y) is the best serial communication
 library for Nantucket/CA-Clipper and this library has a significant
 amount of the functionality contained in Telepath(y) in this Harbour port.
 
-## hbvpdf
+## hbunix (*nix-only)
 
-This is a pure Clipper PDF Library what includes Harbour support and runs
-without the need for external files.
+Unix specific functions
 
-## hbwin
+## hbwin (Windows-only)
 
 This library has functions and classes to access the Windows API. Among
 these features are:
@@ -139,27 +239,71 @@ these features are:
 * DLL handling functions
 * …and more
 
-## rddads
+## hbxdiff
+
+libxdiff bindings (diffing)
+
+## [hbxpp](https://harbour.github.io/doc/hbxpp.html)
+
+Xbase++ compatibility
+
+## hbzebra
+
+Barcode creating functions
+
+## [hbziparc](https://harbour.github.io/doc/hbziparc.html)
+
+`HBZIPARC` compatibility (zip compression)
+
+## xhb
+
+Provides a compatibility layer with the xHarbour fork.
+
+## [rddads](https://harbour.github.io/doc/rddads.html)
 
 `rddads` is an RDD for the Advantage Database Server, an xBase data server by
 Extended Systems. With this library your Harbour application can access
 a remote database server for a true client/server architecture, or it can use
 the "local server" `adsloc32.dll` for stand-alone or even small network
-installations.<br>
-[More info](https://www.sap.com/pc/tech/database/software/advantage-database-server/index.html).
+installations.
 
 ## rddbm
 
-Compatible with core RDDs of Harbour, with bitmap filters and other
-extensions.
+Raw bitmap filters for Harbour RDDs.
 
 ## rddsql
 
 SQL MIX (Memory Index) Database Driver. This library provides access to
-PostgreSQL, SQLite, MariaDB/MySQL, Firebird and ODBC servers.
+PostgreSQL (via `sddpg`), SQLite3 (via `sddsqlt3`), Oracle (via `sddoci`),
+MariaDB/MySQL (via `sddmy`), Firebird (via `sddfb`) and ODBC servers
+(via `sddodbc`).
 
-## xhb
+## hbbz2io
 
-Provides a compatibility layer with the xHarbour fork.
+I/O driver for BZIP2 compressed streams
+
+## hbcomio
+
+I/O driver for serial port streams
+
+## hbgzio
+
+I/O driver for GZIP compressed streams
+
+## hbmemio
+
+Memory I/O driver
+
+## hbnetio
+
+Network I/O driver
+
+## hbpipeio
+
+I/O driver for pipe streams
+
+## hbtcpio
+
+I/O driver for TCP streams
 
 </div>

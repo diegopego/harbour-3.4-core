@@ -5,7 +5,7 @@ title: "Mailing Lists"
 # Mailing Lists
 
 <div markdown="1" class="list-bubble">
-<div><i class="fa fa-user" aria-hidden="true"></i></div>
+<div><i class="fa fa-user-circle-o" aria-hidden="true"></i></div>
 <div markdown="1">
 
 ## for Using Harbour
@@ -24,7 +24,11 @@ Most Harbour developers are lurking on this list to assist Harbour users.
 <div><i class="fa fa-cog" aria-hidden="true"></i></div>
 <div markdown="1">
 
+{% if site.fork %}
+## for Developing Harbour<br>(mainline/non-fork-only)
+{% else %}
 ## for Developing Harbour
+{% endif %}
 
 Harbour Devel list is a place to discuss topics related to the development
 of Harbour itself. It can be technical and advanced.
@@ -68,7 +72,7 @@ hope they will be useful, but WITHOUT GUARANTEE that they are complete,
 accurate, non-infringing or usable for any purpose whatsoever.
 Contributors are NOT LIABLE for any damages that result from using
 Harbour in any ways. For more legal details, see
-[LICENSE](https://raw.githubusercontent.com/{{ site.repo_slug }}/master/COPYING.txt).
+[LICENSE](https://raw.githubusercontent.com/{{ site.repo_slug }}/master/{{ site.license_file }}).
 
 </div>
 </div>

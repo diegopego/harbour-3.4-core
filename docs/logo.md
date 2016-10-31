@@ -1,27 +1,36 @@
 ---
 layout: default
-title: "Official Logos"
+title: "Logo"
 ---
-# Official Logos
+# Harbour Logo
 
-Below offer several images containing reference to the Harbour project for
-use in its software and its website.
+<a href="{{ site.baseurl }}/art/harbour-logo-2016.zip"><img src="{{ site.baseurl }}/images/harbour.svg" alt="icon" height="256"></a>
 
-<a href="{{ site.baseurl }}/images/harbour-full.svg"><img src="{{ site.baseurl }}/images/harbour-full.svg" alt="logo" height="256"></a>
+App icons for
+[Windows](https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.ico) and
+[Apple](https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.icns).<br>
 
-The Harbour logo was created by Patrick Mast.<br>
-Download the original
-[Harbour logo](https://harbour.github.io/art/harbour-logo-2001.zip) in SVG, EPS and AI vector formats (854 kB).
+# Former versions
 
-<a href="https://harbour.github.io/art/harbour-logo-2011.zip"><img src="{{ site.baseurl }}/images/harbour-noborder.svg" alt="icon" height="256"></a>
+## 2011 update
 
-Harbour logo in
-[Windows](https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.ico) or
-[Apple](https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.icns) icon format.<br>
+<a href="https://harbour.github.io/art/harbour-logo-2011.zip"><img src="{{ site.baseurl }}/images/harbour-2011.svg" alt="logo" height="256"></a>
 
-# Historical Buttons
+## Original<br><span class="smaller">by Patrick Mast</span>
 
-* Still (1.5 kB)<br>
+<a href="https://harbour.github.io/art/harbour-logo-2001.zip"><img src="{{ site.baseurl }}/images/harbour-2001.svg" alt="logo" height="256"></a>
+
+{% unless site.fork %}
+# Historical
+
+* Hompages<br>
+  [2000](https://web.archive.org/web/20000309023122/http://www.hagbard.demon.co.uk/harbour/harbour.html)
+  [2001](https://web.archive.org/web/20010206043812/http://www.harbour-project.org/)
+  [2008](https://web.archive.org/web/20081011053452/http://www.harbour-project.org/)
+  [2009](https://web.archive.org/web/20090321144714/http://www.harbour-project.org/)
+  [2011](https://web.archive.org/web/20110723030605/http://www.harbour-project.org/)
+* [T-Shirt]({{ site.baseurl }}/tshirt)
+* Badge<br>
   [![button](https://harbour.github.io/art/harbour-button.png)](https://harbour.github.io/art/harbour-button.png)
-* Animated (116 kB)<br>
-  [harbour-animgif.zip](https://harbour.github.io/art/harbour-animgif.zip)
+* [Badge – animated](https://harbour.github.io/art/harbour-animgif.zip)
+{% endunless %}
