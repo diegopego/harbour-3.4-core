@@ -52,6 +52,8 @@
 #include "hbclass.ch"
 #include "hbver.ch"
 
+#define I_( x )  hb_UTF8ToStr( hb_i18n_gettext( x /*, _SELF_NAME_ */ ) )
+
 #define DOCUMENT_  1
 #define INDEX_     2
 
@@ -77,7 +79,7 @@ CREATE CLASS TPLGenerate
    METHOD AddIndexItem( cName, cID ) INLINE HB_SYMBOL_UNUSED( cName ), HB_SYMBOL_UNUSED( cID ), Self
 
    VAR cFilename AS STRING
-   VAR cBaseTitle AS STRING INIT "Harbour Reference Guide"
+   VAR bBaseTitle INIT {|| I_( "%1$s Reference Guide" ) }
 
    HIDDEN:
 
@@ -95,7 +97,7 @@ CREATE CLASS TPLGenerate
    VAR cLang AS STRING
    VAR cOutFileName AS STRING
 
-   VAR hComponents AS HASH
+   VAR hComponents
 
 ENDCLASS
 
@@ -113,19 +115,15 @@ METHOD NewDocument( cDir, cFilename, cTitle, cExtension, cLang, hComponents ) CL
 
 METHOD New( cDir, cFilename, cTitle, cExtension, cLang, nType, hComponents ) CLASS TPLGenerate
 
-   ::cDir := cDir
+   ::cLang := hb_defaultValue( cLang, "en" )
+   ::cDir := hb_DirSepAdd( cDir ) + iif( Lower( ::cLang ) == "en", "", Lower( StrTran( ::cLang, "_", "-" ) ) + hb_ps() )
    ::cFilename := cFilename
    ::cTitle := cTitle
    ::cExtension := cExtension
-   ::cLang := hb_defaultValue( cLang, "en" )
    ::nType := nType
    ::hComponents := hComponents
 
-   ::cOutFileName := ;
-      ::cDir + hb_ps() + ;
-      ::cFilename + ;
-      iif( Lower( ::cLang ) == "en", "", "." + ::cLang ) + ;
-      ::cExtension
+   ::cOutFileName := ::cDir + ::cFilename + ::cExtension
 
    RETURN Self
 

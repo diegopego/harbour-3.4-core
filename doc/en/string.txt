@@ -1,19 +1,6 @@
-/*
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    Documentation for: Descend()
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: IsAlpha(), IsDigit(), IsUpper(), IsLower(), LTrim(),
- *                       At(), hb_At(), RAt(), hb_RAt(), Left(), Right(),
- *                       SubStr(), Upper(), Lower(), Asc(), Chr(), PadC(),
- *                       PadL(), PadR(), AllTrim(), Trim(), RTrim(), Space(),
- *                       Replicate(), Val(), Transform(), StrTran()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -29,7 +16,7 @@
    $ARGUMENTS$
       <cString> Any character string
    $RETURNS$
-      lAlpha Logical true (.T.) or false (.F.).
+      <lAlpha> Logical true (.T.) or false (.F.).
    $DESCRIPTION$
       This function return a logical true (.T.) if the first character
       in <cString> is an alphabetic character. If not, the function will
@@ -51,6 +38,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -66,15 +55,15 @@
    $ARGUMENTS$
       <cString> Any character string
    $RETURNS$
-      lDigit Logical true (.T.) or false (.F.).
+      <lDigit> Logical true (.T.) or false (.F.).
    $DESCRIPTION$
       This function takes the character string <cString> and checks to
       see if the leftmost character is a digit, from 1 to 9. If so, the
       function will return a logical true (.T.); otherwise, it will
       return a logical false (.F.).
    $EXAMPLES$
-      ? IsDigit( "12345" )      // .T.
-      ? IsDigit( "abcde" )      // .F.
+      ? IsDigit( "12345" )  // .T.
+      ? IsDigit( "abcde" )  // .F.
    $STATUS$
       R
    $COMPLIANCE$
@@ -89,6 +78,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -104,15 +95,15 @@
    $ARGUMENTS$
       <cString> Any character string
    $RETURNS$
-      lUpper Logical true (.T.) or false (.F.).
+      <lUpper> Logical true (.T.) or false (.F.).
    $DESCRIPTION$
       This function checks to see if the leftmost character
       if <cString> is a uppercased letter. If so, the
       function will return a logical true (.T.); otherwise, it will
       return a logical false (.F.).
    $EXAMPLES$
-      ? IsUpper( "Abcde" )    // .T.
-      ? IsUpper( "abcde" )    // .F.
+      ? IsUpper( "Abcde" )  // .T.
+      ? IsUpper( "abcde" )  // .F.
    $STATUS$
       R
    $COMPLIANCE$
@@ -127,6 +118,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -142,15 +135,15 @@
    $ARGUMENTS$
       <cString> Any character string
    $RETURNS$
-      lLower Logical true (.T.) or false (.F.).
+      <lLower> Logical true (.T.) or false (.F.).
    $DESCRIPTION$
       This function takes the character string <cString> and checks to
       see if the leftmost character is a lowercased letter. If so, the
       function will return a logical true (.T.); otherwise, it will
       return a logical false (.F.).
    $EXAMPLES$
-      ? IsLower( "ABCde" )      // .F.
-      ? IsLower( "aBCde" )      // .T.
+      ? IsLower( "ABCde" )  // .F.
+      ? IsLower( "aBCde" )  // .T.
    $STATUS$
       R
    $COMPLIANCE$
@@ -165,6 +158,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -200,6 +195,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -239,6 +236,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -256,9 +255,9 @@
 
       <cString> Main string
 
-      <nStart> First position to search in cString, by default 1
+      <nStart> First position to search in <cString>, by default 1
 
-      <nEnd> End position to search, by default cString length
+      <nEnd> End position to search, by default <cString> length
    $RETURNS$
       hb_At() return the starting position of the first occurrence of the
       substring in the main string
@@ -268,8 +267,8 @@
       the second expression, the function will return 0. The third and fourth
       parameters lets you indicate a starting and end offset to search in.
    $EXAMPLES$
-      ? hb_At( "cde", "abcdefgfedcba" )       // 3
-      ? hb_At( "cde", "abcdefgfedcba", 4 )    // 0
+      ? hb_At( "cde", "abcdefgfedcba" )     // 3
+      ? hb_At( "cde", "abcdefgfedcba", 4 )  // 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -287,6 +286,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -311,8 +312,8 @@
       If the function is unable to find any occurrence of <cSearch> in
       <cString>, the return value is 0.
    $EXAMPLES$
-      ? hb_ntos( RAt( "cde", "abcdefgfcdeedcba" ) )     // 9
-      ? hb_ntos( RAt( "cdr", "abcdefgfedcba" ) )        // 0
+      ? RAt( "cde", "abcdefgfcdeedcba" )  // 9
+      ? RAt( "cdr", "abcdefgfedcba" )     // 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -327,6 +328,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -338,15 +341,15 @@
    $ONELINER$
       Searches for last occurrence a substring of a string.
    $SYNTAX$
-      hb_RAt( <cSearch>, <cString>, [<nStart>], [<nEnd>]  ) --> nPos
+      hb_RAt( <cSearch>, <cString>, [<nStart>], [<nEnd>] ) --> nPos
    $ARGUMENTS$
       <cSearch> Substring to search for
 
       <cString> Main string
 
-      <nStart> First position to search in cString, by default 1.
+      <nStart> First position to search in <cString>, by default 1.
 
-      <nEnd> End position to search, by default cString length
+      <nEnd> End position to search, by default <cString> length
    $RETURNS$
       hb_RAt() return the location of beginning position of last occurrence
       a substring of a string.
@@ -387,6 +390,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -408,10 +413,11 @@
    $DESCRIPTION$
       This functions returns the leftmost <nLen> characters of <cString>.
       It is equivalent to the following expression:
-
+      ```
       SubStr( <cString>, 1, <nLen> )
+      ```
    $EXAMPLES$
-      ? Left( "Hello Harbour", 5 )    // Hello
+      ? Left( "Hello Harbour", 5 )  // Hello
    $STATUS$
       R
    $COMPLIANCE$
@@ -426,6 +432,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -447,12 +455,14 @@
    $DESCRIPTION$
       This functions returns the rightmost <nLen> characters of <cString>.
       It is equivalent to the following expressions:
-
+      ```
       SubStr( <cString>, -<nLen> )
-
+      ```
+      ```
       SubStr( <cString>, Len( <cString> ) - <nLen> + 1, <nLen> )
+      ```
    $EXAMPLES$
-      ? Right( "Hello Harbour", 5 )     // rbour
+      ? Right( "Hello Harbour", 5 )  // rbour
    $STATUS$
       R
    $COMPLIANCE$
@@ -467,6 +477,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -499,9 +511,9 @@
       characters from <nStart> to the end of the string is less than <nLen>
       the rest are ignored.
    $EXAMPLES$
-      ? SubStr( "Hello Harbour",  7, 4 )      // Harb
-      ? SubStr( "Hello Harbour", -3, 3 )      // our
-      ? SubStr( "Hello Harbour",  7    )      // Harbour
+      ? SubStr( "Hello Harbour",  7, 4 )  // Harb
+      ? SubStr( "Hello Harbour", -3, 3 )  // our
+      ? SubStr( "Hello Harbour",  7    )  // Harbour
    $STATUS$
       R
    $COMPLIANCE$
@@ -544,14 +556,14 @@
       Results of Str() with No Optional Arguments
 
       <table>
-      Expression               Return Value Length
+       Expression               Return Value Length
 
-      Field Variable           Field length plus decimals
-      Expressions/constants    Minimum of 10 digits plus decimals
-      Val()                    Minimum of 3 digits
-      Month()/Day()            3 digits
-      Year()                   5 digits
-      RecNo()                  7 digits
+       Field Variable           Field length plus decimals
+       Expressions/constants    Minimum of 10 digits plus decimals
+       Val()                    Minimum of 3 digits
+       Month()/Day()            3 digits
+       Year()                   5 digits
+       RecNo()                  7 digits
       </table>
    $DESCRIPTION$
       Str() is a numeric conversion function that converts numeric values
@@ -576,7 +588,7 @@
       *  If <nLength> is specified but <nDecimals> is omitted (no
          decimal places), the return value is rounded to an integer.
    $EXAMPLES$
-      ? Str( 10, 6, 2 )  // " 10.00"
+      ? Str( 10, 6, 2 )   // " 10.00"
       ? Str( -10, 8, 2 )  // "  -10.00"
    $STATUS$
       R
@@ -618,14 +630,14 @@
       Results of StrZero() with No Optional Arguments
 
       <table>
-      Expression               Return Value Length
+       Expression               Return Value Length
 
-      Field Variable           Field length plus decimals
-      Expressions/constants    Minimum of 10 digits plus decimals
-      Val()                    Minimum of 3 digits
-      Month()/Day()            3 digits
-      Year()                   5 digits
-      RecNo()                  7 digits
+       Field Variable           Field length plus decimals
+       Expressions/constants    Minimum of 10 digits plus decimals
+       Val()                    Minimum of 3 digits
+       Month()/Day()            3 digits
+       Year()                   5 digits
+       RecNo()                  7 digits
       </table>
    $DESCRIPTION$
       StrZero() is a numeric conversion function that converts numeric
@@ -654,7 +666,7 @@
 
       The StrZero() function was part of the CA-Cl*pper samples.
    $EXAMPLES$
-      ? StrZero( 10, 6, 2 )  // "010.00"
+      ? StrZero( 10, 6, 2 )   // "010.00"
       ? StrZero( -10, 8, 2 )  // "-0010.00"
    $STATUS$
       R
@@ -719,7 +731,7 @@
    $ONELINER$
       Returns size of a string or size of an array.
    $SYNTAX$
-      Len( <cString> | <aArray> ) --> <nLength>
+      Len( <cString> | <aArray> ) --> nLength
    $ARGUMENTS$
       <acString> is a character string or the array to check.
    $RETURNS$
@@ -733,8 +745,8 @@
       PROCEDURE Main()
          LOCAL cName
 
-         ? Len( "Harbour" )          // --> 7
-         ? Len( { "One", "Two" } )   // --> 2
+         ? Len( "Harbour" )         // --> 7
+         ? Len( { "One", "Two" } )  // --> 2
 
          cName := ""
          ACCEPT "Enter your name: " TO cName
@@ -775,16 +787,16 @@
       logical indicating whether it the expression is empty or not.
    $EXAMPLES$
       PROCEDURE Main()
-         ? Empty( "I'm not empty" ) // .F.
-         ? Empty( NIL )             // .T.
-         ? Empty( 0 )               // .T.
-         ? Empty( .F. )             // .T.
-         ? Empty( "" )              // .T.
-         ? Empty( "  " )            // .T.
-         ? Empty( 1 )               // .F.
-         ? Empty( .T. )             // .F.
-         ? Empty( "smile" )         // .F.
-         ? Empty( Date() )          // .F.
+         ? Empty( "I'm not empty" )  // .F.
+         ? Empty( NIL )              // .T.
+         ? Empty( 0 )                // .T.
+         ? Empty( .F. )              // .T.
+         ? Empty( "" )               // .T.
+         ? Empty( "  " )             // .T.
+         ? Empty( 1 )                // .F.
+         ? Empty( .T. )              // .F.
+         ? Empty( "smile" )          // .F.
+         ? Empty( Date() )           // .F.
          RETURN
    $STATUS$
       R
@@ -798,6 +810,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Jose Lalin <dezac@corevia.com>
    $TEMPLATE$
       Function
    $NAME$
@@ -853,8 +867,8 @@
       to its lowercased representation. Any non alphabetic character withing
       <cString> will remain unchanged.
    $EXAMPLES$
-      ? Lower( "HARBOUR" )      // harbour
-      ? Lower( "Hello All" )    // hello all
+      ? Lower( "HARBOUR" )    // harbour
+      ? Lower( "Hello All" )  // hello all
    $STATUS$
       R
    $COMPLIANCE$
@@ -869,6 +883,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -889,8 +905,8 @@
       This function converts all alpha characters in <cString> to upper
       case values and returns that formatted character expression.
    $EXAMPLES$
-      ? Upper( "harbour" )       // HARBOUR
-      ? Upper( "Harbour" )       // HARBOUR
+      ? Upper( "harbour" )  // HARBOUR
+      ? Upper( "Harbour" )  // HARBOUR
    $STATUS$
       R
    $COMPLIANCE$
@@ -905,6 +921,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -946,6 +964,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -982,6 +1002,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -1030,6 +1052,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -1078,6 +1102,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -1126,6 +1152,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -1164,6 +1192,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -1188,10 +1218,10 @@
       Together with LTrim(), this function equated to the AllTrim()
       function.
    $EXAMPLES$
-      ? RTrim( "Hello" )              //  "Hello"
-      ? RTrim( "" )                   //  ""
-      ? RTrim( "UA   " )              //  "UA"
-      ? RTrim( "   UA" )              //  "   UA"
+      ? RTrim( "Hello" )   //  "Hello"
+      ? RTrim( "" )        //  ""
+      ? RTrim( "UA   " )   //  "UA"
+      ? RTrim( "   UA" )   //  "   UA"
    $STATUS$
       R
    $COMPLIANCE$
@@ -1206,6 +1236,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -1230,10 +1262,10 @@
       Together with LTrim(), this function equated to the AllTrim()
       function.
    $EXAMPLES$
-      ? Trim( "Hello" )     //  "Hello"
-      ? Trim( "" )          //   ""
-      ? Trim( "UA   " )     //   "UA"
-      ? Trim( "   UA" )     //   "   UA"
+      ? Trim( "Hello" )    //  "Hello"
+      ? Trim( "" )         //   ""
+      ? Trim( "UA   " )    //   "UA"
+      ? Trim( "   UA" )    //   "   UA"
    $STATUS$
       R
    $COMPLIANCE$
@@ -1248,6 +1280,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -1290,6 +1324,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -1368,6 +1404,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
    $TEMPLATE$
       Function
    $NAME$
@@ -1390,7 +1428,7 @@
 
       This functions is the oppose of the Str() function.
    $EXAMPLES$
-      ? Val( "31421" ) // 31421
+      ? Val( "31421" )  // 31421
    $STATUS$
       R
    $COMPLIANCE$
@@ -1401,155 +1439,5 @@
       Library is core
    $SEEALSO$
       Str(), Transform()
-   $END$
- */
-
-/* $DOC$
-   $TEMPLATE$
-      Function
-   $NAME$
-      StrTran()
-   $CATEGORY$
-      API
-   $SUBCATEGORY$
-      Strings
-   $ONELINER$
-      Translate substring value with a main string
-   $SYNTAX$
-      StrTran( <cString>, <cLocString>, [<cRepString>], [<nPos>],
-               [<nOccurrences>] ) --> cReturn
-   $ARGUMENTS$
-      <cString>     The main string to search
-
-      <cLocString>  The string to locate in the main string
-
-      <cRepString>  The string to replace the <cLocString>
-
-      <nPos>        The first occurrence to be replaced
-
-      <nOccurrences> Number of occurrence to replace
-   $RETURNS$
-      <cReturn>  Formated string
-   $DESCRIPTION$
-      This function searches for any occurrence of <cLocString> in <cString>
-      and replaces it with <cRepString>. If <cRepString> is not specified, a
-      NULL byte will replace <cLocString>.
-
-      If <nPos> is used, its value defines the first occurrence to be
-      replaced. The default value is 1. Additionally, if used, the value of
-      <nOccurrences> tell the function how many occurrences of <cLocString>
-      in <cString> are to the replaced. The default of <nOccurrences> is
-      all occurrences.
-   $EXAMPLES$
-      ? StrTran( "Harbour  Power", "  ", " " )   // Harbour Power
-      // Harbour Power The future  of  xBase
-      ? StrTran( "Harbour  Power  The Future  of  xBase", "  ", " " , , 2 )
-   $STATUS$
-      R
-   $COMPLIANCE$
-      C
-   $PLATFORMS$
-      All
-   $FILES$
-      Libraty is rtl
-   $SEEALSO$
-      SubStr(), At()
-   $END$
- */
-
-/* $DOC$
-   $TEMPLATE$
-      Function
-   $NAME$
-      Transform()
-   $CATEGORY$
-      API
-   $SUBCATEGORY$
-      Strings
-   $ONELINER$
-      Formats a value based on a specific picture template.
-   $SYNTAX$
-      Transform( <xExpression>, <cTemplate> ) --> cFormatted
-   $ARGUMENTS$
-      <xExpression> Any expression to be formated.
-
-      <cTemplate> Character string with picture template
-   $RETURNS$
-      <cFormatted> Formatted expression in character format
-   $DESCRIPTION$
-      This function returns <xExpression> in the format of the picture
-      expression passed to the function as <cTemplate>.
-
-      Their are two components that can make up <cTemplate> : a function
-      string and a template string. Function strings are those functions
-      that globally tell what the format of <xExpression> should be. These
-      functions are represented by a single character precede by the
-      @ symbol.
-
-      There are a couple of rules to follow when using function strings
-      and template strings:
-
-       - First, a single space must fall between the function template
-         and the template string if they are used in conjunction with
-         one another.
-
-       - Second, if both components make up the value of <cTemplate>, the
-         function string must precede the template string. Otherwise, the
-         function string may appear with out the template string and
-         vice versa.
-
-      The table below shows the possible function strings available with
-      the Transform() function.
-
-      <table-noheader>
-      @B   Left justify the string within the format.
-      @C   Issue a CR after format is numbers are positive.
-      @D   Put dates in SET DATE format.
-      @E   Put dates in BRITISH format.
-      @L   Make a zero padded string out of the number.
-      @R   Insert non template characters.
-      @X   Issue a DB after format is numbers are negative.
-      @Z   Display any zero as blank spaces.
-      @(   Quotes around negative numbers
-      @!   Convert alpha characters to uppercased format.
-      </table>
-
-      The second part of <cTemplate> consists of the format string. Each
-      character in the string may be formatted based on using the follow
-      characters as template markers for the string.
-
-      <table-noheader>
-      A,N,X,9,#   Any data type
-      L           Shows logical as "T" or "F"
-      Y           Shows logical as "Y" or "N"
-      !           Convert to uppercase
-      $           Dollar sing in place of leading spaces in numeric expression
-      *           Asterisks in place of leading spaces in numeric expression
-      ,           Commas position
-      .           Decimal point position
-      </table>
-   $EXAMPLES$
-      LOCAL cString := "This is harbour"
-      LOCAL nNumber := 9923.34
-      LOCAL nNumber1 := -95842.00
-      LOCAL lValue := .T.
-      LOCAL dDate := Date()
-      ? "working with String"
-      ? "Current String is", cString
-      ? "All uppercased", Transform( cString, "@!" )
-      ? "Date is", dDate
-      ? "Date is", Transform( dDate, "@D" )
-      ? Transform( nNumber, "@L 99999999" )  //  "009923.34"
-      ? Transform( 0      , "@L 9999"     )  //  "0000"
-   $STATUS$
-      R
-   $COMPLIANCE$
-      The @L function template is a FoxPro/Xbase++ Extension
-   $PLATFORMS$
-      All
-   $FILES$
-      Library is core
-   $SEEALSO$
-      @...SAY, DevOutPict()
    $END$
  */

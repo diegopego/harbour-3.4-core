@@ -6,7 +6,7 @@
    $ONELINER$
       Reduce multiple occurences of a character to one
    $SYNTAX$
-      CharOne( [<cCharactersToReduce>,] <cString> ) -> cReducedString
+      CharOne( [<cCharactersToReduce>,] <cString> ) --> cReducedString
    $ARGUMENTS$
       [<cCharactersToReduce>]    specifies the characters the multiple
                                  occurences of which should be reduced to one
@@ -25,9 +25,9 @@
       ? CharOne( " ", "A  B  A  B" ) // "A B A B"
       ? CharOne( "o", "122oooB12o" ) // "122oB12o"
    $STATUS$
-      Ready
+      R
    $COMPLIANCE$
-      CharOne() is compatible with CT3's CharOne().
+      C
    $PLATFORMS$
       All
    $FILES$
@@ -45,7 +45,7 @@
    $ONELINER$
       Reduce multiple occurences of a double character to one
    $SYNTAX$
-      WordOne( [<cDoubleCharactersToReduce>,] <cString> ) -> cReducedString
+      WordOne( [<cDoubleCharactersToReduce>,] <cString> ) --> cReducedString
    $ARGUMENTS$
       [<cDoubleCharactersToReduce>]  specifies the double characters the multiple
                                      occurences of which should be reduced to one
@@ -62,9 +62,9 @@
       ? WordOne( "1AAAA2" )         // "1AAAA2"
       ? WordOne( "12", "1212ABAB" ) // "12ABAB"
    $STATUS$
-      Ready
+      R
    $COMPLIANCE$
-      WordOne() is compatible with CT3's WordOne().
+      C
    $PLATFORMS$
       All
    $FILES$

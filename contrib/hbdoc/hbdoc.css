@@ -5,7 +5,7 @@ html {
 
 body {
   background-color: #f8f8f8;
-  font-family: 'Source Sans Pro', Arial, sans-serif;
+  font-family: 'Source Sans Pro', -apple-system, "San Francisco", "Oxygen", "Ubuntu", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", sans-serif;
   font-size: 14pt;
   line-height: 150%;
   margin: 0;
@@ -14,9 +14,9 @@ body {
 
 header {
   position: absolute;
-  -position: fixed;
-  --webkit-font-smoothing: antialiased;
-  -backface-visibility: hidden;
+  position: fixed;
+  -webkit-font-smoothing: antialiased;
+  backface-visibility: hidden;
   z-index: 2;
   top: 0;
   width: 100%;
@@ -30,12 +30,20 @@ header {
 header > div {
   font-size: 130%;
   margin: auto;
-  width: 693.71875px;  /* 94% */
+  width: 700px;
   padding: 0 15px;
 }
 
 header > div > div:first-child {
   float: left;
+}
+
+header > svg {
+  fill: #f8f8f8;
+  height: 46.1px;
+  float: left;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 
 header > div > div:last-child {
@@ -45,6 +53,7 @@ header > div > div:last-child {
 header a {
   color: #f0f0f0;
   text-decoration: none;
+  transition: color .25s;
 }
 
 header a:visited {
@@ -68,7 +77,7 @@ footer {
   line-height: 150%;
   margin: auto;
   padding: .6em 1em;
-  height: 60px;
+  height: 64px;
   text-align: center;
   width: auto;
 }
@@ -76,6 +85,7 @@ footer {
 footer a {
   color: #ddd;
   text-decoration: none;
+  transition: color .25s;
 }
 
 footer a:visited {
@@ -93,11 +103,12 @@ footer a:active {
 }
 
 main {
+  -webkit-font-smoothing: antialiased;
   border: 0;
   border-spacing: 0;
   margin: auto;
   padding: 0;
-  width: 693.71875px;  /* 94% */
+  width: 700px;
   padding-top: 44px;
 }
 
@@ -114,12 +125,6 @@ a:hover {
   border-style: none none dotted;
   border-width: 0 0 1px;
   color: #ff6800;
-}
-
-.entry-button {
-  font-size: 75%;
-  float: right;
-  margin-bottom: 1em;
 }
 
 hr {
@@ -148,14 +153,16 @@ aside {
   float: left;
   font-size: 9pt !important;
   background-color: #f2f2f2;
-  -background-color: #444;
+  -background-color: #363636;
   width: 180px;
-  border-radius: 0 0 4px 0;
+  -border-radius: 0 0 4px 0;
   line-height: 135%;
   overflow: hidden;
-  padding-top: 44px;
-  margin-top: 10px;
-  padding-bottom: 10px;
+  margin-top: 44px;
+  padding-top: 10px;
+  position: fixed;
+  overflow-y: scroll;
+  height: calc(100% - 44px - 10px);
 }
 
 aside hr {
@@ -178,27 +185,40 @@ aside a {
 
 aside a:visited {
   color: #556acb;
+  -color: #859afb;
 }
 
 aside a:hover {
   border-style: none;
   background-color: #0974c5;
-  color: #fdfdfd;
+  -background-color: #ff6800;
+  background-color: #f5ce00;
+  color: #fff;
+  color: #000;
 }
 
+aside a:hover:visited {
+  color: #dde1f5;
+  color: #374584;
+}
+
+/*
 aside a[title]:hover:after {
   content: attr(title);
   font-size: 7.5pt !important;
   position: absolute;
   left: 8px;
   background-color: #0974c5;
+  -background-color: #ff6800;
   color: #fdfdfd;
   height: inherit;
   margin-top: -1px;
   padding-top: 2px;
   padding-bottom: 1px;
   padding-right: 8px;
+  position: fixed;
 }
+*/
 
 section {
   border-top: 1px solid rgba(0, 0, 0, .1);
@@ -214,17 +234,67 @@ h4 {
   margin-bottom: 14px;
 }
 
+/* Hover permalink
+h4:hover .d-id {
+  visibility: visible;
+}
+
+.d-id {
+  visibility: hidden;
+  color: #000;
+  margin-left: -15px;
+  padding-right: 2px;
+}
+
+a.d-id:hover {
+  border: none;
+  color: #000;
+}
+*/
+
+.d-id:target {
+  padding-top: 62px;  /* 44px + 18px */
+}
+
+.d-id:focus {
+  outline: none;
+}
+
+.d-so {
+  font-size: 14px;
+  font-weight: normal;
+  margin-left: 5px;
+  vertical-align: super;
+}
+
+.d-eb {
+  font-size: 14px;
+  font-weight: normal;
+  float: right;
+  vertical-align: super;
+}
+
+.d-eb .d-ebi {
+  border: 0;
+}
+
+.d-so .d-ebi {
+  border: 0;
+}
+
 pre {
   background-color: #f2f2f2;
   color: #2e2a24;
-  border: none;
-  border-left: 4px solid #aaaaaa;
-  padding: 8px 16px;
+  border: none !important;
+  border-left: 4px solid #aaaaaa !important;
+  border-radius: 0 3px 3px 0 !important;
+  padding: 8px 16px !important;
   overflow: scroll;
+  line-height: 125% !important;
 }
 
-pre, code, .d-t, aside {
-  font-family: Hack, Consolas, Menlo, 'Droid Sans Mono', 'Source Code Pro', 'Liberation Mono', 'Oxygen Mono', 'Andale Mono', monospace;
+code, .d-t {
+  font-family: Hack, Consolas, Menlo, 'Droid Sans Mono', 'Source Code Pro', 'Liberation Mono', 'Oxygen Mono', 'Andale Mono', monospace !important;
   font-size: 85%;
 }
 
@@ -236,22 +306,39 @@ aside code {
   font-size: 80%;
 }
 
-.d-it code {
+.d-it code:not(.language-c) {
   color: #606060;
+  color: #2e2a24;
+  background-color: #efeff8;
   border: none;
-  border-radius: 3px;
-  padding: 2px 3px;
+  border-radius: 10px;
+  margin-right: 0;
+  padding: 2px 7px;
+}
+
+.d-it pre {
+  margin-left: 16px;
 }
 
 .d-sy pre {
+  color: #2e2a24;
   background-color: inherit;
-  border: none;
-  margin: 0;
-  padding-left: 0;
+  border: none !important;
+  font-weight: bold;
+  margin: 0 0 0 1em;
+  padding: 0 !important;
+  white-space: pre-wrap;
 }
 
-.d-sy code {
-  padding: 0;
+.d-sym pre {
+  white-space: pre;
+}
+
+code code {
+  font-size: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none;
 }
 
 .d-it .d-key {
@@ -315,7 +402,8 @@ p {
   border-bottom: 1px solid rgba(0, 0, 0, .1);
   overflow: scroll;
   margin: 16px;
-  width: 80%;
+  white-space: nowrap;
+  line-height: 130%;
 }
 
 .d-t0 div:first-child {
@@ -344,7 +432,7 @@ p {
   font-weight: bold;
   font-size: 115%;
   margin-left: 1em;
-  margin-top: 0px;
+  margin-top: 0;
   margin-bottom: 14px;
 }
 
@@ -361,14 +449,12 @@ p {
   padding-bottom: 8px;
 }
 
-.d-ex {
-  margin-left: 1em;
-  margin-right: 1em;
+.d-sy {
+  padding-bottom: 8px;
 }
 
-.d-te {
-  margin-left: 1em;
-  padding-bottom: 8px;
+.d-ex, .d-te {
+  margin: 8px 0 15px 1em !important;
 }
 
 .d-sc {
@@ -402,9 +488,27 @@ p {
 
 /* drop-down menu magic --------------------------------------------------- */
 
+.menu {
+  display: table;
+}
+
+.menu > nav {
+  display: table-row;
+}
+
+.menu > nav > nav {
+  display: table-cell;
+}
+
+/* The container <nav> - needed to position the dropdown content */
+.dropdown {
+  display: inline-block !important;
+  position: relative;
+}
+
 /* Dropdown Button */
 .dropbtn {
-  cursor: pointer;
+  cursor: default;
   margin-left: 15px;
   transition: color .25s;
 }
@@ -428,7 +532,6 @@ p {
   margin-left: 6px;
   min-width: 9em;
   position: absolute;
-  z-index: 2;
   padding: 5px 5px;
 }
 
@@ -441,6 +544,25 @@ p {
   text-align: left;
   text-decoration: none;
   transition: none;
+}
+
+.d-dd {
+  margin-top: 0;
+}
+
+.d-so .dropdown-content {
+  margin-top: 0;
+  margin-left: -5px;
+  font-size: 14px;
+}
+
+.lang .dropdown-content {
+  min-width: 10px !important;
+}
+
+.lang .dropdown-content a {
+  margin: 0;
+  padding: 3px 4px 0 4px;
 }
 
 /* Change color of dropdown links on hover */
@@ -463,7 +585,7 @@ p {
 
 @media only screen {
   aside {
-    width: calc(((100% - 694px) / 2) - 15px);
+    width: calc(((100% - 700px) / 2) - 15px);
   }
 }
 
@@ -485,17 +607,26 @@ p {
 
   .dropdown-content {
     position: absolute;
-    right: 4px;
+    right: -26px;
+  }
+
+  .lang .dropdown-content {
+    position: absolute;
+    right: -15px;
   }
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 520px) {
   body {
     -font-size: 12pt;
   }
 
+  header > div > div:first-child > a > svg {
+    display: none;
+  }
+
   header {
-    position: absolute;
+    -position: absolute;
     height: 74px;
     line-height: 36px;
   }
@@ -506,5 +637,21 @@ p {
 
   main {
     padding-top: 74px;
+  }
+
+  .d-id:target {
+    padding-top: 92px;  /* 74px + 18px */
+  }
+}
+
+@media print {
+  .d-eb {
+    display: none;
+  }
+
+  main {
+    margin: 0 15px;
+    padding-top: 0;
+    width: auto;
   }
 }

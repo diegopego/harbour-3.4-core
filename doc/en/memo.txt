@@ -1,19 +1,6 @@
-/*
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    MemoTran() documentation
- *    HardCR() documentation
- *
- * Copyright 2003 Alejandro de Garate <alex_degarate@hotmail.com>
- *    MemoRead() documentation
- *    MemoWrit() documentation
- *
- * Documentation for hb_MemoRead(), hb_MemoWrit()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Jose Lalin <dezac@corevia.com>
    $TEMPLATE$
       Function
    $NAME$
@@ -25,7 +12,7 @@
    $ONELINER$
       Converts hard and soft carriage returns within strings.
    $SYNTAX$
-      MemoTran( <cString>, <cHard>, <cSoft> ) --> <cConvertedString>
+      MemoTran( <cString>, <cHard>, <cSoft> ) --> cConvertedString
    $ARGUMENTS$
       <cString> is a string of chars to convert.
 
@@ -53,6 +40,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Jose Lalin <dezac@corevia.com>
    $TEMPLATE$
       Function
    $NAME$
@@ -64,7 +53,7 @@
    $ONELINER$
       Replace all soft carriage returns with hard carriages returns.
    $SYNTAX$
-      HardCR( <cString> ) --> <cConvertedString>
+      HardCR( <cString> ) --> cConvertedString
    $ARGUMENTS$
       <cString> is a string of chars to convert.
    $RETURNS$
@@ -86,6 +75,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2003 Alejandro de Garate <alex_degarate@hotmail.com>
    $TEMPLATE$
       Function
    $NAME$
@@ -105,7 +96,7 @@
    $RETURNS$
       Returns the contents of a text file as a character string.
 
-      If <cFileName> cannot be found or read MEMOREAD returns an empty
+      If <cFileName> cannot be found or read MemoRead() returns an empty
       string ("").
    $DESCRIPTION$
       MemoRead() is a function that reads the content of a text file (till
@@ -152,6 +143,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2003 Alejandro de Garate <alex_degarate@hotmail.com>
    $TEMPLATE$
       Function
    $NAME$
@@ -171,7 +164,7 @@
    $RETURNS$
       Returns the contents of a text file as a character string.
 
-      If <cFileName> cannot be found or read HB_MEMOREAD returns an empty
+      If <cFileName> cannot be found or read hb_MemoRead() returns an empty
       string ("").
    $DESCRIPTION$
       hb_MemoRead() is a function that reads the content of a text file
@@ -222,6 +215,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2003 Alejandro de Garate <alex_degarate@hotmail.com>
    $TEMPLATE$
       Function
    $NAME$
@@ -279,6 +274,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 2003 Alejandro de Garate <alex_degarate@hotmail.com>
    $TEMPLATE$
       Function
    $NAME$

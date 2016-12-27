@@ -17,7 +17,9 @@ if [ "${_BRANCH#*prod*}" = "${_BRANCH}" ] ; then
 #  pacman --noconfirm --noprogressbar -S --needed mingw-w64-{i686,x86_64}-qt5
 fi
 
-pacman --noconfirm --noprogressbar -S --needed mingw-w64-{i686,x86_64}-icu
+# Skip using this component for test purposes for now in favour
+# of creating more practical/usable snapshot binaries.
+# pacman --noconfirm --noprogressbar -S --needed mingw-w64-{i686,x86_64}-icu
 
 # Dependencies of 'prod' builds (we use our own builds instead for now)
 # pacman --noconfirm --noprogressbar -S --needed mingw-w64-{i686,x86_64}-{curl,openssl}
@@ -51,8 +53,8 @@ gpg --version | grep gpg
 (
    set -x
 
-#  curl -o pack.bin -L --proto-redir =https 'https://github.com/upx/upx/releases/download/v3.91/upx391w.zip'
-#  openssl dgst -sha256 pack.bin | grep -q d7d4817f46d2616c209c46fb8bce44e4bec93ab5adef5e4dfc93ee879527be1b
+#  curl -o pack.bin -L --proto-redir =https 'https://github.com/upx/upx/releases/download/v3.92/upx392w.zip'
+#  openssl dgst -sha256 pack.bin | grep -q 041f9fe5c749a5491db1c902db16b55a6d343030103cb1add2fcc5bb63c6143d
 #  7z e -y -oupx pack.bin > /dev/null
 
    if [ "${_BRANCH#*extmingw*}" != "${_BRANCH}" ] ; then
@@ -88,8 +90,8 @@ gpg --version | grep gpg
 gpg_recv_keys 8756C4F765C9AC3CB6B85D62379CE192D401AB61
 
 # Builder public key
-# curl 'https://bintray.com/user/downloadSubjectPublicKey?username=vszakats' | \
-#    gpg --import
+# curl 'https://bintray.com/user/downloadSubjectPublicKey?username=vszakats' \
+#    | gpg --import
 
 readonly base='https://bintray.com/artifact/download/vszakats/generic/'
 

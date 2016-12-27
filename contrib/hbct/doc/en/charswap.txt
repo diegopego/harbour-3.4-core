@@ -6,7 +6,7 @@
    $ONELINER$
       Swap neighbouring characters in a string
    $SYNTAX$
-      CharSwap( <[@]cString> ) -> cSwappedString
+      CharSwap( <[@]cString> ) --> cSwappedString
    $ARGUMENTS$
       <[@]cString>      is the string that should be processed
    $RETURNS$
@@ -21,9 +21,9 @@
       ? CharSwap( "0123456789" )   // "1032547698"
       ? CharSwap( "ABCDEFGHIJK" )  // "BADCFEHGJIK"
    $STATUS$
-      Ready
+      R
    $COMPLIANCE$
-      CharSwap() is compatible with CT3's CharSwap().
+      C
    $PLATFORMS$
       All
    $FILES$
@@ -41,7 +41,7 @@
    $ONELINER$
       Swap neighbouring double characters in a string
    $SYNTAX$
-      WordSwap( <[@]cString> [, <lSwapCharacters>] ) -> cSwappedString
+      WordSwap( <[@]cString> [, <lSwapCharacters>] ) --> cSwappedString
    $ARGUMENTS$
       <[@]cString>         is the string that should be processed
       [<lSwapCharacters>]  specifies whether an additional swap should be
@@ -62,9 +62,9 @@
       ? WordSwap( "1234567890" )       // "3412785690"
       ? WordSwap( "1234567890", .T. )  // "4321876590"
    $STATUS$
-      Ready
+      R
    $COMPLIANCE$
-      WordSwap() is compatible with CT3's WordSwap().
+      C
    $PLATFORMS$
       All
    $FILES$

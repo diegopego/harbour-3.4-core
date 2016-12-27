@@ -4,7 +4,7 @@
 
 $font-code: Hack, Consolas, Menlo, 'Droid Sans Mono', 'Source Code Pro', 'Liberation Mono', 'Oxygen Mono', 'Andale Mono', monospace;
 $font-copy: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-$font-main: 'Noto Sans', sans-serif;
+$font-main: 'Open Sans', sans-serif;
 
 $fork-color: #f8981d;
 $fork-color: orangered;
@@ -51,7 +51,7 @@ $color-donate-normal: $fork-color;
 $header-border: 0;  /* 3px */
 $header-height: 119px;
 $content-width: 738px;
-$content-fill: 94%;
+$content-fill: 700px;
 
 .banner {
   position: absolute;
@@ -69,25 +69,11 @@ footer {
   clear: left;
 }
 
-main {
-  background-color: $color-bk-main;
-  color: $color-main;
-  border: 0;
-  border-spacing: 0;
-  margin: auto;
-  margin-top: 15px;
-  padding: 0;
-  width: (($content-width / 100%) * $content-fill);
-}
-
 body {
   background: $color-bk-footer;
   border: none;
   margin: 0;
   padding: 0;
-}
-
-.hbsite {
   background-color: $color-bk-border;
   font: 16px $font-main;
   line-height: 150%;
@@ -98,15 +84,15 @@ body {
 {% endif %}
 }
 
-.faq { font: 12pt serif; line-height: 120%; margin: 2em .1em; }
-.faq a { color: #00f; text-decoration: underline; }
-.faq a:hover { color: #88f; text-decoration: underline; transition: none; }
-.faq a:active { color: #f00; text-decoration: underline; transition: none; }
-.faq h1 { font-size: 200%; color: #000; }
-.faq h2 { font-size: 150%; color: #000; }
-.faq h3 {}
-
-body {
+main {
+  background-color: $color-bk-main;
+  color: $color-main;
+  border: 0;
+  border-spacing: 0;
+  margin: auto;
+  margin-top: 15px;
+  padding: 0;
+  width: $content-fill;
 }
 
 hr {
@@ -136,7 +122,7 @@ nav hr {
   -border-top: 1px solid rgba(0, 0, 0, .1);
   -border-radius: 0;
   float: left;
-  width: 53%;
+  width: 49%;
 }
 
 .why-items ul {
@@ -201,6 +187,7 @@ $dl-button-color: $color-bk-footer;
 }
 
 .dl-button a {
+  color: $dl-button-color;
   transition: color $dl-button-transition-time;
 }
 
@@ -222,7 +209,7 @@ $donate-button-transition-time: .3s;
 }
 
 .donate-button:hover {
-  background-color: $color-donate-normal;
+  background-color: #00457c;
 }
 
 .donate-button:hover a {
@@ -259,6 +246,14 @@ $donate-button-transition-time: .3s;
   margin-bottom: 1em;
   padding: .2em 1em;
   width: auto;
+}
+
+a.readmore-dark {
+  color: darken($color-a, 15%);
+}
+
+a.readmode-dark:hover {
+  color: $color-a-hover;
 }
 
 .sshot {
@@ -427,7 +422,7 @@ $color-header-text-shadow: darken($color-base1, 7%);
   box-shadow: 0 4px 6px -6px $color-header-text-shadow;
 {% if old_design %}
   font-size: 180%;
-  font-family: 'Variane Script', 'Noto Sans', cursive;
+  font-family: 'Variane Script', 'Open Sans', cursive;
   letter-spacing: 2px;
   transform: scale(1, 1.6);
 {% endif %}
@@ -460,7 +455,7 @@ footer a:active {
 
 .footer-content {
   margin: auto;
-  width: (($content-width / 100%) * $content-fill);
+  width: $content-fill;
 }
 
 .footer-content div {
@@ -659,8 +654,25 @@ h2 {
   font-size: 100%;
 }
 
-$readmore-char: ' ›';
-$readmore-char: ' ⋯';
+.updated:after {
+  content: 'New';
+  border: 0;
+  border-radius: 4px;
+  font: 15px $font-copy;
+  text-align: center;
+  padding: 2px 4.5px;
+  background-color: $color-version-bk;
+  color: $color-version;
+  position: relative;
+  left: 5px;
+}
+
+@mixin readmore-char() {
+  // content: ' ›';
+  // content: ' ⋯';
+  content: ' \f105';  /* fa-angle-right */
+  font-family: FontAwesome;
+}
 
 .readmore {
   font-size: 75%;
@@ -668,7 +680,7 @@ $readmore-char: ' ⋯';
 }
 
 .readmore:after {
-  content: $readmore-char;
+  @include readmore-char();
 }
 
 .readmore-md {
@@ -677,7 +689,7 @@ $readmore-char: ' ⋯';
 }
 
 .readmore-md a:after {
-  content: $readmore-char;
+  @include readmore-char();
 }
 
 .readmore-norm {
@@ -685,7 +697,7 @@ $readmore-char: ' ⋯';
 }
 
 .readmore-norm:after {
-  content: $readmore-char;
+  @include readmore-char();
 }
 
 a {
@@ -801,13 +813,12 @@ pre, code {
 
 .shot-window {
   background: #fff;
-  border-radius: 5px;
+  border-radius: 6px;
   margin-top: 2em;
   margin-left: auto;
   margin-bottom: 2em;
   margin-right: auto;
   min-width: 500px;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, .75);
   overflow: hidden;
   width: 98%;
 }
@@ -815,8 +826,8 @@ pre, code {
 .shot-toolbar {
   width: 100%;
   height: 25px;
-  border-radius: 5px 5px 0 0;
-  background: #afafaf;
+  border-radius: 6px 6px 0 0;
+  background: #e0e0e0;
 }
 
 .shot-title {
@@ -826,7 +837,6 @@ pre, code {
   width: 50%;
   left: 50%;
   font-size: 14px;
-  text-shadow: 0px 1px 0px rgba(255, 255, 255, .5);
   line-height: 14px;
 }
 
@@ -841,12 +851,13 @@ pre, code {
 .shot-screen pre {
   text-align: left;
   background-color: #000;
-  color: #0d0 !important;
+  color: #0d0;
   font-size: 12px;
   line-height: 12px;
   margin-top: 0;
   margin-bottom: 0;
   -webkit-font-smoothing: auto;
+  border-radius: 0 0 6px 6px;
 }
 
 .shot-shrink pre {
@@ -856,22 +867,22 @@ pre, code {
 
 .shot-alt-1 pre {
   background-color: #35669f;
-  color: #e8e8e8 !important;
+  color: #e8e8e8;
 }
 
 .shot-alt-2 pre {
   background-color: #05057a;
-  color: #fff !important;
+  color: #fff;
 }
 
 .shot-alt-3 pre {
   background-color: #2e3437;
-  color: #d7d1ca !important;
+  color: #d7d1ca;
 }
 
 .shot-alt-4 pre {
   background-color: #272822;
-  color: #f9f8f5 !important;
+  color: #f9f8f5;
 }
 
 /* .shot-screen pre::selection { background-color: #aaa; } */
@@ -918,7 +929,7 @@ pre, code {
 /* The container <nav> - needed to position the dropdown content */
 .dropdown {
   display: inline-block !important;
-  padding: 8px 15px 6px 15px;
+  padding: 8px 15.6px 6px 15.6px;
   position: relative;
 }
 
@@ -1074,6 +1085,10 @@ pre, code {
   .menu {
     font-size: 95%;
     padding-top: ($header-border + $header-height + 7px);
+  }
+
+  .menu > nav {
+    padding: 3px 7px 7px 7px;
   }
 
   .dropbtn {

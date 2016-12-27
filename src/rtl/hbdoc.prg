@@ -190,8 +190,8 @@ STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
 STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg )
 
    LOCAL hEntry := NIL
-   LOCAL cLine
    LOCAL cSection
+   LOCAL cLine
    LOCAL tmp
    LOCAL nLine
    LOCAL nStartCol
@@ -210,6 +210,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
             AAdd( aEntry, hEntry )
          ENDIF
          hEntry := { => }
+         cSection := NIL
          IF HB_ISHASH( hMeta )
             FOR EACH tmp IN hMeta
                hEntry[ tmp:__enumKey() ] := tmp
@@ -223,11 +224,12 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
             AAdd( aEntry, hEntry )
          ENDIF
          hEntry := NIL
+         cSection := NIL
          EXIT
       OTHERWISE
          IF hEntry == NIL
             /* Ignore line outside entry. Don't warn, this is normal. */
-         ELSEIF hb_ULeft( LTrim( cLine ), 1 ) == "$" .AND. hb_URight( RTrim( cLine ), 1 ) == "$"
+         ELSEIF hb_ULeft( LTrim( cLine ), 1 ) == "$" .AND. hb_URight( RTrim( cLine ), 1 ) == "$" .AND. Len( AllTrim( cLine ) ) > 1
             cLine := AllTrim( cLine )
             cSection := hb_USubStr( cLine, 2, hb_ULen( cLine ) - 2 )
             IF Empty( cSection )
@@ -272,7 +274,9 @@ FUNCTION __hbdoc_ToSource( aEntry )
    IF HB_ISARRAY( aEntry )
       cEOL := Set( _SET_EOL )
       FOR EACH hEntry IN aEntry
-         cSource += cEOL
+         IF ! HB_ISNULL( cSource )
+            cSource += cEOL
+         ENDIF
          cSource += "/* $DOC$" + cEOL
          FOR EACH item IN hEntry
             IF HB_ISSTRING( item ) .AND. ! hb_LeftEq( item:__enumKey(), "_" )

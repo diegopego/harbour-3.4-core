@@ -245,7 +245,7 @@ STATIC FUNCTION FindChangeLog( cVCS )
 
 STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
 
-   LOCAL cLogHeaderExp := "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-6][0-9] UTC[\-+][0-1][0-9][0-5][0-9] [\S ]*"
+   LOCAL cLogHeaderExp := "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-6][0-9] [\S ]*"
 
    LOCAL cOldCP := hb_cdpSelect( "cp437" )
    LOCAL cHit
@@ -278,15 +278,26 @@ STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
 STATIC FUNCTION MakeEntry( aChanges, cMyName, cLogName, lAllowChangeLog, cEOL )
 
    LOCAL nOffset := hb_UTCOffset()
+   LOCAL tDate := hb_DateTime()
 
-   LOCAL cLog := hb_StrFormat( "%1$s UTC%2$s%3$02d%4$02d %5$s", ;
-      hb_TToC( hb_DateTime(), "yyyy-mm-dd", "hh:mm" ), ;
-      iif( nOffset < 0, "-", "+" ), ;
-      Int( Abs( nOffset ) / 3600 ), ;
-      Int( Abs( nOffset ) % 3600 / 60 ), ;
-      cMyName ) + cEOL
-
+   LOCAL cLog
    LOCAL cLine
+
+   tDate -= ( nOffset / 86400 )
+   nOffset := 0
+
+   IF nOffset == 0
+      cLog := hb_StrFormat( "%1$s UTC", ;
+         hb_TToC( tDate, "yyyy-mm-dd", "hh:mm" ) )
+   ELSE
+      cLog := hb_StrFormat( "%1$s UTC+%2$s%3$02d%4$02d", ;
+         hb_TToC( tDate, "yyyy-mm-dd", "hh:mm" ), ;
+         iif( nOffset < 0, "-", "+" ), ;
+         Int( Abs( nOffset ) / 3600 ), ;
+         Int( Abs( nOffset ) % 3600 / 60 ) )
+   ENDIF
+
+   cLog += " " + cMyName + cEOL
 
    FOR EACH cLine IN aChanges
       IF lAllowChangeLog .OR. !( SubStr( cLine, 5 ) == hb_FNameNameExt( cLogName ) )
@@ -624,36 +635,11 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       "LICENSE.txt", ;
       "*/RELNOTES.txt", ;
       "README.txt", ;
+      "WARNING.txt", ;
       "ChangeLog.txt", ;
       "*/doc/*/*.txt", ;
       "*.po", ;
       "*.md" }
-
-   LOCAL aCanBeDot := { ;
-      ".appveyor.yml", ;
-      ".travis.yml", ;
-      ".git*", ;
-      ".clang*", ;
-      ".editorconfig", ;
-      ".ackrc" }
-
-   /* TOFIX: Harbour repo specific */
-   LOCAL aCanBeLong := { ;
-      "ChangeLog.txt", ;
-      ".appveyor.yml", ;
-      ".git*", ;
-      ".clang*", ;
-      ".editorconfig", ;
-      "*.po", ;
-      "*.md", ;
-      "*.html", ;
-      "*/hb-charmap.def", ;  /* TOFIX: Use 8.3 name */
-      "debian/*", ;
-      "package/*", ;
-      "contrib/gtqtc/*", ;
-      "contrib/hbwin/*", ;
-      "contrib/rddads/unixutils.h", ;
-      "extras/httpsrv/*" }
 
    /* TOFIX: Harbour repo specific */
    LOCAL aCanHaveNoExtension := { ;
@@ -726,14 +712,6 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       ! FNameExc( cName, LoadGitignore( cLocalRoot + ".gitignore" ) )
 
       /* filename checks */
-
-      IF "msdosfs" $ hFLags .AND. ( Len( hb_FNameName( cName ) ) > 8 .OR. Len( hb_FNameExt( cName ) ) > 4 ) .AND. ! FNameExc( cName, aCanBeLong )
-         AAdd( aErr, "filename: non-8.3" )
-      ENDIF
-
-      IF "msdosfs" $ hFLags .AND. hb_LeftEq( hb_FNameName( cName ), "." ) .AND. ! FNameExc( cName, aCanBeDot )
-         AAdd( aErr, "filename: non MS-DOS compatible" )
-      ENDIF
 
       IF HB_ISNULL( hb_FNameExt( cName ) )
          IF ! FNameExc( cName, aCanHaveNoExtension )

@@ -65,7 +65,7 @@
   - Keep one (not zero or multiple) newline at the end of file
   - Use platform native newline (CRLF or LF)
 - In the rare case you need to send something large (> 100 kB),
-  use this [free service](https://transfer.sh).
+  use this [free service](https://transfer.sh/).
 - See this good guideline on how to contribute:
   <https://github.com/necolas/issue-guidelines/blob/master/CONTRIBUTING.md>
 - And these:
@@ -169,6 +169,8 @@ Evaluate these points before reporting an issue:
       * <https://stackoverflow.com/help/mcve>
     * See more on how to report issues in an effective and useful way:
       <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
+    * "How To Ask Questions The Smart Way" article by Eric Steven Raymond:
+      <http://www.catb.org/~esr/faqs/smart-questions.html>
 13. <a name="trbl-13"></a> Please do not report warnings or bugs &ndash;
     except of _build errors_ &ndash; in 3rd party component hosted inside
     the Harbour source tree. You can recognize these by their source path,
@@ -187,5 +189,5 @@ Evaluate these points before reporting an issue:
 
 
 ---
-This document Copyright &copy;&nbsp;2009&ndash;2016 Viktor Szakáts (vszakats.net/harbour)<br />
+This document Copyright &copy;&nbsp;2009&ndash;2017 Viktor Szakáts (vszakats.net/harbour)<br />
 [![Creative Commons Attribution-ShareAlike 4.0](https://cdn.rawgit.com/cc-icons/cc-icons/master/fonts/cc-icons-svg/small.by-sa.svg)](https://creativecommons.org/licenses/by-sa/4.0/)

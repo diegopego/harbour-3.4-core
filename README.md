@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/license-GPLv2%20%2B%20Library%20Exception-blue.svg)](LICENSE.txt "License")
 [![Download](https://img.shields.io/badge/download-snapshot_3.4.0dev-ff4500.svg)](https://github.com/vszakats/harbour-core/releases "Download snapshot release")
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-[![PayPal Donate](https://img.shields.io/badge/PayPal-donate-ff4500.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG "Donate")
+[![PayPal Donate](https://img.shields.io/badge/PayPal-Donate_Now-ff4500.svg?colorA=00457c)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG "Donate Now")
 <br />
 [![Build Status](https://api.travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core)
 [![Build Status](https://ci.appveyor.com/api/projects/status/1kx6w3y6qasymah3/branch/master?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core/branch/master)
@@ -108,12 +108,7 @@ Download source archive from any of these URLs and unpack:
 
 * [Web browser](https://github.com/vszakats/harbour-core/commits/master)
 * [RSS feed](https://github.com/vszakats/harbour-core/commits/master.atom)
-* Apps
-  * [iOctocat](https://ioctocat.com/) on iOS
-  * [CodeHub](https://itunes.apple.com/us/app/codehub-github-for-ios/id707173885) on iOS
-  * [OctoDroid](https://play.google.com/store/apps/details?id=com.gh4a) on Android
-  * [Gitskarios for Github](https://play.google.com/store/apps/details?id=com.alorma.github) on Android
-  * [Committed](https://itunes.apple.com/us/app/committed-source-control-notifications/id881634293) on Mac
+* Any of the Git/GitHub client mobile/desktop apps
 
 # How to Build
 
@@ -128,6 +123,7 @@ For all platforms you will need:
 Platform specific prerequisites:
 
 1. Windows 7 or upper system is recommended to *build* Harbour.
+   (64-bit edition is also recommended to make things simpler)
 2. Make sure to have your C compiler of choice installed
    in `PATH`. Refer to your C compiler installation and setup
    instructions for details. Make sure no tools in your `PATH`
@@ -176,6 +172,11 @@ You should see `Hello, world!` on screen.
 
 Make sure to have your C compiler of choice installed in `PATH`.
 
+To prepare:
+
+    1. Get `curl` tool.
+    2. Execute shell script `config/dl-tools.sh` to download required build tools.
+
 To build:
 
     > dos-make
@@ -189,6 +190,11 @@ To test it, type:
 You should see `Hello, world!` on screen.
 
 ## on OS/2 hosts (possible cross-build targets: MS-DOS, OS/2, Linux)
+
+To prepare:
+
+    1. Get `curl` tool.
+    2. Execute shell script `config/dl-tools.sh` to download required build tools.
 
 To build:
 
@@ -429,7 +435,7 @@ See contrib-specific dependencies and build notes in the projects'
 
 ## Darwin (Mac)
 
-1. Install [Homebrew :beer:](http://brew.sh/)
+1. Install [Homebrew](http://brew.sh/) :beer:
 2. Install packages:
 
         $ brew install valgrind pcre pcre2 s-lang upx uncrustify ack optipng jpegoptim eg
@@ -596,8 +602,8 @@ case-sensitive.
    - `HB_BUILD_NOGPLLIB=yes`
 
      Disable components dependent on GPL 3rd party code,
-     to allow Harbour for commercial (closed source)
-     projects. Default: `no`
+     to allow Harbour for nonfree/proprietary projects.
+     Default: `no`
 
    - `HB_BUILD_3RDEXT=no`
 
@@ -725,7 +731,7 @@ executables are required for a cross-build process to succeed.
 
 # Build Examples
 
-## on Windows 32-bit hosts
+## on Windows x86-64 (64-bit) hosts
 
 > NOTES:
 >
@@ -736,6 +742,97 @@ executables are required for a cross-build process to succeed.
 >   make parameters depending on what you want to do.
 > - To redirect all output to a log file, append this after the make
 >   command: `> log.txt 2>&1`
+
+```batchfile
+:: MinGW GCC for Windows x86
+set PATH=C:\mingw\bin;%PATH%
+win-make
+```
+
+```batchfile
+:: MinGW GCC for Windows x86-64
+set PATH=C:\mingw64\bin;%PATH%
+win-make
+```
+
+```batchfile
+:: clang (alpha)
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
+set PATH=%ProgramFiles(x86)%\LLVM 3.6.svn;%PATH%
+win-make
+```
+
+```batchfile
+:: MSVC 2015 for Windows x86
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
+win-make
+```
+
+```batchfile
+:: MSVC 2015 for Windows x86-64
+:: (requires preceding build for native target)
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+win-make
+```
+
+```batchfile
+:: MSVC 2010 and Windows SDK 7.1 for Windows x86
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
+win-make
+```
+
+```batchfile
+:: MSVC 2010 (Professional or above) and Windows SDK 7.1 for Windows x86-64
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" amd64
+win-make
+```
+
+```batchfile
+:: Windows SDK 7 for Windows x86
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\bin\vcvars32.bat"
+win-make
+```
+
+```batchfile
+:: Windows SDK 7 for Windows x86-64
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\bin\vcvars64.bat"
+win-make
+```
+
+```batchfile
+:: MSVC 2008 for Windows x86
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
+win-make
+```
+
+```batchfile
+:: MSVC 2008 (Standard or above) for Windows x86-64
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" amd64
+win-make
+```
+
+```batchfile
+:: MSVC 2008 (Team Suite) for Windows IA-64 Itanium
+:: (requires preceding build for native target)
+call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
+win-make
+```
+
+```batchfile
+:: Open Watcom C/C++
+set WATCOM=C:\watcom
+set PATH=%WATCOM%\BINNT64;%WATCOM%\BINNT;%PATH%
+set INCLUDE=%WATCOM%\H;%WATCOM%\H\NT;%WATCOM%\H\NT\DIRECTX;%WATCOM%\H\NT\DDK;%INCLUDE%
+win-make
+```
+
+## on Windows 32-bit hosts
+
+Same as 64-bit Windows, with the difference that you will have to change
+`%ProgramFiles(x86)%` to `%ProgramFiles%` for 32-bit and mixed tools.
+Building 64-bit targets requires a preceding 32-bit build and to do
+a cross-build. It's recommended to use a 64-bit environment for Windows
+development.
 
 ```batchfile
 :: clang (alpha)
@@ -882,39 +979,7 @@ win-make
 ```
 
 ```batchfile
-:: Borland C++ 5.5.1
-set PATH=C:\Borland\BCC55\Bin;%PATH%
-win-make
-```
-
-```batchfile
-:: Pelles C
-set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
-set INCLUDE=%ProgramFiles%\PellesC\Include;%ProgramFiles%\PellesC\Include\Win;%INCLUDE%
-set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\Win;%LIB%
-win-make
-```
-
-```batchfile
-:: Pelles C for Windows x86-64
-:: (requires preceding build for native target)
-set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
-set INCLUDE=%ProgramFiles%\PellesC\Include;%ProgramFiles%\PellesC\Include\Win;%INCLUDE%
-set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\Win64;%LIB%
-win-make
-```
-
-```batchfile
-:: Pelles C for Windows CE ARM
-:: (requires preceding build for native target)
-set PATH=%ProgramFiles%\PellesC\Bin;%PATH%
-set INCLUDE=%ProgramFiles%\PellesC\Include\WinCE;%ProgramFiles%\PellesC\Include;%INCLUDE%
-set LIB=%ProgramFiles%\PellesC\Lib;%ProgramFiles%\PellesC\Lib\WinCE;%LIB%
-win-make
-```
-
-```batchfile
-:: Delorie GNU C for MS-DOS (on Intel 32-bit Windows hosts only)
+:: Delorie GNU C for MS-DOS
 set DJGPP=C:\djgpp\djgpp.env
 set PATH=C:\djgpp\bin;%PATH%
 win-make
@@ -987,91 +1052,6 @@ set PATH=C:\cygwin\bin
 sh -c make
 ```
 
-## on Windows x86-64 (64-bit) hosts
-
-Same as 32-bit Windows, with the difference that you will have to change
-`%ProgramFiles%` to `%ProgramFiles(x86)%` for 32-bit and mixed tools,
-that you can build for both x86 and x86-64 without building a native
-target first, and potential differences with some compilers in using
-native binaries if they are available.
-
-```batchfile
-:: MinGW GCC for Windows x86-64
-set PATH=C:\mingw64\bin;%PATH%
-win-make
-```
-
-```batchfile
-:: clang (alpha)
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
-set PATH=%ProgramFiles(x86)%\LLVM 3.6.svn;%PATH%
-win-make
-```
-
-```batchfile
-:: MSVC 2015 for Windows x86
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
-win-make
-```
-
-```batchfile
-:: MSVC 2015 for Windows x86-64
-:: (requires preceding build for native target)
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
-win-make
-```
-
-```batchfile
-:: MSVC 2010 and Windows SDK 7.1 for Windows x86
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
-win-make
-```
-
-```batchfile
-:: MSVC 2010 (Professional or above) and Windows SDK 7.1 for Windows x86-64
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" amd64
-win-make
-```
-
-```batchfile
-:: Windows SDK 7 for Windows x86
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\bin\vcvars32.bat"
-win-make
-```
-
-```batchfile
-:: Windows SDK 7 for Windows x86-64
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\bin\vcvars64.bat"
-win-make
-```
-
-```batchfile
-:: MSVC 2008 for Windows x86
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"
-win-make
-```
-
-```batchfile
-:: MSVC 2008 (Standard or above) for Windows x86-64
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" amd64
-win-make
-```
-
-```batchfile
-:: MSVC 2008 (Team Suite) for Windows IA-64 Itanium
-:: (requires preceding build for native target)
-call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat" x86_ia64
-win-make
-```
-
-```batchfile
-:: Open Watcom C/C++
-set WATCOM=C:\watcom
-set PATH=%WATCOM%\BINNT64;%WATCOM%\BINNT;%PATH%
-set INCLUDE=%WATCOM%\H;%WATCOM%\H\NT;%WATCOM%\H\NT\DIRECTX;%WATCOM%\H\NT\DDK;%INCLUDE%
-win-make
-```
-
 ## on MS-DOS hosts
 
 ```batchfile
@@ -1121,15 +1101,6 @@ os2-make
 export WATCOM="/opt/lng/watcom"
 export PATH="${WATCOM}/binl:$PATH"
 export INCLUDE="${WATCOM}/h:${WATCOM}/h/os2"
-export HB_BUILD_3RDEXT=no
-make
-```
-
-```sh
-# Borland C++ 5.5.1
-export PATH=~/.wine/drive_c/Borland/BCC55/Bin:$PATH
-export HB_PLATFORM=win
-export HB_COMPILER=bcc
 export HB_BUILD_3RDEXT=no
 make
 ```
@@ -1321,7 +1292,6 @@ Press `<Alt+D>` in the app.
 * sunpro   - Sun Studio C/C++
 
 ### win
-* clang    - Clang
 * mingw    - MinGW GNU C 3.4.2 and above
 * mingw64  - MinGW GNU C x86-64
 * msvc     - Microsoft Visual C++
@@ -1331,10 +1301,12 @@ Press `<Alt+D>` in the app.
 ### win (partial support, some features may be missing)
 * clang    - Clang
 * watcom   - Open Watcom C/C++
-* bcc      - Borland/CodeGear/Embarcadero C++ 5.5 and above
-* bcc64    - Embarcadero C++ 6.5 and above
 * icc      - Intel(R) C/C++
 * iccia64  - Intel(R) C/C++ IA-64 (Itanium)
+
+### win (deprecated)
+* bcc      - Borland/CodeGear/Embarcadero C++ 5.5 and above
+* bcc64    - Embarcadero C++ 6.5 and above
 * pocc     - Pelles C 4.5 and above
 * pocc64   - Pelles C x86-64 5.0 and above
 * xcc      - Pelles C for xhb
@@ -1475,7 +1447,7 @@ Supported shells per host platforms:
 
 * C/C++ Compilers/Shells:
 
-     * MinGW/MinGW-64 [win, \*nix, free, open-source]
+     * MinGW/MinGW-64 [win, \*nix, free software, open-source]
         * <https://mingw-w64.org/>, <https://duckduckgo.com/?q=mingw-w64> (recommended, look for MSYS2 or niXman builds)
           * Dual-target (aka _multilib_) for x86-64 and x86 hosts (select non-native target with `HB_CPU=x86` or `HB_CPU=x86_64`):
             * 32-bit hosted, posix, sjlj
@@ -1484,7 +1456,7 @@ Supported shells per host platforms:
             * 32-bit hosted, posix, dwarf-2
           * x86-64:
             * 64-bit hosted, posix, seh
-     * MinGW CEGCC [win, \*nix, free, open-source]
+     * MinGW CEGCC [win, \*nix, free software, open-source]
         * <https://web.archive.org/web/sourceforge.net/projects/cegcc/files/cegcc/>
           * To use this package, you will also need Cygwin package
             installed and be in `PATH` for the Cygwin runtime (`cygwin1.dll`).
@@ -1494,81 +1466,74 @@ Supported shells per host platforms:
             `tar -xvf cegcc_mingw32ce_cygwin1.7_r1399.tar -h`
 
           * Compiler will be in the `opt\mingw32ce` subdirectory.
-     * MSYS2 [Windows, free, open-source]
+     * MSYS2 [Windows, free software, open-source]
         * <https://msys2.github.io/>
-     * Clang [multi-platform, free, open-source]
-        * <http://llvm.org/releases/>
-     * Cygwin [win, free, open-source]
+     * Clang [multi-platform, free software, open-source]
+        * <http://releases.llvm.org/>
+     * Cygwin [win, free software, open-source]
         * <https://cygwin.com/>
-     * OS/2 GCC [os2, free, open-source]
+     * OS/2 GCC [os2, free software, open-source]
         * <http://os2ports.smedley.id.au/index.php?page=tools-utilities>
-     * DJGPP [dos, \*nix, free, open-source]
+     * DJGPP [dos, \*nix, free software, open-source]
         * <http://www.delorie.com/djgpp/>
-     * Open Watcom [win, dos, os2, linux, free, open-source]
-        * <https://github.com/open-watcom>, <https://open-watcom.github.io/open-watcom/>
-     * Xcode / Command Line Tools for Xcode [darwin, free, hybrid-source]
+     * Open Watcom [win, dos, os2, linux, free software, open-source]
+        * <https://github.com/open-watcom/open-watcom-v2>, <https://open-watcom.github.io/open-watcom/>
+     * Xcode / Command Line Tools for Xcode [darwin, zero price, proprietary with open-source components]
         * <https://itunes.apple.com/us/app/xcode/id497799835>
         * <https://developer.apple.com/downloads/>
-     * MS Windows SDK [win, free, closed-source]
-        * <https://msdn.microsoft.com/en-us/windows/desktop/bg162891.aspx><br />
+     * MS Windows SDK [win, zero price, proprietary]
+        * <https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/><br />
          ([7.x](https://www.microsoft.com/en-us/download/details.aspx?id=8279) includes compilers for x86, x86-64 and IA-64)
-     * MS Windows Mobile SDK [wce, free]
+     * MS Windows Mobile SDK [wce, zero price, proprietary]
         * <https://www.microsoft.com/en-us/download/details.aspx?id=42>
-     * MS Visual C++ Build Tools [win, free, closed-source]
+     * MS Visual C++ Build Tools [win, zero price, proprietary]
         * <https://go.microsoft.com/fwlink/?LinkId=691126>
-     * MS Visual Studio Community [win, free, closed-source]
+     * MS Visual Studio Community [win, zero price, proprietary]
         * <https://www.visualstudio.com/vs/visual-studio-express/>
-     * MS Visual Studio [win, commercial, closed-source]
+     * MS Visual Studio [win, commercial, proprietary]
         * <https://www.visualstudio.com/>
-     * Pelles C [win, wce, free, closed-source]
-        * <http://smorgasbordet.com/pellesc/>
-     * Borland/CodeGear/Embarcadero Compiler [win, free, closed-source]
-        * <https://downloads.embarcadero.com/free/c_builder>
-     * Intel Compiler [win, linux, darwin, commercial, closed-source]
+     * Intel Compiler [win, linux, darwin, commercial, proprietary]
         * <https://software.intel.com/en-us/c-compilers>
 
 * Libraries:
 
-     * HB_WITH_PCRE2, HB_WITH_PCRE - Perl Compatible Regular Expressions [multi-platform, free, open-source]
+     * HB_WITH_PCRE2, HB_WITH_PCRE - Perl Compatible Regular Expressions [multi-platform, free software, open-source]
         * <http://pcre.org/>
-     * HB_WITH_PNG - libpng [multi-platform, free, open-source]
+     * HB_WITH_PNG - libpng [multi-platform, free software, open-source]
         * <https://github.com/glennrp/libpng>
-     * HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
+     * HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free software, open-source]
         * <http://www.watt-32.net/>
-     * HB_WITH_ZLIB - zlib [multi-platform, free, open-source]
+     * HB_WITH_ZLIB - zlib [multi-platform, free software, open-source]
         * <http://zlib.net/>
 
 * Tools:
 
-     * Git (1.7 or upper) [multi-platform, free, open-source]
+     * Git (1.7 or upper) [multi-platform, free software, open-source]
         * <https://git-scm.com/>
         * Windows binaries:
            * <https://git-for-windows.github.io/>
-     * GitHub Client [multi-platform, free]
-        * <https://windows.github.com/>
-        * <https://mac.github.com/>
-     * Travis CI [continuous integration, web service, free plan]
+     * GitHub Desktop [multi-platform, zero price, proprietary]
+        * <https://desktop.github.com/>
+     * Travis CI [continuous integration, web service, free plan available]
         * <https://travis-ci.org/>
-     * AppVeyor CI [continuous integration, web service, free plan]
+     * AppVeyor CI [continuous integration, web service, free plan available]
         * <https://www.appveyor.com/>
-     * Read the Docs [online documentation creator, web service, free]
+     * Read the Docs [online documentation creator, web service, free software]
         * <https://readthedocs.org/>
-     * ReadMe.io [online documentation creator, web service, free plan]
-        * <https://readme.io/>
-     * GNU Bison (grammar parser generator) [multi-platform, free, open-source]
+     * GNU Bison (grammar parser generator) [multi-platform, free software, open-source]
         * Windows binary:
-           * <https://github.com/msysgit/msysgit/releases>
-     * Cppcheck (static analysis) [multi-platform, free, open-source]
+           * <https://git-for-windows.github.io/>
+     * Cppcheck (static analysis) [multi-platform, free software, open-source]
         * <https://github.com/danmar/cppcheck>
-     * Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
+     * Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free software, open-source]
         * <http://valgrind.org/>
-     * Uncrustify (source formatter) [multi-platform, free, open-source]
+     * Uncrustify (source formatter) [multi-platform, free software, open-source]
         * <https://github.com/uncrustify/uncrustify>
-     * UPX (executable compressor) [win, dos, \*nix, free, open-source]
+     * UPX (executable compressor) [win, dos, \*nix, free software, open-source]
         * <https://upx.github.io/>
-     * 7-Zip [multi-platform, free, open-source]
+     * 7-Zip [multi-platform, free software, open-source]
         * <http://7-zip.org/>
-     * GNU Make
+     * GNU Make [multi-platform, free software, open-source]
 
         Windows binary + source:
 
@@ -1577,34 +1542,6 @@ Supported shells per host platforms:
          * `git clone ssh://git.sv.gnu.org/srv/git/make.git`
           <br />(included in Harbour as [win-make.exe](win-make.exe))
 
-        MS-DOS binary + source:
-
-         * <https://mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip>
-         * <https://mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip>
-          <br />(included in Harbour as [dos-make.exe](dos-make.exe))
-
-        OS/2 binary + source (3.81r3 or upper):
-
-         * <http://hobbes.nmsu.edu/download/pub/os2/dev/util/make-3.81-r3-bin-static.zip>
-         * <http://hobbes.nmsu.edu/h-browse.php?dir=/pub/os2/dev/util>
-          <br />(included in Harbour as [os2-make.exe](os2-make.exe))
-     * GNU core utils (mkdir, rm, cp, echo)
-
-        MS-DOS binary + source:
-
-         * <https://mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/fil41b.zip>
-         * <https://mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip>
-         * <https://mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/shl2011b.zip>
-         * <https://mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/shtl208s.zip>
-         * <https://mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2/djdev203.zip>
-         * <https://mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2/djlsr203.zip>
-          <br />(included in Harbour as [dosmkdir.exe](config/dosmkdir.exe), [dosrm.exe](config/dosrm.exe), [doscp.exe](config/doscp.exe), [dosecho.exe](config/dosecho.exe))
-
-        OS/2 binary:
-
-         * <http://os2ports.smedley.id.au/index.php?page=gnu-coreutils>
-          <br />(included in Harbour as [os2mkdir.exe](config/os2mkdir.exe), [os2rm.exe](config/os2rm.exe), [os2cp.exe](config/os2cp.exe))
-
 * Documentation:
 
      * [Netiquette Guidelines](https://tools.ietf.org/html/rfc1855)
@@ -1612,7 +1549,7 @@ Supported shells per host platforms:
      * [Pro Git](https://git-scm.com/book) [free book]
      * [GitHub Training Kit & Multi-language Cheat Sheet](https://training.github.com/kit/)
      * Using gettext (.po files)
-       * <http://docs.transifex.com/formats/gettext>
+       * <https://docs.transifex.com/formats/gettext>
        * <http://heiner-eichmann.de/autotools/using_gettext.html>
      * [GitHub Guides](https://guides.github.com/)
      * [GitHub Flavored Markdown](https://help.github.com/articles/github-flavored-markdown)
@@ -1639,7 +1576,7 @@ Supported shells per host platforms:
 
   * Translators:
      * [Bing Translator](https://www.bing.com/translator/)
-     * [Google Translate](https://translate.google.com)
+     * [Google Translate](https://translate.google.com/)
 
 
 # Harbour Links
@@ -1679,7 +1616,7 @@ Supported shells per host platforms:
    tools *tested most*, *focused on*, *used and deployed* by the
    maintainer/developer of this fork. While this is strongly believed to result
    in the best Harbour experience for most situations, it's ultimately
-   a subjective decision. If you don't like it, use what you feel the best.
+   a subjective decision. If you don't like it, use what fits you best.
 
 ---
 This document Copyright &copy;&nbsp;2009&ndash;2017 Viktor Szakáts (vszakats.net/harbour)<br />
