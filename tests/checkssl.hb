@@ -24,11 +24,12 @@ procedure Main( cURLList )
    hb_vfErase( "_cookie" )
 
    if ! hb_vfExists( cURLList )
-      hb_run( 'grep -R -H -I -n -o "http://[a-zA-Z0-9_/\.\~\%\?&\+=@:-]*" * > ' + cURLList )
+      hb_SetEnv( "GREP_OPTIONS" )
+      hb_run( 'grep -R -H -I -n -o "http' + '://[a-zA-Z0-9_/\.\~\%\?&\+=@:-]*" * > ' + cURLList )
    endif
 
    for each url in hb_ATokens( hb_MemoRead( cURLList ), .T. )
-      if Len( url := hb_ATokens( url, ":" ) ) >= 4
+      if Len( url := split_grep_res( url ) ) == 4
          if ! Empty( url[ 4 ] ) .and. ;
             ! "apple.com/DTDs/" $ url[ 4 ] .and. ;
             ! Right( url[ 4 ], Len( ".xsd" ) ) == ".xsd" .and. ;
@@ -49,11 +50,14 @@ procedure Main( cURLList )
                if lDebug
                   OutErr( "Checking...", hb_StrToExp( "https:" + url[ 4 ] ) + hb_eol() )
                endif
-               hb_processRun( "curl -fsS -v -L --max-redirs 10 --cookie-jar _cookie --connect-timeout 2 " + '"' + "https:" + url[ 4 ] + '"',, @outs, @err )
+               hb_processRun( "curl -fsS -v -L --max-redirs 10 --cookie-jar _cookie --connect-timeout 5 --user-agent Mozilla " + '"' + "https:" + url[ 4 ] + '"',, @outs, @err )
+               hb_processRun( "curl -fsS -v -L --max-redirs 10 --cookie-jar _cookie --connect-timeout 5 --user-agent Mozilla " + '"' + "http:" + url[ 4 ] + '"',, @outp, @err )
                if Empty( outs )
+                  if Empty( outp )
+                     OutStd( url[ 1 ], "http:" + url[ 4 ], "[Possibly lost link]" + hb_eol() )
+                  endif
                   ++cntp
                else
-                  hb_processRun( "curl -fsS -v -L --max-redirs 10 --cookie-jar _cookie --connect-timeout 2 " + '"' + "http:" + url[ 4 ] + '"',, @outp, @err )
                   OutStd( url[ 1 ], "->", "https:" + url[ 4 ], iif( outs == outp, "[OK]", "[Different content - verify manually]" ) + hb_eol() )
                   if outs == outp
                      ++cnts
@@ -79,3 +83,14 @@ procedure Main( cURLList )
    OutStd( "http-only:", hb_ntos( cntp ) + hb_eol() )
 
    return
+
+static function split_grep_res( res )
+
+   local url := hb_ATokens( res, ":" )
+
+   do while len( url ) > 4
+      url[ 4 ] += ":" + url[ 5 ]
+      hb_ADel( url, 5, .T. )
+   enddo
+
+   return url

@@ -58,8 +58,12 @@ END
 
 /* Manifest */
 
+#if ! defined( HBMK_DYNLIB ) && ! defined( HB_DYNLIB )
+
 /* String escaping rules:
-      https://msdn.microsoft.com/en-us/library/windows/desktop/aa381050.aspx */
+      https://msdn.microsoft.com/library/aa381050
+   Application Manifest doc, including the list of 'supportedOS Id's:
+      https://msdn.microsoft.com/library/aa374191 */
 
 #ifndef CREATEPROCESS_MANIFEST_RESOURCE_ID
 #define CREATEPROCESS_MANIFEST_RESOURCE_ID  1
@@ -68,14 +72,16 @@ END
 #define RT_MANIFEST  24
 #endif
 
-/* Application Manifest doc, including the list of 'supportedOS Id's:
-      https://msdn.microsoft.com/en-us/library/aa374191.aspx */
-
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST
 BEGIN
    "<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>"
    "<assembly xmlns=""urn:schemas-microsoft-com:asm.v1"" manifestVersion=""1.0"">"
       "<assemblyIdentity name=""" HB_NAME """ version=""" HB_VER_PROD_STR ".0"" type=""win32""/>"
+      "<application xmlns=""urn:schemas-microsoft-com:asm.v3"">"
+         "<windowsSettings>"
+            "<dpiAware xmlns=""http:" "//schemas.microsoft.com/SMI/2005/WindowsSettings"">true</dpiAware>"
+         "</windowsSettings>"
+      "</application>"
       "<trustInfo xmlns=""urn:schemas-microsoft-com:asm.v3"">"
          "<security>"
             "<requestedPrivileges>"
@@ -100,4 +106,5 @@ BEGIN
    "</assembly>"
 END
 
+#endif
 #endif

@@ -55,7 +55,7 @@ static procedure conv_one( name )
   a := hb_bleft( a, 378 ) + hb_strxor( hb_bsubstr( a, 378 + 1 ), 0x1a )  // "decrypt"
 
   if hb_lefteq( a, 'NG' ) .or. ;
-     hb_lefteq( a, 'EH' )
+     hb_lefteq( a, 'EH' )  // untested
 
     mc := bin2w( hb_bsubstr( a, 7, 2 ) )  // menu count
 
@@ -63,7 +63,7 @@ static procedure conv_one( name )
     for each tmp in r[ 'copy' ] := array( 5 )
       tmp := substrz( a, 0x31 + ( tmp:__enumindex() - 1 ) * 66, 66 )
     next
-    while ! empty( r[ 'copy' ] ) .and. hb_isnull( atail( r[ 'copy' ] ) )
+    while ! empty( r[ 'copy' ] ) .and. atail( r[ 'copy' ] ) == ''
       asize( r[ 'copy' ], len( r[ 'copy' ] ) - 1 )
     enddo
     r[ 'menu' ] := { => }
