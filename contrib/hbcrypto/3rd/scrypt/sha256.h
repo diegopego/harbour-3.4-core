@@ -2,7 +2,7 @@
 #define _SHA256_H_
 
 #include <stddef.h>
-#include <stdint.h>
+#include "_compat.h"
 
 /*
  * Use #defines in order to avoid namespace collisions with anyone else's

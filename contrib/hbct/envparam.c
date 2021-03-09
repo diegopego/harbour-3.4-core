@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,27 +47,27 @@
 #include "hbapi.h"
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_OS_IOS )
-   #include <unistd.h>
-   #if defined( HB_OS_DARWIN )
-      #include <crt_externs.h>
-      #define environ  ( *_NSGetEnviron() )
-   #elif ! defined( __WATCOMC__ )
+#  include <unistd.h>
+#  if defined( HB_OS_DARWIN )
+#     include <crt_externs.h>
+#     define environ  ( *_NSGetEnviron() )
+#  elif ! defined( __WATCOMC__ )
       extern char ** environ;
-   #endif
+#  endif
 #elif defined( HB_OS_DOS )
-   #if defined( __DJGPP__ )
+#  if defined( __DJGPP__ )
       extern char ** environ;
-   #elif ! defined( __WATCOMC__ )
-      #define environ _environ
+#  elif ! defined( __WATCOMC__ )
+#     define environ _environ
       extern char ** _environ;
-   #endif
+#  endif
 #elif defined( HB_OS_OS2 )
-   #if ! defined( __WATCOMC__ )
+#  if ! defined( __WATCOMC__ )
       extern char ** environ;
-   #endif
+#  endif
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   #include "hbwinuni.h"
-   #include <windows.h>
+#  include "hbwinuni.h"
+#  include <windows.h>
 #endif
 
 HB_FUNC( ENVPARAM )

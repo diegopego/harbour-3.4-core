@@ -1,4 +1,4 @@
-/* Copyright 2014 Viktor Szakats (vszakats.net/harbour) */
+/* Copyright 2014 Viktor Szakats (vsz.me/hb) */
 
 /* Legacy constants. Use hbwin.ch instead. */
 
@@ -57,8 +57,8 @@
 #define TPM_VCENTERALIGN                          WIN_TPM_VCENTERALIGN
 #define TPM_BOTTOMALIGN                           WIN_TPM_BOTTOMALIGN
 
-#define TPM_HORIZONTAL                            WIN_TPM_HORIZONTAL   /* Horz alignment matters more */
-#define TPM_VERTICAL                              WIN_TPM_VERTICAL     /* Vert alignment matters more */
+#define TPM_HORIZONTAL                            WIN_TPM_HORIZONTAL   /* Horizontal alignment matters more */
+#define TPM_VERTICAL                              WIN_TPM_VERTICAL     /* Vertical alignment matters more */
 #define TPM_NONOTIFY                              WIN_TPM_NONOTIFY     /* Don't send any notification msgs */
 #define TPM_RETURNCMD                             WIN_TPM_RETURNCMD
 

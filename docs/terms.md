@@ -25,7 +25,7 @@ the individual applicable license.
 
 Your use of any software obtained from this site is subject to the terms of any
 license agreement provided with the software. Some of these agreements
-incorporate the terms of the GPL or other open source licences. Please read
+incorporate the terms of the GPL or other open source licenses. Please read
 these agreements before installing and using the software; by installing and
 using the software, you will have accepted the terms of the agreements.
 
@@ -71,4 +71,5 @@ viruses or other defects that result from, or are associated with the use of
 this website.
 
 Any doubts about the content on this site, please post a topic in our
-[mailing list]({{ site.baseurl }}/mailing) that we will assist you.
+[mailing list]({{ site.baseurl }}/mailing{{ site.ilink_suffix }}) that we will
+assist you.

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -153,16 +153,16 @@ HB_FUNC( WAPI_SETDLGITEMTEXT )
 /* Retrieves the title or text associated with a control in a dialog box. */
 HB_FUNC( WAPI_GETDLGITEMTEXT )
 {
-   int     nSize    = ( int ) SendMessage( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ), WM_GETTEXTLENGTH, 0, 0 );
+   HB_SIZE nSize    = ( HB_SIZE ) SendMessage( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ), WM_GETTEXTLENGTH, 0, 0 );
    TCHAR * lpResult = ( TCHAR * ) hb_xgrab( ( nSize + 1 ) * sizeof( TCHAR ) );
 
-   UINT nResult = GetDlgItemText( hbwapi_par_raw_HWND( 1 ),
-                                  hbwapi_par_INT( 2 ),
-                                  lpResult,
-                                  nSize + 1 );
+   HB_SIZE nResult = ( HB_SIZE ) GetDlgItemText( hbwapi_par_raw_HWND( 1 ),
+                                                 hbwapi_par_INT( 2 ),
+                                                 lpResult,
+                                                 ( int ) ( nSize + 1 ) );
 
    hbwapi_SetLastError( GetLastError() );
-   HB_RETSTRLEN( lpResult, ( HB_SIZE ) nResult );
+   HB_RETSTRLEN( lpResult, nResult );
    hb_xfree( lpResult );
 }
 

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -153,7 +153,7 @@ static PHB_GARBAGE s_pLockedBlock = NULL;
 static PHB_GARBAGE s_pDeletedBlock = NULL;
 
 /* marks if block releasing is requested during garbage collecting */
-static HB_BOOL s_bCollecting = HB_FALSE;
+static HB_BOOL volatile s_bCollecting = HB_FALSE;
 
 /* flag for used/unused blocks - the meaning of the HB_GC_USED_FLAG bit
  * is reversed on every collecting attempt
@@ -743,7 +743,7 @@ void hb_gcReleaseAll( void )
       do
       {
          PHB_GARBAGE pDelete;
-         HB_TRACE( HB_TR_INFO, ( "Release %p", s_pCurrBlock ) );
+         HB_TRACE( HB_TR_INFO, ( "Release %p", ( void * ) s_pCurrBlock ) );
          pDelete = s_pCurrBlock;
          hb_gcUnlink( &s_pCurrBlock, pDelete );
          HB_GC_AUTO_DEC();
@@ -780,7 +780,7 @@ HB_FUNC( HB_GCALL )
     */
    hb_ret();
 
-   hb_gcCollectAll( hb_pcount() < 1 || hb_parl( 1 ) );
+   hb_gcCollectAll( hb_parldef( 1, HB_TRUE ) );
 }
 
 #ifdef HB_GC_AUTO

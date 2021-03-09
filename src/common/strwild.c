@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +48,7 @@
 #include "hbapicdp.h"
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_NO_FNMATCH )
-   #include <fnmatch.h>
+#  include <fnmatch.h>
 #endif
 
 #define HB_MAX_WILDPATTERN  256
@@ -277,11 +277,11 @@ HB_BOOL hb_strMatchCaseWildExact( const char * szString, const char * szPattern 
 HB_BOOL hb_strMatchFile( const char * szString, const char * szPattern )
 {
 #if defined( HB_OS_UNIX )
-   #if defined( HB_NO_FNMATCH )
+#  if defined( HB_NO_FNMATCH )
    return hb_strMatchWildExact( szString, szPattern );
-   #else
+#  else
    return fnmatch( szPattern, szString, FNM_PATHNAME ) == 0;
-   #endif
+#  endif
 #elif defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
    PHB_CODEPAGE cdp = hb_vmCDP();
 

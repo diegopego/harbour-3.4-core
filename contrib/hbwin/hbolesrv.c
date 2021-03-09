@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,7 +50,15 @@
 
 #include "hbwinuni.h"
 #include "hbwinole.h"
+
+#if defined( _MSC_VER )
+#  pragma warning(push)
+#  pragma warning(disable:4201)  /* warning C4201: nonstandard extension used: nameless struct/union */
+#endif
 #include <olectl.h>
+#if defined( _MSC_VER )
+#  pragma warning(pop)
+#endif
 
 #define MAX_CLSID_SIZE    64
 #define MAX_CLSNAME_SIZE  256
@@ -653,7 +661,7 @@ static HRESULT STDMETHODCALLTYPE classLockServer( IClassFactory * lpThis,
    return S_OK;
 }
 
-static const IClassFactoryVtbl IClassFactory_Vtbl = {
+static const IClassFactoryVtbl s_IClassFactory_Vtbl = {
    classQueryInterface,
    classAddRef,
    classRelease,
@@ -705,10 +713,10 @@ STDAPI DllUnregisterServer( void )
 }
 
 #ifndef SELFREG_E_CLASS
-   #ifndef SELFREG_E_FIRST
-      #define SELFREG_E_FIRST  MAKE_SCODE( SEVERITY_ERROR, FACILITY_ITF, 0x0200 )
-   #endif
-   #define SELFREG_E_CLASS     ( SELFREG_E_FIRST + 1 )
+#  ifndef SELFREG_E_FIRST
+#     define SELFREG_E_FIRST  MAKE_SCODE( SEVERITY_ERROR, FACILITY_ITF, 0x0200 )
+#  endif
+#  define SELFREG_E_CLASS     ( SELFREG_E_FIRST + 1 )
 #endif
 
 STDAPI DllRegisterServer( void )
@@ -775,7 +783,7 @@ BOOL WINAPI DllMain( HINSTANCE hInstance, DWORD dwReason, PVOID pvReserved )
          s_hInstDll = ( HINSTANCE ) hInstance;
          s_lLockCount = s_lObjectCount = 0;
          s_IClassFactoryObj.lpVtbl = ( IClassFactoryVtbl * )
-                                     &IClassFactory_Vtbl;
+                                     HB_UNCONST( &s_IClassFactory_Vtbl );
 
          DisableThreadLibraryCalls( ( HMODULE ) hInstance );
 
@@ -846,7 +854,7 @@ HB_FUNC( WIN_OLESERVERINIT )
          LPCOLESTR lpOleClsId;
 
          lpOleClsId = hb_parstr_u16( 1, HB_CDP_ENDIAN_NATIVE, &hOleClsId, NULL );
-         if( CLSIDFromString( ( LPOLESTR ) lpOleClsId, &s_IID_IHbOleServer ) == S_OK )
+         if( CLSIDFromString( lpOleClsId, &s_IID_IHbOleServer ) == S_OK )
          {
             PHB_ITEM pAction;
 

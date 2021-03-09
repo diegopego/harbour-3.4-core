@@ -2,7 +2,7 @@
  * Windows API functions (shellapi.h - shell32.dll)
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,37 +52,37 @@
 #include "hbapiitm.h"
 
 #if defined( __BORLANDC__ )
-   #if ! defined( NONAMELESSUNION )
-      #define NONAMELESSUNION
-   #endif
-   #if defined( DUMMYUNIONNAME )
-      #undef DUMMYUNIONNAME
-   #endif
-   #if defined( DUMMYUNIONNAME2 )
-      #undef DUMMYUNIONNAME2
-   #endif
-   #if defined( DUMMYUNIONNAME3 )
-      #undef DUMMYUNIONNAME3
-   #endif
-   #if defined( DUMMYUNIONNAME4 )
-      #undef DUMMYUNIONNAME4
-   #endif
-   #if defined( DUMMYUNIONNAME5 )
-      #undef DUMMYUNIONNAME5
-   #endif
+#  if ! defined( NONAMELESSUNION )
+#     define NONAMELESSUNION
+#  endif
+#  if defined( DUMMYUNIONNAME )
+#     undef DUMMYUNIONNAME
+#  endif
+#  if defined( DUMMYUNIONNAME2 )
+#     undef DUMMYUNIONNAME2
+#  endif
+#  if defined( DUMMYUNIONNAME3 )
+#     undef DUMMYUNIONNAME3
+#  endif
+#  if defined( DUMMYUNIONNAME4 )
+#     undef DUMMYUNIONNAME4
+#  endif
+#  if defined( DUMMYUNIONNAME5 )
+#     undef DUMMYUNIONNAME5
+#  endif
 #endif
 
 #include <shellapi.h>
 
 #if defined( NONAMELESSUNION )
-   #define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
+#  define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
 #else
-   #define HB_WIN_V_UNION( x, z )  ( ( x ).z )
+#  define HB_WIN_V_UNION( x, z )  ( ( x ).z )
 #endif
 
 /* win_ShellNotifyIcon( [<hWnd>], [<nUID>], [<nMessage>], [<hIcon>],
                         [<cTooltip>], [<lAddDel>],
-                        [<cInfo>], [<nInfoTimeOut>], [<cInfoTitle>], [<nInfoFlags>] ) -> <lOK> */
+                        [<cInfo>], [<nInfoTimeOut>], [<cInfoTitle>], [<nInfoFlags>] ) --> <lOK> */
 HB_FUNC( WIN_SHELLNOTIFYICON )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -129,8 +129,8 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 #if ! defined( HB_OS_WIN_CE )
 
 #if defined( __MINGW32__ )
-   #include <_mingw.h>
-   #if ! defined( __MINGW64_VERSION_MAJOR )
+#  include <_mingw.h>
+#  if ! defined( __MINGW64_VERSION_MAJOR )
 
 typedef struct _SHNAMEMAPPING
 {
@@ -140,7 +140,7 @@ typedef struct _SHNAMEMAPPING
    int    cchNewPath;
 } SHNAMEMAPPING, * LPSHNAMEMAPPING;
 
-   #endif   /* End MinGW-w64 detection */
+#endif   /* End MinGW-w64 detection */
 #endif   /* End MinGW detection */
 
 typedef struct
@@ -211,7 +211,7 @@ static LPTSTR s_StringList( int iParam )
 
 /* win_SHFileOperation( [<hWnd>], [<nFunction>], [<cFrom>|<aFrom>], [<cTo>|<aTo>],
                         [<nFlags>], [<@lAnyOperationAborted>],
-                        [<aNameMappings>], [<cProgressTitle>] ) -> <nResult> */
+                        [<aNameMappings>], [<cProgressTitle>] ) --> <nResult> */
 HB_FUNC( WIN_SHFILEOPERATION )
 {
    int iRetVal;
@@ -223,11 +223,14 @@ HB_FUNC( WIN_SHFILEOPERATION )
 
    void * hProgressTitle;
 
+   LPTSTR pFrom = s_StringList( 3 );
+   LPTSTR pTo   = s_StringList( 4 );
+
    memset( &fop, 0, sizeof( fop ) );
    fop.hwnd                  = hbwapi_par_raw_HWND( 1 );
    fop.wFunc                 = hbwapi_par_UINT( 2 );
-   fop.pFrom                 = ( LPCTSTR ) s_StringList( 3 );
-   fop.pTo                   = ( LPCTSTR ) s_StringList( 4 );
+   fop.pFrom                 = ( LPCTSTR ) pFrom;
+   fop.pTo                   = ( LPCTSTR ) pTo;
    fop.fFlags                = ( FILEOP_FLAGS ) hb_parnl( 5 );
    fop.fAnyOperationsAborted = FALSE;
    fop.hNameMappings         = NULL;
@@ -238,11 +241,11 @@ HB_FUNC( WIN_SHFILEOPERATION )
 
    hb_storl( fop.fAnyOperationsAborted, 6 );
 
-   if( fop.pFrom )
-      hb_xfree( ( void * ) fop.pFrom );
+   if( pFrom )
+      hb_xfree( pFrom );
 
-   if( fop.pTo )
-      hb_xfree( ( void * ) fop.pTo );
+   if( pTo )
+      hb_xfree( pTo );
 
    hb_strfree( hProgressTitle );
 

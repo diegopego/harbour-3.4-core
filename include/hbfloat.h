@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,10 +60,6 @@
  */
 #if ! defined( __C99FEATURES__ ) && defined( __GNUC__ ) && defined( __sun__ )
 #  define __C99FEATURES__
-#endif
-
-#if defined( __TINYC__ )
-   #define __NO_ISOCEXT
 #endif
 
 #include "hbapi.h"
@@ -127,14 +123,14 @@
 
 
 #if defined( _ISOC99_SOURCE ) || defined( _STDC_C99 ) || \
-    ( defined( isfinite ) && defined( isnan ) && defined( isinf ) )
+    ( defined( isfinite ) && defined( isnan ) )
 
    /* use C99 macros */
 #  define hb_isfinite( d )    isfinite( d )
 #  define HB_NUMTYPE( v, d )  do { \
                                  v = ( isfinite( d ) ? 0 : \
                                        ( isnan( d ) ? _HB_NUM_NAN : \
-                                         ( isinf( d ) < 0 ? _HB_NUM_NINF : \
+                                         ( hb_signbit( d ) ? _HB_NUM_NINF : \
                                            _HB_NUM_PINF ) ) ); \
                               } while( 0 )
 
@@ -189,15 +185,14 @@
 #elif 0 /* TODO: add other C compilers here (check their version number) */
 #else
 
-#  if defined( __RSXNT__ ) || defined( __EMX__ ) || \
-      defined( __XCC__ ) || defined( __POCC__ ) || \
+#  if defined( __EMX__ ) || defined( __POCC__ ) || \
       defined( __MINGW32__ ) || defined( HB_OS_HPUX ) || defined( HB_OS_MINIX )
 #     define hb_isfinite( d )       isfinite( d )
 #  elif defined( _MSC_VER )
 #     define hb_isfinite( d )       _finite( ( double ) d )
 #  elif defined( __BORLANDC__ ) || defined( __WATCOMC__ )
 #     define hb_isfinite( d )       _finite( d )
-#  elif defined( __GNUC__ ) || defined( __DJGPP__ ) || defined( __LCC__ ) || \
+#  elif defined( __GNUC__ ) || defined( __DJGPP__ ) || \
       defined( HB_OS_SUNOS )
 #     define hb_isfinite( d )       finite( d )
 #  endif
@@ -221,7 +216,7 @@
 #endif
 
 
-/* NOTE: Workaround for Pellec C 5.00 not having an 'inf' (HUGE_VAL)
+/* NOTE: Workaround for Pelles C 5.00 not having an 'inf' (HUGE_VAL)
          in '-Tarm-coff' mode. [vszakats] */
 #if defined( __POCC__ ) && defined( HB_OS_WIN_CE )
    #undef HUGE_VAL

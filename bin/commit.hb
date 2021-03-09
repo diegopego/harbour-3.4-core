@@ -2,7 +2,7 @@
 /*
  * Commit preparer and source checker/fixer
  *
- * Copyright 2012-2017 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2012-2017 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their website at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -69,7 +69,9 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   IF CheckFileList( aFiles, cLocalRoot, .F. ) .OR. "--force" $ cli_Options()
+   IF CheckFileList( aFiles, cLocalRoot, .F. ) .OR. ;
+      "-f" $ cli_Options() .OR. ;
+      "--force" $ cli_Options()
 
       cLogName := FindChangeLog( cVCS )
       IF cLogName == ""
@@ -532,7 +534,7 @@ STATIC FUNCTION Changes( cVCS )
 
    SWITCH cVCS
    CASE "svn" ; hb_processRun( Shell() + " " + CmdEscape( "svn status -q" ),, @cStdOut ) ; EXIT
-   /* TOFIX: This will inconveniently (for us) return all files as changed, where
+   /* FIXME: This will inconveniently (for us) return all files as changed, where
              automatic EOL conversion is going to be done by Git on commit. */
    CASE "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status --porcelain" ),, @cStdOut ) ; EXIT
    OTHERWISE ; cStdOut := ""
@@ -627,7 +629,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
    LOCAL lReBuild
    LOCAL lRemoveEndingWhitespace
 
-   /* TOFIX: Harbour repo specific */
+   /* FIXME: Harbour repo specific */
    LOCAL aCanBeUpper := { ;
       "Makefile", ;
       "ChangeLog.*", ;
@@ -651,14 +653,17 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       "debian/rules", ;
       "*.mk", ;
       "*.go", ;
-      "*.dif" }
+      "*.diff", ;
+      "*.patch" }
 
    LOCAL aCanHaveSpaceAtEol := { ;
-      "*.dif", ;
+      "*.diff", ;
+      "*.patch", ;
       "*.md" }
 
    LOCAL aCanHaveAnyEncoding := { ;
-      "*.dif" }
+      "*.diff", ;
+      "*.patch" }
 
    LOCAL aForcedCRLF := { ;
       "*.bat" }
@@ -666,11 +671,11 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
    LOCAL aForcedLF := { ;
       "*.sh" }
 
-   /* TOFIX: Harbour repo specific */
+   /* FIXME: Harbour repo specific */
    LOCAL aNoProc := { ;
       "contrib/hbhpdf/tests/files/*" }
 
-   /* TOFIX: Harbour repo specific */
+   /* FIXME: Harbour repo specific */
    LOCAL aNoCopyrightOk := { ;
       "tests/*", ;
       "*/*/tests/*", ;
@@ -680,7 +685,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
    LOCAL nLines
 
    /* TODO: extend as you go */
-   /* TOFIX: Harbour repo specific */
+   /* FIXME: Harbour repo specific */
    LOCAL hDoNotProcess := { ;
       ".c" => { "3rd", "include", "dlmalloc", "hvm", "sha1", "sha2" }, ;
       ".h" => { "3rd", "include" } }
@@ -696,12 +701,14 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
 
       /* filename checks */
 
-      IF hb_FNameExt( cName ) == "" .AND. ! FNameExc( cName, aCanHaveNoExtension )
-         AAdd( aErr, "filename: missing extension" )
-      ENDIF
+      IF ! hb_DirSepToOS( "/3rd/" ) $ cName
+         IF hb_FNameExt( cName ) == "" .AND. ! FNameExc( cName, aCanHaveNoExtension )
+            AAdd( aErr, "filename: missing extension" )
+         ENDIF
 
-      IF ! cName == Lower( cName ) .AND. ! FNameExc( cName, aCanBeUpper )
-         AAdd( aErr, "filename: non-lowercase" )
+         IF ! cName == Lower( cName ) .AND. ! FNameExc( cName, aCanBeUpper )
+            AAdd( aErr, "filename: non-lowercase" )
+         ENDIF
       ENDIF
 
       IF ! IsASCII7( cName )
@@ -718,7 +725,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
 
          lReBuild := .F.
 
-         /* TOFIX: Harbour repo specific */
+         /* FIXME: Harbour repo specific */
          IF ! hb_DirSepToOS( "/3rd/" ) $ cName .OR. ;
             hb_FNameName( cName ) == "Makefile" .OR. ;
             hb_FNameExt( cName ) == ".hbc" .OR. ;
@@ -814,7 +821,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
                AAdd( aErr, "content: has " + "$" + "Id" )
             ENDIF
 
-            /* TOFIX: Harbour repo specific */
+            /* FIXME: Harbour repo specific */
             IF "|" + hb_FNameExt( cName ) + "|" $ "|.c|.h|.api|.prg|.hb|.ch|" .AND. ;
                nLines > 20 .AND. ;
                ! FNameExc( cName, aNoCopyrightOk ) .AND. ;
@@ -944,7 +951,7 @@ STATIC FUNCTION StripCStrings( cFile )
    LOCAL tmp
 
    DO WHILE ( tmp := hb_BAt( '"', cFile, nPos ) ) > 0
-      /* TOFIX: imprecise escaped char detection */
+      /* FIXME: imprecise escaped char detection */
       IF ( ! hb_BSubStr( cFile, tmp - 1, 1 ) == "\" .OR. ;
          hb_BSubStr( cFile, tmp - 2, 2 ) == "\\" ) .AND. ;
          ! hb_BSubStr( cFile, tmp - 1, 1 ) + hb_BSubStr( cFile, tmp + 1, 1 ) == "''"
@@ -1015,7 +1022,7 @@ STATIC FUNCTION FNameExc( cName, aList )
 
 STATIC PROCEDURE ProcFile( cFileName )
 
-   /* TOFIX: bin/hb-uncrustify.cfg is in Harbour's bin dir, not in current project's */
+   /* FIXME: bin/hb-uncrustify.cfg is in Harbour's bin dir, not in current project's */
    LOCAL hProc := { ;
       ".png" => { "advpng -z -4 %1$s", "optipng -o7 %1$s" }, ;
       ".jpg" => { "jpegoptim --strip-all %1$s" }, ;
@@ -1064,7 +1071,7 @@ STATIC FUNCTION LoadGitignore( cFileName )
 
    IF t_aIgnore == NIL
 
-      /* TOFIX: Harbour repo specific */
+      /* FIXME: Harbour repo specific */
       t_aIgnore := { ;
          "*/3rd/*", ;
          "!*/3rd/*/*.hbc", ;
@@ -1113,14 +1120,14 @@ STATIC FUNCTION my_DirScanWorker( cMask, aList )
 
 STATIC FUNCTION FixFuncCaseFilter( cFileName )
 
-   /* TOFIX: Harbour repo specific */
+   /* FIXME: Harbour repo specific */
    STATIC sc_hFileExceptions := { ;
       "c_std.txt"   =>, ;  /* C level doc */
       "locks.txt"   =>, ;  /* C level doc */
       "pcode.txt"   =>, ;  /* C level doc */
       "tracing.txt" => }   /* C level doc */
 
-   /* TOFIX: Harbour repo specific */
+   /* FIXME: Harbour repo specific */
    STATIC sc_aMaskExceptions := { ;
       "*/3rd/*" }  /* foreign code */
 

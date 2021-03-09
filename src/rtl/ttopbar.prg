@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -265,9 +265,9 @@ METHOD getPrev() CLASS TopBarMenu
    RETURN 0
 
 /* NOTE: This method corrects two bugs in Cl*pper:
-         1) when two menuitems have the same key and the
+         1) when two menu items have the same key and the
             first item is disabled
-         2) when a menuitem is disabled it will ignore the key [jlalin] */
+         2) when a menu item is disabled it will ignore the key [jlalin] */
 
 METHOD getAccel( nKey ) CLASS TopBarMenu
 
@@ -295,7 +295,7 @@ METHOD getAccel( nKey ) CLASS TopBarMenu
    IF cKey != NIL
       cKey := "&" + cKey
       FOR EACH item IN ::aItems
-         IF hb_AtI( cKey, item:caption ) > 0  /* TOFIX: use hb_UAtI() */
+         IF hb_AtI( cKey, item:caption ) > 0  /* FIXME: use hb_UAtI() */
             RETURN item:__enumIndex()
          ENDIF
       NEXT
@@ -318,11 +318,11 @@ METHOD getShortCt( nKey ) CLASS TopBarMenu
    RETURN 0
 
 /* NOTE: In my tests I cannot get other values than HTNOWHERE or a value
-         greather than 0 (selected item), althought the NG's says that
+         greater than 0 (selected item), although the NG's says that
          it returns other HT* values [jlalin]
 
          This method correct a bug in Cl*pper:
-         when click on a disabled menuitem it will ignore it [jlalin] */
+         when click on a disabled menu item it will ignore it [jlalin] */
 
 METHOD hitTest( nMRow, nMCol ) CLASS TopBarMenu
 

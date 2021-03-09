@@ -1,24 +1,21 @@
--stop{hbdyn}
+-stop{hbdyn&!(HB_BUILD_3RD_DYN='yes')} -env:__HB_3RD_DYN=yes{hbdyn}
 
 -hblib
 -inc
 
--o${hb_targetname}
+-o${hb_name}
 
 -warn=low
 -pic
 
 minilzo.c
 
-# WARNING: self-signed certificate
-
 # ORIGIN https://www.oberhumer.com/opensource/lzo/
-# URL    https://www.oberhumer.com/opensource/lzo/download/minilzo-2.09.tar.gz
-# DIFF
+# URL    https://www.oberhumer.com/opensource/lzo/download/minilzo-2.10.tar.gz
 #
-# MAP    COPYING    LICENSE.txt
+# MAP    COPYING
 # MAP    lzoconf.h
 # MAP    lzodefs.h
 # MAP    minilzo.h
 # MAP    minilzo.c
-# MAP    README.LZO README.txt
+# MAP    README.LZO

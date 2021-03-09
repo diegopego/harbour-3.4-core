@@ -77,7 +77,7 @@ define lib_object
 endef
 
 # We have to use script to overcome the MS-DOS limit of max 128 characters
-# in commmand line
+# in command-line
 define create_library
    @$(ECHO) $(ECHOQUOTE)CREATE $(LIB_DIR)/$@$(ECHOQUOTE) > __lib__.tmp
    $(foreach file,$(^F),$(lib_object))
@@ -95,7 +95,8 @@ define link_file
 endef
 
 define link_exe_file
-   @$(ECHO) $(ECHOQUOTE)$(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$(BIN_DIR)/$@$(ECHOQUOTE) > __link__.tmp
+   @$(ECHO) $(ECHOQUOTE)$(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) \
+      $(LD_OUT)$(BIN_DIR)/$@$(ECHOQUOTE) > __link__.tmp
    $(foreach file,$(^F),$(link_file))
    $(foreach file,$(LIBPATHS),$(link_file))
    $(foreach file,$(LDLIBS),$(link_file))
@@ -108,7 +109,7 @@ AR_RULE = $(create_library)
 
 LD_RULE = $(link_exe_file)
 
-ifeq ($(HB_BUILD_DYN),dostest)
+ifeq ($(__HB_BUILD_DYN),dostest)
 
    DY := dxe3gen
    DFLAGS += $(LIBPATHS)
@@ -136,6 +137,6 @@ ifeq ($(HB_BUILD_DYN),dostest)
 
    DY_RULE = $(create_dynlib)
 
-endif # HB_BUILD_DYN
+endif # __HB_BUILD_DYN
 
 include $(TOP)$(ROOT)config/rules.mk

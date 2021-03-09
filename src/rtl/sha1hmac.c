@@ -1,5 +1,5 @@
 /*
- * hmac_sha1.c
+ * WARNING: Outdated, insecure algorithm.
  *
  * Version 1.0.0
  *
@@ -58,10 +58,6 @@
 
 #include "sha1hmac.h"
 #include <string.h>
-
-#ifdef  __cplusplus
-extern "C" {
-#endif
 
 /* Filler bytes: */
 #define IPAD_BYTE   0x36
@@ -186,9 +182,5 @@ void hb_HMAC_SHA1_Done(HMAC_SHA1_CTX *ctx) {
     ctx->keylen = 0;
     ctx->hashkey = 0;
 }
-
-#ifdef  __cplusplus
-}
-#endif
 
 #endif

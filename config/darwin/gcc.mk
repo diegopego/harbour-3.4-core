@@ -18,6 +18,11 @@ CC_OUT := -o$(subst x,x, )
 
 CFLAGS += -I. -I$(HB_HOST_INC) -c
 
+CFLAGS += -D_FORTIFY_SOURCE=2
+ifeq ($(filter $(__HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407 0408),)
+   CFLAGS += -fstack-protector-strong
+endif
+
 # -no-cpp-precomp prevents from using buggy precompiled headers
 # CFLAGS += -no-cpp-precomp
 
@@ -47,18 +52,12 @@ LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
-LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
+LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 LDFLAGS += $(LIBPATHS)
 
-AR := libtool
-AR_RULE = ( $(AR) -static -no_warning_for_no_symbols $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -o $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && $(FALSE) )
-
-DY := $(AR)
-DFLAGS += -dynamic -flat_namespace -undefined warning -multiply_defined suppress -single_module $(LIBPATHS)
-DY_OUT := -o$(subst x,x, )
+DY := $(CC)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
-
-DY_RULE = $(DY) $(DFLAGS) -install_name "$(DYN_NAME_NVR)" -compatibility_version $(HB_VER_MAJOR).$(HB_VER_MINOR) -current_version $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ $^ $(DLIBS) $(DYSTRIP) && $(LN) $(@F) $(DYN_FILE_NVR) && $(LN) $(@F) $(DYN_FILE_CPT)
+DFLAGS += $(LIBPATHS)
 
 include $(TOP)$(ROOT)config/rules.mk

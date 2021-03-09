@@ -1,5 +1,5 @@
 /* Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
-   See COPYING.txt for licensing terms. */
+   See LICENSE.txt for licensing terms. */
 
 #include "hbapi.h"
 
@@ -7,7 +7,7 @@
    #include <dos.h>
 #endif
 
-/* http://www.delorie.com/djgpp/doc/rbinter/ix/33/00.html */
+/* https://www.delorie.com/djgpp/doc/rbinter/ix/33/00.html */
 
 HB_FUNC( _FT_MSETSENSITIVE )  /* nHoriz, nVert, nDouble */
 {

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -61,8 +61,8 @@ ANNOUNCE RLCDX
  * methods: NEW and RELEASE receive pointer to work area structure
  * not work area number. It's necessary because the can be executed
  * before work area is allocated
- * these methods does not have to execute SUPER methods - these is
- * always done by low level USRRDD code
+ * these methods does not have to execute SUPER methods - this is
+ * always done by low-level USRRDD code
  */
 
 STATIC FUNCTION RLCDX_NEW( pWA )

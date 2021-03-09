@@ -38,7 +38,7 @@
  * ORIGIN
  *   Takes one argument, the URL of component's home page. Not currently used,
  *   but greatly helps locating resources regarding the component.
- *   Example: for PCRE2, it is `http://pcre.org/'.
+ *   Example: for PCRE2, it is `https://pcre.org/'.
  *
  * VER
  *   Takes one argument, the version number of the component currently in the
@@ -51,14 +51,15 @@
  *   version of the component. Used by 3rdpatch.
  *   Example: for PCRE2, at the time of this writing, it is
  *   `https://ftp.pcre.org/pub/pcre/pcre2-10.22.tar.bz2'.
- *   3rdpatch can currently unpack only `tar.gz', `tar.bz2', `tgz', `tbz',
- *   `tbz2', `tar.xz', `txz' and `zip' archives -- one of these must be chosen.
+ *   3rdpatch can currently unpack only `.tar.gz', `.tar.bz2', `.tgz', `.tbz',
+ *   `.tbz2', `.tar.xz', `.txz', `.tar.lz', `.tlz' and `.zip' archives -- one
+ *   of these must be chosen.
  *
  *   3rdpatch will also use the URL parameter to figure out what type of
  *   file it is working with, so a URL containing this sort if information must
  *   be picked. As an example, download URLs like
  *   `https://github.com/glennrp/libpng/archive/v1.6.16.tar.gz'
- *   are OK, but `https://example.com/download/latest' is not, even if latter
+ *   are OK, but `https://example.org/download/latest' is not, even if latter
  *   would ultimately result (perhaps by the server using Content-Disposition
  *   or similar headers) in a file named `example-pkg-54.tar.gz'.
  *
@@ -204,14 +205,14 @@
  * 5. NOTES
  * --------
  *
- * It seems that the Unix versions of GNU patch can not handle diff files with
- * DOS-style path separators, whereas the Windows (MinGW/Cygwin) versions have no
- * problem working with Unix-style path separators. They however cannot be coerced
- * into generating diffs with Unix-style path separators, which results in diffs
- * generated on Windows hosts can not be applied on non-Windows hosts.
+ * It seems that the Unix versions of GNU patch cannot handle diff files with
+ * DOS-style path separators, whereas the Windows versions have no problem working
+ * with Unix-style path separators. They however cannot be coerced into generating
+ * diffs with Unix-style path separators, which results in diffs generated on
+ * Windows hosts cannot be applied on non-Windows hosts.
  *
  * To remedy this situation, 3rdpatch will change diffs to use Unix-style path
- * separators. Since this is a grave problem (the diff is unapplyable on
+ * separators. Since this is a grave problem (the diff is unappliable on
  * non-Windows hosts), this change takes place unconditionally. The user is
  * notified of the change by an informational message stating the fact. These
  * changed diffs should be committed back to the repository.
@@ -259,6 +260,7 @@ STATIC s_aTools := { ;
    "gzip"   =>, ;
    "bzip2"  =>, ;
    "xz"     =>, ;
+   "lzip"   =>, ;
    "unzip"  => }
 
 PROCEDURE Main( ... )
@@ -274,7 +276,7 @@ PROCEDURE Main( ... )
    LOCAL cThisComponent       /* component being processed */
    LOCAL aOneMap              /* one pair from s_aChangeMap */
    LOCAL cCommand             /* patch/diff commands */
-   LOCAL nRunResult           /* patch/diff exit vals */
+   LOCAL nRunResult           /* patch/diff exit statuses */
    LOCAL cDiffText            /* diff will return the new diff in this */
    LOCAL cArchiveURL          /* URL for the component */
    LOCAL cTopIndicator        /* file signifying the top of the component's source tree */
@@ -365,7 +367,7 @@ PROCEDURE Main( ... )
             IF "/" $ aRegexMatch[ TWOARG_ARG1 ]
                aRegexMatch[ TWOARG_ARG1 ] := StrTran( aRegexMatch[ TWOARG_ARG1 ], "/", hb_ps() )
             ENDIF
-            /* In case the priginal and the HB file names are identical, the
+            /* In case the original and the HB file names are identical, the
              * second argument to `MAP' is optional. Due to the way the regex is
              * constructed, in this case the last backref will contain the only
              * file name, so shuffle arguments around accordingly
@@ -469,7 +471,7 @@ PROCEDURE Main( ... )
             CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ), ;
             CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ) )
 
-         /* Munch the file, applying the appropriate xforms */
+         /* Munch the file, applying the appropriate transforms */
          hb_FileTran( CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ) )
 
          /* If operating in `rediff' mode, copy the current Harbour component tree;
@@ -600,7 +602,7 @@ STATIC PROCEDURE SetupTools()
    LOCAL cTool
 
    /* Look for g$tool first, only attempt raw name if it isn't found
-    * Helps non-GNU userland systems with GNU tools installed.
+    * Helps non-GNU user space systems with GNU tools installed.
     * Only several of the tools are known to have GNU variants. */
 
    FOR EACH cPathComp IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
@@ -704,6 +706,13 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
          "Archiver"           => "tar", ;
          "ArchiverArgs"       => "--force-local -xvf" ;
       }, ;
+      ".tar.lz|.tlz" => { ;
+         "Extractor"          => "lzip", ;
+         "ExtractorArgs"      => "-d", ;
+         "ExtractedFile"      => ".tar", ;
+         "Archiver"           => "tar", ;
+         "ArchiverArgs"       => "--force-local -xvf" ;
+      }, ;
       ".zip" => { ;
          "Extractor"          => NIL, ;
          "ExtractorArgs"      => NIL, ;
@@ -742,7 +751,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
    NEXT
 
    IF cArchiver == NIL
-      OutStd( hb_StrFormat( "E: Can not find archiver for `%1$s'", ;
+      OutStd( hb_StrFormat( "E: Cannot find archiver for `%1$s'", ;
          hb_FNameNameExt( cArchiveURL ) ) + hb_eol() )
       RETURN .F.
    ENDIF

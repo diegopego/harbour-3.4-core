@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,15 +55,15 @@
 #define WVT_MAX_COLS               1024
 #define WVT_MAX_WINDOWS             256
 #if defined( HB_OS_WIN_CE )
-   #define WVT_DEFAULT_ROWS         15
-   #define WVT_DEFAULT_COLS         50
-   #define WVT_DEFAULT_FONT_HEIGHT  12
-   #define WVT_DEFAULT_FONT_WIDTH   8
+#  define WVT_DEFAULT_ROWS          15
+#  define WVT_DEFAULT_COLS          50
+#  define WVT_DEFAULT_FONT_HEIGHT   12
+#  define WVT_DEFAULT_FONT_WIDTH    8
 #else
-   #define WVT_DEFAULT_ROWS         25
-   #define WVT_DEFAULT_COLS         80
-   #define WVT_DEFAULT_FONT_HEIGHT  16
-   #define WVT_DEFAULT_FONT_WIDTH   10
+#  define WVT_DEFAULT_ROWS          25
+#  define WVT_DEFAULT_COLS          80
+#  define WVT_DEFAULT_FONT_HEIGHT   16
+#  define WVT_DEFAULT_FONT_WIDTH    10
 #endif
 #define WVT_DEFAULT_FONT_NAME       TEXT( "Courier New" )
 
@@ -126,9 +126,9 @@ typedef struct
    HPEN      penBlack;                      /* Black pen to draw GDI elements */
    HPEN      penWhiteDim;                   /* White dim pen to draw GDI elements */
    HPEN      penDarkGray;                   /* Dark gray pen to draw GDI elements */
-   HPEN      penGray;                       /* Gray pen equivilant to Clipper White */
+   HPEN      penGray;                       /* Gray pen equivalent to Clipper White */
    HPEN      penNull;                       /* Null pen */
-   HBRUSH    diagonalBrush;                 /* Handle to diaoganl brush to draw scrollbars */
+   HBRUSH    diagonalBrush;                 /* Handle to diagonal brush to draw scrollbars */
    HBRUSH    solidBrush;                    /* Handle to solid brush */
    HBRUSH    whiteBrush;                    /* Wvt specific White colored brush */
 #if ! defined( HB_OS_WIN_CE )
@@ -157,7 +157,7 @@ typedef struct
    COLORREF COLORS[ 16 ];                   /* colors */
 
    HB_BOOL  CaretExist;                     /* HB_TRUE if a caret has been created */
-   HB_BOOL  CaretHidden;                    /* HB_TRUE if a caret has been hiden */
+   HB_BOOL  CaretHidden;                    /* HB_TRUE if a caret has been hidden */
    int      CaretSize;                      /* Height of solid caret */
    int      CaretWidth;                     /* Width of solid caret */
 
@@ -202,7 +202,7 @@ typedef struct
    HB_BOOL  IgnoreWM_SYSCHAR;
 
    HB_BOOL  bMaximized;                     /* Flag is set when window has been maximized */
-   HB_BOOL  bBeingMarked;                   /* Flag to control DOS window like copy operation */
+   HB_BOOL  bBeingMarked;                   /* Flag to control CUI window like copy operation */
    HB_BOOL  bBeginMarked;
 
    HB_BOOL  bResizable;
@@ -280,7 +280,7 @@ typedef struct
    PHB_GT_PARAMS  pPP;                      /* Presentation Parameters */
 
    HB_BOOL   bDeferPaint;                   /* To create pure Windows dialogs */
-   HB_BOOL   bTracking;                     /* To track if mouse has eneter or left the window area */
+   HB_BOOL   bTracking;                     /* To track if mouse has entered or left the window area */
 
    HB_BOOL   bResizing;                     /* To know when it is in resizing mode */
    HB_BOOL   bAlreadySizing;
@@ -304,10 +304,8 @@ typedef struct
 #define PHB_GTWVT  PHB_GTWVG
 
 extern HB_EXPORT POINT         hb_wvt_gtGetXYFromColRow( int col, int row );
-#if ! defined( HB_OS_WIN_CE )
-extern HB_EXPORT IPicture *    hb_wvt_gtLoadPicture( LPCTSTR image );
+extern HB_EXPORT IPicture *    hb_wvt_gtLoadPicture( const char * pszFileName );
 extern HB_EXPORT IPicture *    hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section );
-#endif
 extern HB_EXPORT void          hb_wvt_GetStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
 extern HB_EXPORT void          hb_wvt_PutStringAttrib( int top, int left, int bottom, int right, HB_BYTE * sBuffer, HB_BYTE * sAttrib );
 

@@ -24,7 +24,7 @@
               Returns the pointer (address) to a function.
 
               The returned value is not useful to application-level programming, but
-              is used at a low level to implement object oriented coding.
+              is used at a low-level to implement object oriented coding.
               (Internally, a class method is a static function and there is no
               symbol for it, so it is accessed via its address).
 
@@ -59,7 +59,7 @@
 
         - Class HBDbInput()
 
-        - Class HBDbMenu() implement both pulldown and popup menus.
+        - Class HBDbMenu() implement both pull-down and popup menus.
 
       <b>RTL enhanced functionality:</b>
       ---------------------------
@@ -67,7 +67,7 @@
       - `hb_vfDirSpace( <nDir>, <nType> )`
 
         The second parameter is a Harbour (optional) parameter and indicates the
-        type of diskinfo being requested. See doc/en/diskspac.txt for info.
+        type of disk info being requested. See doc/en/diskspac.txt for info.
 
    $END$
  */

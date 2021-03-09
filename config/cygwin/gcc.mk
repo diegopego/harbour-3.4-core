@@ -1,5 +1,7 @@
-ifeq ($(HB_COMPILER_VER),)
-   $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let auto-detection detect it, or set HB_COMPILER_VER manually according to your C compiler version (f.e. 0304 for 3.4.x).)
+ifeq ($(__HB_COMPILER_VER),)
+   $(info ! Warning: __HB_COMPILER_VER internal variable empty. If the variable \
+      was manually set, it must be removed and if it still/otherwise fails, this \
+      may indicate an auto-detection failure and should be reported.)
 endif
 
 ifeq ($(HB_BUILD_MODE),cpp)
@@ -30,7 +32,7 @@ endif
 ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -O3
    # It's the default in 4.6 and up
-   ifneq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405),)
+   ifneq ($(filter $(__HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405),)
       CFLAGS += -fomit-frame-pointer
    endif
 endif
@@ -76,7 +78,9 @@ endef
 define create_library
    $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
    $(foreach file,$^,$(library_object))
-   ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
+   ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) \
+      $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) \
+      || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
 endef
 
 AR_RULE = $(create_library)
@@ -94,7 +98,9 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dynlib_object))
-   $(DY) $(DFLAGS) -Wl,-soname,$(DYN_NAME_CPT) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(HB_USER_DFLAGS) $(DLIBS) -Wl,--output-def,$(DYN_DIR)/$(basename $@).def,--out-implib,$(IMP_FILE) $(DYSTRIP)
+   $(DY) $(DFLAGS) -Wl,-soname,$(DYN_NAME_CPT) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp \
+      $(HB_USER_DFLAGS) $(DLIBS) \
+      -Wl,--output-def,$(DYN_DIR)/$(basename $@).def,--out-implib,$(IMP_FILE) $(DYSTRIP)
 endef
 
 DY_RULE = $(create_dynlib)

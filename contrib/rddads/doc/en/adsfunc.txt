@@ -449,7 +449,7 @@
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
-      GoTo the given estimated key position within the current index
+      Go to the given estimated key position within the current index
    $SYNTAX$
       ADSSetSelKeyPos( <nPercent> ) --> nError
    $ARGUMENTS$
@@ -695,8 +695,9 @@
       you need to implement this.
    $EXAMPLES$
       #include "inkey.ch"
+
       PROCEDURE Main()
-         ...
+         // ...
          AdsRegCallback( {| nPercent | outputstuff( nPercent ) }  )
          /* The above codeblock will be called approximately
             every 2 seconds while indexing.
@@ -795,7 +796,7 @@
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
-      Get/Set function for ADS's ShowDeleted() setting.
+      Get/Set function for ADS's AdsShowDeleted() setting.
    $SYNTAX$
       AdsSetDeleted( [<lOnOff>] ) --> lPriorSetting
    $ARGUMENTS$
@@ -915,7 +916,7 @@
       Options are ADS_ANSI and ADS_OEM. This indicates the type of
       character data to be stored in the table. For compatibility with
       DOS-based CA-Cl*pper applications, ADS_OEM should be specified.
-      When usTableType is ADS_ADT, this parameter is ignored and ANSI
+      When <usTableType> is ADS_ADT, this parameter is ignored and ANSI
       is always used.
       <lOEM> This parameter used for console mode applications, when
       character data stored in OEM charset. If <lOEM> is passed as .T.,
@@ -925,7 +926,7 @@
       <nPriorSetting>
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
-      This sets the usCharType parameter used when ADS opens a table.
+      This sets the <usCharType> parameter used when ADS opens a table.
    $EXAMPLES$
 
    $STATUS$
@@ -1161,7 +1162,7 @@
    $DESCRIPTION$
       Advantage uses Handles to control connections to various servers.
       It's possible that an app may open some files via the Remote server,
-      but others via the Local server or an Internect connection.
+      but others via the Local server or an internet connection.
       This function identifies the type of server used in the current workarea.
    $EXAMPLES$
 
@@ -1190,7 +1191,7 @@
       AdsDDAddTable( <cTableName>, <cFileName>, <cIndexFileName> ) --> lSuccess
    $ARGUMENTS$
       <cTableName> Name of the table inside the data dictionary
-      <cFileName>  Name of the adt or dbf file name
+      <cFileName>  Name of the ADT or dbf file name
       <cIndexFileName> Optional name of the index file
    $RETURNS$
       <lSuccess> - .T. if file was added, otherwise .F.
@@ -1283,7 +1284,7 @@
       of the entire application. The default number of open tables that
       are cached is 0.
    $EXAMPLES$
-      AdsCacheOpenTables( 25 )
+      ? AdsCacheOpenTables( 25 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -1322,7 +1323,7 @@
       behavior of the entire application. The default number of
       open cursors that are cached is 25.
    $EXAMPLES$
-      AdsCacheOpenCursors( 0 )
+      ? AdsCacheOpenCursors( 0 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -1359,7 +1360,7 @@
       will be closed, as well as all cache closed tables on the server
       that might have been used when executing SQL statements.
    $EXAMPLES$
-      AdsCloseCachedTables()
+      ? AdsCloseCachedTables()
    $STATUS$
       R
    $COMPLIANCE$

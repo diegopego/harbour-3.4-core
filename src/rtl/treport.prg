@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -237,7 +237,7 @@ METHOD PROCEDURE New( cFrmName AS STRING, ;
 
    BEGIN SEQUENCE
 
-      ::aReportData := ::LoadReportFile( cFRMName )  // Load the frm into an array
+      ::aReportData := ::LoadReportFile( cFRMName )  // Load the .frm into an array
       ::nMaxLinesAvail := ::aReportData[ RPT_LINES ]
 
       // Modify ::aReportData based on the report parameters
@@ -488,7 +488,7 @@ METHOD ReportHeader() CLASS HBReportForm
       NEXT
    NEXT
 
-   AAdd( aPageHeader, "" )  // S87 compat.
+   AAdd( aPageHeader, "" )  // S87 compatibility
 
    nLinesInHeader := Len( aPageHeader )
    nMaxColLength := 0
@@ -614,7 +614,7 @@ METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
                aRecordHeader[ Len( aRecordHeader ) ] += " "
             NEXT
             // Get rid of the extra space from the last column
-            aRecordHeader[ Len( aRecordHeader ) ] := hb_StrShrink( ATail( aRecordHeader ) )  /* TOFIX: use hb_UStrShrink() */
+            aRecordHeader[ Len( aRecordHeader ) ] := hb_StrShrink( ATail( aRecordHeader ) )  /* FIXME: use hb_UStrShrink() */
          ENDIF
       NEXT
    ENDIF
@@ -813,7 +813,7 @@ METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
       // Tack on the spacing for double/triple/etc.
       IF ::aReportData[ RPT_SPACING ] > 1
 
-         /*  Double space problem in REPORT FORM at the bottom of the page  */
+         /* Double space problem in REPORT FORM at the bottom of the page  */
          IF ::nLinesLeft >= ::aReportData[ RPT_SPACING ] - 1
 
             FOR nLine := 2 TO ::aReportData[ RPT_SPACING ]

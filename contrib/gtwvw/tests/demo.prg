@@ -203,7 +203,7 @@ PROCEDURE Main()
    @ MaxRow(), 0 SAY "This is line " + hb_ntos( MaxRow() )
 
    DO WHILE ( nKeyStd := hb_keyStd( Inkey( 0 ) ) ) != K_ESC
-      // experiment with different paintrefresh interval:
+      // experiment with different paint refresh interval:
       DO CASE
       CASE nKeyStd == hb_keyCode( "<" )
          wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() / 2 ) )
@@ -309,7 +309,7 @@ STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
          // Recursively call (another) typewriter, bigger one
          Demo_Console( nTop + 2, nLeft + 2, nBottom + 4, nRight + 6 )
       ELSEIF nKeyStd == K_CTRL_E
-         // toggle echoing output to prev window
+         // toggle echoing output to previous window
          lEchoing := ! lEchoing
       ELSE
          // any other char goes here
@@ -581,14 +581,14 @@ STATIC PROCEDURE DEMO_Browse()
 
    RETURN
 
-/* generic Vertical Scrollbar handler for tbrowse */
+/* generic Vertical Scrollbar handler for TBrowse */
 STATIC PROCEDURE VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    LOCAL nOldWin
    LOCAL lNeedStabilize
 
 #if 0
-   // if we can't handle non topmost window we must return right away
+   // if we cannot handle non topmost window we must return right away
    IF nWinNum != wvw_nNumWindows() - 1
       RETURN
    ENDIF
@@ -637,14 +637,14 @@ STATIC PROCEDURE VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    RETURN
 
-/* generic Horizontal Scrollbar handler for tbrowse */
+/* generic Horizontal Scrollbar handler for TBrowse */
 STATIC PROCEDURE HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
    LOCAL nOldWin
    LOCAL lNeedStabilize
 
 #if 0
-   // if we can't handle non topmost window we must return right away
+   // if we cannot handle non topmost window we must return right away
    IF nWinNum != wvw_nNumWindows() - 1
       RETURN
    ENDIF
@@ -704,7 +704,7 @@ STATIC PROCEDURE RefreshVXB( oBrowse, nWinNum, XBid )
    LOCAL nMin, nMax, nPage, nPos
    LOCAL nRatio
 
-   // recalc the pos
+   // Recalculate position
    IF ordKeyCount() < 30000
       nMin := 1
       nMax := ordKeyCount()
@@ -726,7 +726,7 @@ STATIC PROCEDURE RefreshVXB( oBrowse, nWinNum, XBid )
 
    RETURN
 
-// recalc the pos
+// Recalculate position
 STATIC PROCEDURE RefreshHXB( oBrowse, nWinNum, XBid )
 
    LOCAL nMin := 1
@@ -789,17 +789,17 @@ STATIC FUNCTION TBPrev()
 
    RETURN lMoved
 
-// WVW_Paint() must be a FUNCTION in your application
+// WVW_PAINT() must be a FUNCTION in your application
 // as it is called when Window gets WM_PAINT message.
 //
-// 2004-03-30, was: FUNCTION WVW_Paint( hWnd, msg, wParam, lParam, nWinNum )
-// 2004-04-08, was: FUNCTION WVW_Paint( nWinNum, nrow1, ncol1, nrow2, ncol2 )
+// 2004-03-30, was: FUNCTION WVW_PAINT( hWnd, msg, wParam, lParam, nWinNum )
+// 2004-04-08, was: FUNCTION WVW_PAINT( nWinNum, nrow1, ncol1, nrow2, ncol2 )
 
-FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
+FUNCTION WVW_PAINT( nWinNum )  /* must be a public function */
 
 #if 0
    ldebug( ;
-      "WVW_Paint:" + hb_eol() + ;
+      "WVW_PAINT():" + hb_eol() + ;
       "hWnd: " + hb_ntos( hWnd ) + hb_eol() + ;
       "nWinNum: " + hb_ntos( nWinNum ) )
 #endif
@@ -812,12 +812,12 @@ FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
 
    RETURN 0
 
-// WVW_SetFocus() must be a FUNCTION in your application
+// WVW_SETFOCUS() must be a FUNCTION in your application
 // needs to process messages sent through WM_SETFOCUS message
 // received by the window.
 //
 #if 0
-PROCEDURE WVW_SetFocus( hWnd, nWinNum )  /* must be a public function */
+PROCEDURE WVW_SETFOCUS( hWnd, nWinNum )  /* must be a public function */
 
    STATIC s_nGotFocus := 0
 
@@ -832,11 +832,11 @@ PROCEDURE WVW_SetFocus( hWnd, nWinNum )  /* must be a public function */
 
    RETURN
 
-// WVW_KillFocus() must be a FUNCTION in your application
+// WVW_KILLFOCUS() must be a FUNCTION in your application
 // needs to process messages sent through WM_KILLFOCUS message
 // received by the window.
 
-PROCEDURE WVW_KillFocus( hWnd )  /* must be a public function */
+PROCEDURE WVW_KILLFOCUS( hWnd )  /* must be a public function */
    RETURN
 #endif
 
@@ -942,7 +942,7 @@ STATIC PROCEDURE AddMiscObjects( nWinNum, bAction )
 
 STATIC FUNCTION nAfterInkey( nKey )
 
-   // check if nkey is:
+   // check if nKey is:
    // (1) menu command, or
    // (2) mouse button action
    LOCAL bAction
@@ -1157,7 +1157,7 @@ STATIC PROCEDURE MyError( e )
    RETURN
 
 /* Pseudo mouse object in GTWVW GUI
-   copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
+   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
    This is a sample of implementation of a pseudo GUI object in GTWVW,
    using GTWVW GUI primitives.
@@ -1195,8 +1195,8 @@ STATIC PROCEDURE MyError( e )
 
 // mouse object types
 #define _MOBJECT_BUTTON  0      // mouse button
-#define _MOBJECT_HSCROLL 1      // horiz scrollbar: OBSOLETE, NOT USED HERE
-#define _MOBJECT_VSCROLL 2      // horiz scrollbar: OBSOLETE, NOT USED HERE
+#define _MOBJECT_HSCROLL 1      // horizontal scrollbar: OBSOLETE, NOT USED HERE
+#define _MOBJECT_VSCROLL 2      // horizontal scrollbar: OBSOLETE, NOT USED HERE
 
 // WVWMouseButton
 
@@ -1525,7 +1525,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
 STATIC PROCEDURE wvwm_paint( nWinNum )
 
-   // normally called by WVW_Paint()
+   // normally called by WVW_PAINT()
    // redraw every mouse object in window nWinNum
    IF Len( s_amouseobjlist ) >= nWinNum + 1
       AEval( s_amouseobjlist[ nWinNum + 1 ], {| o | o[ 2 ]:draw( nWinNum ) } )

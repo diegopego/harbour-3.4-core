@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -400,7 +400,7 @@ HB_FUNC( WVW_MAXMAXCOL )
 /* wvw_UnreachedBr( [nWinNum], [nBottomPixels], [nRightPixels] )
  * get unreached pixels
  * below MaxRow() to nBottomPixels
- * and on the right of maxcols() to nRightPixels
+ * and on the right of MaxCol() to nRightPixels
  */
 HB_FUNC( WVW_UNREACHEDBR )
 {
@@ -458,7 +458,7 @@ HB_FUNC( WVW_SETMAINCOORD )
 /* Budyanto Dj. <budyanto@centrin.net.id> */
 
 /* wvw_SetPaintRefresh( [nPaintRefresh] )
- * returns old setting of wvw->iPaintRefresh (millisec between calls to WVW_PAINT)
+ * returns old setting of wvw->iPaintRefresh (millisec between calls to WVW_PAINT())
  * then assigns wvw->iPaintRefresh := nPaintRefresh (if supplied)
  * NOTES: nPaintRefresh must be >= 50
  *        or nPaintRefresh == 0, causing Repaint to execute immediately, as GTWVT
@@ -594,7 +594,7 @@ HB_FUNC( WVW_SETDEFVCENTREWINDOW )
 
 /* wvw_SetDefLineSpacing( [nLineSpacing] )
  * returns old setting of wvw->iDefLineSpacing (default linespacing between lines)
- * then assigns wvw->iDefLineSpacing:= nLineSpacing (if supplied)
+ * then assigns wvw->iDefLineSpacing := nLineSpacing (if supplied)
  * NOTES:
  * - nLineSpacing will be the default line spacing for all window opens
  * - nLineSpacing must be even, positive number <= 40
@@ -619,7 +619,7 @@ HB_FUNC( WVW_SETDEFLINESPACING )
 
 /* wvw_SetDefLSpaceColor( [nColorIndex] )
  * returns old setting of wvw->iDefLSpaceColor (color index of spacing between lines)
- * then assigns wvw->iDefLSpaceColor:= nColorIndex (if supplied)
+ * then assigns wvw->iDefLSpaceColor := nColorIndex (if supplied)
  * NOTES:
  * - nColorIndex will be the default line spacing color for all window opens
  * - nColorIndex must >= 0 and <= 15, or == -1

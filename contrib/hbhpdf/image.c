@@ -3,18 +3,18 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -32,7 +32,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -44,19 +44,19 @@
 
 #include "hbhpdf.h"
 
-/* HPDF_LoadPngImageFromFile( hDoc, cPNGFileName ) -> hImage */
+/* HPDF_LoadPngImageFromFile( hDoc, cPNGFileName ) --> hImage */
 HB_FUNC( HPDF_LOADPNGIMAGEFROMFILE )
 {
    hb_retptr( ( void * ) HPDF_LoadPngImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 
-/* HPDF_LoadPngImageFromFile2( hDoc, cPNGFileName ) -> hImage */
+/* HPDF_LoadPngImageFromFile2( hDoc, cPNGFileName ) --> hImage */
 HB_FUNC( HPDF_LOADPNGIMAGEFROMFILE2 )
 {
    hb_retptr( ( void * ) HPDF_LoadPngImageFromFile2( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 
-/* HPDF_LoadRawImageFromFile( hDoc, cImageFileName, nWidth, nHeight, nColorSpace ) -> hImage
+/* HPDF_LoadRawImageFromFile( hDoc, cImageFileName, nWidth, nHeight, nColorSpace ) --> hImage
        nColorSpace
    HPDF_CS_DEVICE_GRAY
    HPDF_CS_DEVICE_RGB
@@ -67,13 +67,13 @@ HB_FUNC( HPDF_LOADRAWIMAGEFROMFILE )
    hb_retptr( ( void * ) HPDF_LoadRawImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ) ) );
 }
 
-/* HPDF_LoadRawImageFromMem( hDoc, cBuffer, nWidth, nHeight, nColorSpace, nBitsPerComponents ) -> hImage */
+/* HPDF_LoadRawImageFromMem( hDoc, cBuffer, nWidth, nHeight, nColorSpace, nBitsPerComponents ) --> hImage */
 HB_FUNC( HPDF_LOADRAWIMAGEFROMMEM )
 {
    hb_retptr( ( void * ) HPDF_LoadRawImageFromMem( hb_HPDF_Doc_par( 1 ), ( const HPDF_BYTE * ) hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ), hb_parni( 6 ) ) );
 }
 
-/* HPDF_LoadJpegImageFromFile( hDoc, cHPEGFileName ) -> hImage */
+/* HPDF_LoadJpegImageFromFile( hDoc, cHPEGFileName ) --> hImage */
 HB_FUNC( HPDF_LOADJPEGIMAGEFROMFILE )
 {
    hb_retptr( ( void * ) HPDF_LoadJpegImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
@@ -110,13 +110,12 @@ HB_FUNC( HPDF_LOADJPEGIMAGEFROMMEM )
 #endif
 }
 
-/* HPDF_Image_GetSize( hImage ) -> aSize[ nW, nH ] */
+/* HPDF_Image_GetSize( hImage ) --> aSize[] { nW, nH } */
 HB_FUNC( HPDF_IMAGE_GETSIZE )
 {
-   HPDF_Point pt;
-   PHB_ITEM   info = hb_itemArrayNew( 2 );
+   HPDF_Point pt = HPDF_Image_GetSize( ( HPDF_Image ) hb_parptr( 1 ) );
 
-   pt = HPDF_Image_GetSize( ( HPDF_Image ) hb_parptr( 1 ) );
+   PHB_ITEM info = hb_itemArrayNew( 2 );
 
    hb_arraySetND( info, 1, ( double ) pt.x );
    hb_arraySetND( info, 2, ( double ) pt.y );
@@ -124,25 +123,25 @@ HB_FUNC( HPDF_IMAGE_GETSIZE )
    hb_itemReturnRelease( info );
 }
 
-/* HPDF_Image_GetWidth( hImage ) -> nWidth */
+/* HPDF_Image_GetWidth( hImage ) --> nWidth */
 HB_FUNC( HPDF_IMAGE_GETWIDTH )
 {
    hb_retni( HPDF_Image_GetWidth( ( HPDF_Image ) hb_parptr( 1 ) ) );
 }
 
-/* HPDF_Image_GetHeight( hImage ) -> nHeight */
+/* HPDF_Image_GetHeight( hImage ) --> nHeight */
 HB_FUNC( HPDF_IMAGE_GETHEIGHT )
 {
    hb_retni( HPDF_Image_GetHeight( ( HPDF_Image ) hb_parptr( 1 ) ) );
 }
 
-/* HPDF_Image_GetBitsPerComponent( hImage ) -> nBitsPerComponent */
+/* HPDF_Image_GetBitsPerComponent( hImage ) --> nBitsPerComponent */
 HB_FUNC( HPDF_IMAGE_GETBITSPERCOMPONENT )
 {
    hb_retni( HPDF_Image_GetBitsPerComponent( ( HPDF_Image ) hb_parptr( 1 ) ) );
 }
 
-/* HPDF_Image_GetColorSpace( hImage ) -> nColorSpace */
+/* HPDF_Image_GetColorSpace( hImage ) --> nColorSpace */
 HB_FUNC( HPDF_IMAGE_GETCOLORSPACE )
 {
    HPDF_Image image = ( HPDF_Image ) hb_parptr( 1 );
@@ -165,7 +164,7 @@ HB_FUNC( HPDF_IMAGE_SETCOLORMASK )
                                                hb_parni( 7 ) ) );
 }
 
-/* HPDF_Image_SetMaskImage( hImage, hImageMask ) -> hStatus */
+/* HPDF_Image_SetMaskImage( hImage, hImageMask ) --> hStatus */
 HB_FUNC( HPDF_IMAGE_SETMASKIMAGE )
 {
    hb_retnl( ( long ) HPDF_Image_SetMaskImage( ( HPDF_Image ) hb_parptr( 1 ), ( HPDF_Image ) hb_parptr( 2 ) ) );

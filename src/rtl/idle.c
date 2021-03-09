@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -134,13 +134,15 @@ void hb_idleSleep( double dSeconds )
 {
    if( dSeconds >= 0 )
    {
-      HB_MAXUINT end_timer = hb_dateMilliSeconds() + ( HB_MAXUINT ) ( dSeconds * 1000 );
+      HB_MAXINT timeout = dSeconds > 0 ? ( HB_MAXINT ) ( dSeconds * 1000 ) : 0;
+      HB_MAXUINT timer = hb_timerInit( timeout );
 
       do
       {
          hb_idleState();
       }
-      while( hb_dateMilliSeconds() < end_timer && hb_vmRequestQuery() == 0 );
+      while( ( timeout = hb_timerTest( timeout, &timer ) ) != 0 &&
+             hb_vmRequestQuery() == 0 );
 
       hb_idleReset();
    }

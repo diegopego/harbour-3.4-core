@@ -1,7 +1,7 @@
 /*
  * BLAKE2b function wrapper (fast secure hash)
  *
- * Copyright 2015 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2015 Viktor Szakats (vsz.me/hb)
  * (Harbour wrapper and low-level code adaptation)
  *
  * Low-level BLAKE2 C code courtesy of
@@ -22,9 +22,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file LICENSE.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -227,7 +227,7 @@ static int blake2b( void * out, HB_SIZE outlen,
 
 #define BLAKE2B_OUTBYTES  64
 
-/* hb_BLAKE2b( <cIn>, [<cKey>], [<nSize=64>], [<lBinary=.F.>] ) -> <cHash> */
+/* hb_BLAKE2b( <cIn>, [<cKey>], [<nSize=64>], [<lBinary=.F.>] ) --> <cHash> */
 HB_FUNC( HB_BLAKE2B )
 {
    const char * pszStr = hb_parc( 1 );

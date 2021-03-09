@@ -2,7 +2,7 @@
  * The Console API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour) (hb_conNewLine(), DispOutAt(), hb_StrEOL())
+ * Copyright 1999-2015 Viktor Szakats (vsz.me/hb) (hb_conNewLine(), DispOutAt(), hb_StrEOL())
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_conOutAlt(), hb_conOutDev(), DevOut(), hb_conDevPos(),
  *    DevPos(), __Eject(),
@@ -21,9 +21,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -75,9 +75,9 @@
 
 /* length of buffer for CR/LF characters */
 #if ! defined( HB_OS_EOL_LEN ) || HB_OS_EOL_LEN < 4
-   #define CRLF_BUFFER_LEN  4
+#  define CRLF_BUFFER_LEN  4
 #else
-   #define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
+#  define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
 #endif
 
 static const char s_szCR[] = { HB_CHAR_CR, 0 };
@@ -115,7 +115,7 @@ void hb_conInit( void )
 
 #if ! defined( HB_OS_WIN )
    /* On Windows file handles with numbers 0, 1, 2 are
-      transalted inside filesys to:
+      translated inside filesys to:
       GetStdHandle( STD_INPUT_HANDLE ), GetStdHandle( STD_OUTPUT_HANDLE ),
       GetStdHandle( STD_ERROR_HANDLE ) */
 
@@ -168,10 +168,10 @@ void hb_conRelease( void )
    /*
     * Clipper does not restore screen size on exit so I removed the code with:
     *    hb_gtSetMode( s_originalMaxRow + 1, s_originalMaxCol + 1 );
-    * If the low level GT drive change some video adapter parameters which
+    * If the low-level GT drive change some video adapter parameters which
     * have to be restored on exit then it should does it in its Exit()
     * method. Here we cannot force any actions because it may cause bad
-    * results in some GTs, f.e. when the screen size is controlled by remote
+    * results in some GTs, e.g. when the screen size is controlled by remote
     * user and not Harbour application (some terminal modes), [Druzus]
     */
 
@@ -614,7 +614,7 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
 
 /* NOTE: Clipper does no checks about the screen positions. [vszakats] */
 
-HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position, but is not affected by SET ALTERNATE */
+HB_FUNC( DISPOUTAT )  /* writes a single value to the screen at specific position, but is not affected by SET ALTERNATE */
 {
    char * pszString;
    HB_SIZE nLen;
@@ -647,7 +647,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
    }
 }
 
-/* Harbour extension, works like DISPOUTAT but does not change cursor position */
+/* Harbour extension, works like DispOutAt() but does not change cursor position */
 
 HB_FUNC( HB_DISPOUTAT )
 {

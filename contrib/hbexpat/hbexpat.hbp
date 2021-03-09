@@ -1,16 +1,17 @@
 -hblib
 -inc
 
--o${hb_targetname}
+-o${hb_name}
 
 -w3 -es2
 
--depurlbase=expat:https://expat.sourceforge.io/
+-depurlbase=expat:https://github.com/libexpat/libexpat
 -deppkgname=expat:libexpat1-dev{deb}
--deppkgname=expat:mingw-w64-i686-expat{msys2&mingw}
--deppkgname=expat:mingw-w64-x86_64-expat{msys2&mingw64}
+-deppkgname=expat:expat-devel{rpm}
+-deppkgname=expat:expat{homebrew|pkgng}
 -deppkgname=expat:expat{pacman}
--deppkgname=expat:expat{homebrew}
+-deppkgname=expat:mingw-w64-i686-expat{msys2&x86}
+-deppkgname=expat:mingw-w64-x86_64-expat{msys2&x86_64}
 -depkeyhead=expat:expat.h
 -depcontrol=expat:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=expat:${HB_WITH_EXPAT}

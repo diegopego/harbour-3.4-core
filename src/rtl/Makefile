@@ -136,6 +136,7 @@ C_SOURCES := \
    math.c \
    maxrow.c \
    memofile.c \
+   mime.c \
    minmax.c \
    mlcfunc.c \
    mod.c \
@@ -264,6 +265,7 @@ PRG_SOURCES := \
    readkey.prg \
    readvar.prg \
    savebuff.prg \
+   savebufs.prg \
    scrollbr.prg \
    setfunc.prg \
    setta.prg \
@@ -312,24 +314,24 @@ DIRS := \
 ifneq ($(HB_HAS_ZLIB),)
 
    ifneq ($(HB_HAS_PCRE2),)
-      HB_CFLAGS += -DHB_HAS_PCRE2 $(foreach d,$(HB_HAS_PCRE2),-I$(d))
+      HB_CFLAGS += -DHB_HAS_PCRE2 $(QUOTE)-I$(HB_HAS_PCRE2)$(QUOTE)
       ifneq ($(HB_HAS_PCRE2_LOCAL),)
          HB_CFLAGS += -DPCRE2_STATIC
       endif
       HB_CFLAGS += -DPCRE2_CODE_UNIT_WIDTH=8
    else
    ifneq ($(HB_HAS_PCRE),)
-      HB_CFLAGS += -DHB_HAS_PCRE $(foreach d,$(HB_HAS_PCRE),-I$(d))
+      HB_CFLAGS += -DHB_HAS_PCRE $(QUOTE)-I$(HB_HAS_PCRE)$(QUOTE)
       ifneq ($(HB_HAS_PCRE_LOCAL),)
          HB_CFLAGS += -DPCRE_STATIC
       endif
    endif
    endif
    ifneq ($(HB_HAS_ZLIB),)
-      HB_CFLAGS += -DHB_HAS_ZLIB $(foreach d,$(HB_HAS_ZLIB),-I$(d))
+      HB_CFLAGS += -DHB_HAS_ZLIB $(QUOTE)-I$(HB_HAS_ZLIB)$(QUOTE)
    endif
    ifneq ($(HB_HAS_WATT),)
-      HB_CFLAGS += -DHB_HAS_WATT $(foreach d,$(HB_HAS_WATT),-I$(d))
+      HB_CFLAGS += -DHB_HAS_WATT $(QUOTE)-I$(HB_HAS_WATT)$(QUOTE)
    endif
    ifneq ($(HB_HAS_GPM),)
       HB_CFLAGS += -DHB_HAS_GPM

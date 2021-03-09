@@ -3,7 +3,7 @@
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt) (hb_winExceptionHandler() Windows exception info dump code.)
- * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour) (hb_winExceptionHandler() Module listing code, x86_64/WinCE/ARM support, OS/2, MIPS32, MIPS64, SH, IA64 CPU dumps.)
+ * Copyright 2008-2010 Viktor Szakats (vsz.me/hb) (hb_winExceptionHandler() Module listing code, x86_64/WinCE/ARM support, OS/2, MIPS32, MIPS64, SH, IA64 CPU dumps.)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,36 +54,34 @@
 #include "hbset.h"
 
 #if defined( HB_OS_UNIX )
-   #include <unistd.h>
-   #include <signal.h>
-   #if defined( SIGSTKSZ ) && \
-       ( ( defined( _BSD_SOURCE ) && _BSD_SOURCE ) || \
-         ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
-      #define HB_SIGNAL_EXCEPTION_HANDLER
-   #endif
+#  include <unistd.h>
+#  include <signal.h>
+#  if defined( SIGSTKSZ ) && \
+      ( ( defined( _BSD_SOURCE ) && _BSD_SOURCE ) || \
+        ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
+#     define HB_SIGNAL_EXCEPTION_HANDLER
+#  endif
 #elif defined( HB_OS_WIN )
-   #include <windows.h>
-   #if ! defined( __TINYC__ )
-      #include <tlhelp32.h>
-   #endif
-   #include "hbwinuni.h"
-   #if defined( HB_OS_WIN_CE )
-      #include "hbwince.h"
-   #endif
-   #ifndef TH32CS_SNAPMODULE32
-   #define TH32CS_SNAPMODULE32  0x00000010
-   #endif
+#  include <windows.h>
+#  include <tlhelp32.h>
+#  include "hbwinuni.h"
+#  if defined( HB_OS_WIN_CE )
+#     include "hbwince.h"
+#  endif
+#  ifndef TH32CS_SNAPMODULE32
+#  define TH32CS_SNAPMODULE32  0x00000010
+#  endif
 #elif defined( HB_OS_OS2 )
-   #define INCL_DOSEXCEPTIONS
-   #define INCL_ERRORS
-   #include <os2.h>
+#  define INCL_DOSEXCEPTIONS
+#  define INCL_ERRORS
+#  include <os2.h>
 #endif
 
 #if defined( HB_SIGNAL_EXCEPTION_HANDLER )
    static HB_BYTE * s_signal_stack[ SIGSTKSZ ];
 #endif
 
-#if defined( HB_OS_WIN ) && ! defined( __TINYC__ )
+#if defined( HB_OS_WIN )
 
 static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
@@ -347,7 +345,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          pc = ( unsigned char * ) pCtx->Eip;
          for( i = 0; i < 16; i++ )
          {
-            /* TOFIX: Unsafe funcion. */
+            /* FIXME: Unsafe function. */
             if( IsBadReadPtr( pc, 1 ) )
                break;
             hb_snprintf( buf, sizeof( buf ), " %02X", ( int ) pc[ i ] );
@@ -357,7 +355,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          sc = ( unsigned int * ) pCtx->Esp;
          for( i = 0; i < 16; i++ )
          {
-            /* TOFIX: Unsafe funcion. */
+            /* FIXME: Unsafe function. */
             if( IsBadReadPtr( sc, 4 ) )
                break;
             hb_snprintf( buf, sizeof( buf ), " %08X", sc[ i ] );
@@ -368,12 +366,12 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          hb_strncat( errmsg, "    EIP:     EBP:       Frame: OldEBP, RetAddr, Params...\n", errmsglen );
          eip = pCtx->Eip;
          ebp = ( unsigned int * ) pCtx->Ebp;
-         /* TOFIX: Unsafe funcion. */
+         /* FIXME: Unsafe function. */
          if( ! IsBadWritePtr( ebp, 8 ) )
          {
             for( i = 0; i < 20; i++ )
             {
-               /* TOFIX: Unsafe funcion. */
+               /* FIXME: Unsafe function. */
                if( ( unsigned int ) ebp % 4 != 0 || IsBadWritePtr( ebp, 40 ) || ( unsigned int ) ebp >= ebp[ 0 ] )
                   break;
                hb_snprintf( buf, sizeof( buf ), "    %08X %08X  ", ( int ) eip, ( int ) ebp );
@@ -444,7 +442,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                   {
                      char buf[ 256 ];
 #if defined( HB_OS_WIN_64 )
-                     /* TOFIX: me32.szExePath seemed trashed in some (standalone) tests. */
+                     /* FIXME: me32.szExePath seemed trashed in some (standalone) tests. */
                      hb_snprintf( buf, sizeof( buf ), "%016" PFLL "X %016" PFLL "X %s\n", ( HB_PTRUINT ) me32.modBaseAddr, ( HB_PTRUINT ) me32.modBaseSize, me32.szExePath );
 #else
                      char szBuffer[ MAX_PATH ];
@@ -565,7 +563,7 @@ static void hb_signalExceptionHandler( int sig, siginfo_t * si, void * ucp )
 
 void hb_vmSetExceptionHandler( void )
 {
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) && ! defined( __TINYC__ )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    {
       LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_winExceptionHandler );
       HB_SYMBOL_UNUSED( ef );

@@ -222,7 +222,7 @@ procedure main( cdp, info, unicode )
                cLo := cLo2
                if lSort
                   ? "letters are not sorted continuously" + ;
-                     " (padded to 1-st non latin character)"
+                     " (padded to 1st non-latin character)"
                   lBin := lWarn := .t.
                endif
             elseif cUp2 >= Chr( 127 ) .and. cLo2 >= Chr( 127 )
@@ -436,7 +436,7 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
 #endif
       if lWarn
          cDef += ;
-            "#if 0 /* TOVERIFY: binary tables */" + hb_eol()
+            "#if 0 /* TODO: Verify binary tables */" + hb_eol()
       endif
    endif
    if lBin .or. lWarn

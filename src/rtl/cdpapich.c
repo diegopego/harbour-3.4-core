@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -122,7 +122,7 @@ HB_FUNC( HB_UTF8AT )
    {
       HB_SIZE nTextLength = hb_itemGetCLen( pText );
       HB_SIZE nStart = hb_parnsdef( 3, 1 );
-      HB_SIZE nEnd = hb_parnsdef( 4, nTextLength ); /* nTextLength can be > UTF8 len. No problem.*/
+      HB_SIZE nEnd = hb_parnsdef( 4, nTextLength ); /* nTextLength can be > UTF-8 len. No problem.*/
 
       if( nEnd < nStart )
          hb_retns( 0 );
@@ -135,7 +135,7 @@ HB_FUNC( HB_UTF8AT )
 }
 
 /*
- * NOTE: In HB_UTF8RAT we are still traversing from
+ * NOTE: In hb_utf8RAt() we are still traversing from
  *       left to right, as it would be required anyway to
  *       determine the real string length. [bacco]
  */
@@ -149,7 +149,7 @@ HB_FUNC( HB_UTF8RAT )
    {
       HB_SIZE nTextLength = hb_itemGetCLen( pText );
       HB_SIZE nStart = hb_parnsdef( 3, 1 );
-      HB_SIZE nEnd = hb_parnsdef( 4, nTextLength ); /* nTextLength can be > UTF8 len. No problem.*/
+      HB_SIZE nEnd = hb_parnsdef( 4, nTextLength ); /* nTextLength can be > UTF-8 len. No problem.*/
 
       if( nEnd < nStart )
          hb_retns( 0 );
@@ -375,7 +375,7 @@ HB_FUNC( HB_UTF8LEN )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* none of numeric parameters in StrTran() (4-th and 5-th) refers to
+/* none of numeric parameters in StrTran() (4th and 5th) refers to
  * character position in string so we do not need to create new
  * hb_utf8StrTran() but we can safely use normal StrTran() function
  */

@@ -1,7 +1,7 @@
 /*
  * SHA3 function wrappers (secure hash)
  *
- * Copyright 2015 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2015 Viktor Szakats (vsz.me/hb)
  * (Harbour wrapper and low-level code adaptation)
  *
  * Low-level SHA3 C code:
@@ -12,9 +12,9 @@
  *   denoted as "the implementer".
  *
  *   For more information, feedback or questions, please refer to our websites:
- *   http://keccak.noekeon.org/
- *   http://keyak.noekeon.org/
- *   http://ketje.noekeon.org/
+ *   https://keccak.noekeon.org/
+ *   https://keyak.noekeon.org/
+ *   https://ketje.noekeon.org/
  *
  *   To the extent possible under law, the implementer has waived all copyright
  *   and related or neighboring rights to the source code in this file.
@@ -31,9 +31,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file LICENSE.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -81,14 +81,14 @@
 
    The drawbacks of this implementation are:
     - There is no message queue. The whole message must be ready in a buffer.
-    - It is not optimized for peformance.
+    - It is not optimized for performance.
 
    For a more complete set of implementations, please refer to
    the Keccak Code Package at https://github.com/gvanas/KeccakCodePackage
 
    For more information, please refer to:
-    * [Keccak Reference] http://keccak.noekeon.org/Keccak-reference-3.0.pdf
-    * [Keccak Specifications Summary] http://keccak.noekeon.org/specs_summary.html
+    * [Keccak Reference] https://keccak.team/files/Keccak-reference-3.0.pdf
+    * [Keccak Specifications Summary] https://keccak.team/keccak_specs_summary.html
 
    This file uses UTF-8 encoding, as some comments use Greek letters. */
 
@@ -282,7 +282,7 @@ static void Keccak( unsigned int rate, unsigned int capacity, const unsigned cha
    /* === Absorb all the input blocks === */
    while( inputByteLen > 0 )
    {
-      blockSize = HB_MIN( inputByteLen, rateInBytes );
+      blockSize = HB_MIN( ( unsigned int ) inputByteLen, rateInBytes );
       for( i = 0; i < blockSize; i++ )
          state[ i ] ^= input[ i ];
       input        += blockSize;
@@ -309,7 +309,7 @@ static void Keccak( unsigned int rate, unsigned int capacity, const unsigned cha
    /* === Squeeze out all the output blocks === */
    while( outputByteLen > 0 )
    {
-      blockSize = HB_MIN( outputByteLen, rateInBytes );
+      blockSize = HB_MIN( ( unsigned int ) outputByteLen, rateInBytes );
       memcpy( output, state, blockSize );
       output        += blockSize;
       outputByteLen -= blockSize;
@@ -320,13 +320,13 @@ static void Keccak( unsigned int rate, unsigned int capacity, const unsigned cha
 }
 
 /* Function to compute SHAKE128 on the input message with any output length. */
-static void FIPS202_SHAKE128( const unsigned char * input, HB_SIZE inputByteLen, unsigned char * output, int outputByteLen )
+static void FIPS202_SHAKE128( const unsigned char * input, HB_SIZE inputByteLen, unsigned char * output, HB_SIZE outputByteLen )
 {
    Keccak( 1344, 256, input, inputByteLen, 0x1F, output, outputByteLen );
 }
 
 /* Function to compute SHAKE256 on the input message with any output length. */
-static void FIPS202_SHAKE256( const unsigned char * input, HB_SIZE inputByteLen, unsigned char * output, int outputByteLen )
+static void FIPS202_SHAKE256( const unsigned char * input, HB_SIZE inputByteLen, unsigned char * output, HB_SIZE outputByteLen )
 {
    Keccak( 1088, 512, input, inputByteLen, 0x1F, output, outputByteLen );
 }

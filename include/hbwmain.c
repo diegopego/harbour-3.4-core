@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,9 +47,9 @@
 #include <windows.h>
 
 #if defined( HB_OS_WIN_CE )
-   #define HB_LPSTR  LPWSTR
+#  define HB_LPSTR  LPWSTR
 #else
-   #define HB_LPSTR  LPSTR
+#  define HB_LPSTR  LPSTR
 #endif
 
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
@@ -63,7 +63,9 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    HB_SYMBOL_UNUSED( lpCmdLine );
 
-   /* HB_TRACE( HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow ) ); */
+   #if 0
+   HB_TRACE( HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow ) );
+   #endif
 
    hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
 
@@ -71,7 +73,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    iErrorCode = hb_vmQuit();
 
 #else
-   #define HB_MAX_ARGS   256
+#  define HB_MAX_ARGS   256
 
    int argc = 0;
    char * argv[ HB_MAX_ARGS ];
@@ -79,19 +81,19 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    LPSTR pArgs, pArg, pDst, pSrc;
    HB_BOOL fQuoted;
    HANDLE hHeap;
-   #if defined( HB_OS_WIN_CE )
+#  if defined( HB_OS_WIN_CE )
    LPSTR pFree;
-   #endif
+#  endif
 
    argv[ argc++ ] = ( char * ) "";
 
    pArg = NULL;
 
-   #if defined( HB_OS_WIN_CE )
+#  if defined( HB_OS_WIN_CE )
    pSrc = pFree = hb_wctomb( lpCmdLine ); /* No HVM stack */
-   #else
+#  else
    pSrc = lpCmdLine;
-   #endif
+#  endif
    hHeap = GetProcessHeap();
    pDst = pArgs = ( LPSTR ) HeapAlloc( hHeap, 0, strlen( pSrc ) + 1 );
    fQuoted = HB_FALSE;
@@ -127,9 +129,9 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
       argv[ argc++ ] = pArg;
    }
 
-   #if defined( HB_OS_WIN_CE )
+#  if defined( HB_OS_WIN_CE )
    hb_xfree( pFree );
-   #endif
+#  endif
 
    HB_SYMBOL_UNUSED( hInstance );
    HB_SYMBOL_UNUSED( hPrevInstance );

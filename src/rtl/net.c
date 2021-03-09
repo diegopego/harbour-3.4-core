@@ -1,7 +1,7 @@
 /*
  * NetName() function
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net> (Support for DJGPP/GCC/OS2 for NetName())
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -58,7 +58,7 @@
 #elif defined( HB_OS_DOS )
 
    #include "hb_io.h"
-   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
+   #if defined( __DJGPP__ ) || defined( __GNUC__ )
       #include <sys/param.h>
    #endif
 
@@ -100,11 +100,11 @@ char * hb_netname( void )
 {
 #if defined( HB_OS_WIN )
 
-   DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
+   DWORD dwLen = MAX_COMPUTERNAME_LENGTH + 1;
    TCHAR lpValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
 
    lpValue[ 0 ] = TEXT( '\0' );
-   GetComputerName( lpValue, &ulLen );
+   GetComputerName( lpValue, &dwLen );
    lpValue[ MAX_COMPUTERNAME_LENGTH ] = TEXT( '\0' );
 
    if( lpValue[ 0 ] )
@@ -112,13 +112,13 @@ char * hb_netname( void )
 
 #elif defined( HB_OS_DOS )
 
-   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
+#  if defined( __DJGPP__ ) || defined( __GNUC__ )
       char szValue[ MAXGETHOSTNAME + 1 ];
       szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
       gethostname( szValue, MAXGETHOSTNAME );
       if( szValue[ 0 ] )
          return hb_osStrDecode( szValue );
-   #else
+#  else
       union REGS regs;
       struct SREGS sregs;
       char szValue[ 16 ];
@@ -132,7 +132,7 @@ char * hb_netname( void )
 
       if( regs.h.ch != 0 && szValue[ 0 ] )
          return hb_osStrDecode( szValue );
-   #endif
+#  endif
 
 #elif ( defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) ) || \
       ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )

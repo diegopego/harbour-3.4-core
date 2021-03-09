@@ -322,7 +322,7 @@ STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
    oCom:mapEvent( 269, {|| uiDebug( "EXPLORER-269" ) } )
 #endif
    oCom:create()
-#if ! defined( __HBSCRIPT__HBSHELL )  /* TOFIX: disabled in hbrun due to OLE bugs */
+#if ! defined( __HBSCRIPT__HBSHELL )  /* FIXME: disabled in hbrun due to OLE bugs */
    oCom:navigate( hb_Version( HB_VERSION_URL_BASE ) )
 #endif
 
@@ -472,7 +472,7 @@ STATIC PROCEDURE BrwBuildButtons( oCrt, oBrw )
       "Maximize", ;
       "Go Top", ;
       "Go Bottom", ;
-      "Right Most" }
+      "Rightmost" }
    LOCAL aAct := { ;
       {|| wvt_Keyboard( K_F3 ) }, ;
       {|| wvt_Keyboard( K_F4 ) }, ;

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,18 +44,36 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbrddsql.h"
+
 #include "hbapiitm.h"
 #include "hbvm.h"
-
-#include "hbrddsql.h"
 
 #ifndef my_socket_defined
 #define my_socket_defined
 typedef int my_socket;
 #endif
 
+#if defined( HB_GCC_HAS_DIAG ) && defined( __clang__ )
+   #pragma GCC diagnostic push
+   #pragma GCC diagnostic ignored "-Wignored-attributes"  /* Windows */
+   #pragma GCC diagnostic ignored "-Wstrict-prototypes"   /* darwin */
+#endif
+
 #include "mysql.h"
+
+#if defined( HB_GCC_HAS_DIAG ) && defined( __clang__ )
+   #pragma GCC diagnostic pop
+#endif
+
+#if ! defined( MYSQL_VERSION_ID )
+   #if defined( MARIADB_VERSION_ID )
+      /* Required since MariaDB ~10.2.* */
+      #define MYSQL_VERSION_ID  MARIADB_VERSION_ID
+   #else
+      #define MYSQL_VERSION_ID  0
+   #endif
+#endif
 
 #ifndef MYSQL_TYPE_NEWDECIMAL
 #define MYSQL_TYPE_NEWDECIMAL  246
@@ -488,14 +506,14 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    char *    pValue;
    char      szBuffer[ 64 ];
    HB_BOOL   bError;
-   HB_SIZE   ulLen;
+   HB_SIZE   nLen;
 
    bError = HB_FALSE;
    uiIndex--;
    pField = pArea->area.lpFields + uiIndex;
 
    pValue = pSDDData->pNatRecord[ uiIndex ];
-   ulLen  = pSDDData->pNatLength[ uiIndex ];
+   nLen   = pSDDData->pNatLength[ uiIndex ];
 
    /* NULL => NIL (?) */
    if( ! pValue )
@@ -513,22 +531,22 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
          /* Expand strings to field length */
          pStr = ( char * ) hb_xgrab( pField->uiLen + 1 );
-         memcpy( pStr, pValue, ulLen );
+         memcpy( pStr, pValue, nLen );
 
-         if( ( HB_SIZE ) pField->uiLen > ulLen )
-            memset( pStr + ulLen, ' ', pField->uiLen - ulLen );
+         if( ( HB_SIZE ) pField->uiLen > nLen )
+            memset( pStr + nLen, ' ', pField->uiLen - nLen );
 
          pStr[ pField->uiLen ] = '\0';
          hb_itemPutCRaw( pItem, pStr, pField->uiLen );
 #else
          /* Do not expand strings */
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
 #endif
          break;
       }
 
       case HB_FT_MEMO:
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
          hb_itemSetCMemo( pItem );
          break;
 

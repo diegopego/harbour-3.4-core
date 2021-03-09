@@ -39,7 +39,7 @@
       <cGetColor> Color string to be used for the GET expression.
    $DESCRIPTION$
       This command adds a GET object to the reserved array variable
-      named `GetList[]` and displays it to the screen. The field or variable
+      named `GetList` and displays it to the screen. The field or variable
       to be added to the GET object is specified in <xVar> and is displayed
       at row, column coordinate <nRow>, <nCol>.
 
@@ -127,16 +127,14 @@
       be included in the PICTURE string if there are both functions and
       templates.
    $EXAMPLES$
-      PROCEDURE Main()
-         LOCAL cVar := Space( 50 )
-         LOCAL nId := 0
-         CLS
-         @ 3, 1 SAY "Name" GET cVar PICTURE "@!S 30"
-         @ 4, 1 SAY "Id"   GET nId  PICTURE "999.999"
-         READ
-         ? "The name you entered is", cVar
-         ? "The id you entered is", nId
-         RETURN
+      LOCAL cVar := Space( 50 ), nId := 0
+      LOCAL GetList := {}
+      CLS
+      @ 3, 1 SAY "Name" GET cVar PICTURE "@!S 30"
+      @ 4, 1 SAY "Id"   GET nId  PICTURE "999.999"
+      READ
+      ? "The name you entered is", cVar
+      ? "The id you entered is", nId
    $STATUS$
       R
    $COMPLIANCE$
@@ -181,12 +179,10 @@
       For a complete list of PICTURES templates and functions, see the
       `@...GET` command.
    $EXAMPLES$
-      PROCEDURE Main()
-         CLS
-         @ 2, 1 SAY "Harbour"
-         @ 3, 1 SAY "is" COLOR "b/r+"
-         @ 4, 1 SAY "Power" PICTURE "@!"
-         RETURN
+      CLS
+      @ 2, 1 SAY "Harbour"
+      @ 3, 1 SAY "is" COLOR "b/r+"
+      @ 4, 1 SAY "Power" PICTURE "@!"
    $STATUS$
       R
    $COMPLIANCE$

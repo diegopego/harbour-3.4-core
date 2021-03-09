@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------
-# Copyright 2009-2015 Viktor Szakats (vszakats.net/harbour)
+# Copyright 2009-2015 Viktor Szakats (vsz.me/hb)
 # See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
@@ -49,11 +49,7 @@ ifneq ($($(subst HB_INC_,HB_WITH_,$(_DET_VAR_INC_))),)
    $(_DET_VAR_INC_) := $($(subst HB_INC_,HB_WITH_,$(_DET_VAR_INC_)))
 endif
 
-ifneq ($(HB_SRC_ROOTPATH),)
-   _DET_INC_LOCL := $(HB_SRC_ROOTPATH)$(_DET_INC_LOCL)
-else
-   _DET_INC_LOCL := $(realpath $(TOP)$(ROOT)$(_DET_INC_LOCL))
-endif
+_DET_INC_LOCL := $(realpath $(TOP)$(ROOT)$(_DET_INC_LOCL))
 
 _DET_RES_TEXT :=
 
@@ -71,22 +67,18 @@ ifeq ($($(_DET_VAR_HAS_)),)
                   $(_DET_VAR_HAS_) := $($(_DET_VAR_INC_))
                   ifeq ($($(_DET_VAR_INC_)),yes)
                      $(_DET_VAR_HAS_) :=
-                  else
+                  else ifeq ($($(_DET_VAR_INC_)),force)
                      # bypass local check
-                     ifeq ($($(_DET_VAR_INC_)),force)
-                        $(_DET_VAR_HAS_) := .
-                     endif
+                     $(_DET_VAR_HAS_) := .
                   endif
                   ifeq ($($(_DET_VAR_HAS_)),)
                      ifneq ($(HB_BUILD_3RDEXT),no)
                         $(_DET_VAR_HAS_) := $(subst $(subst x, ,x),$(PTHSEP),$(_DET_INC_DEFP))
                      endif
                      $(_DET_VAR_HAS_) := $($(_DET_VAR_HAS_))$(PTHSEP)$(_DET_INC_LOCL)
-                  else
-                     ifeq ($($(_DET_VAR_HAS_)),nolocal)
-                        ifneq ($(HB_BUILD_3RDEXT),no)
-                           $(_DET_VAR_HAS_) := $(subst $(subst x, ,x),$(PTHSEP),$(_DET_INC_DEFP))
-                        endif
+                  else ifeq ($($(_DET_VAR_HAS_)),nolocal)
+                     ifneq ($(HB_BUILD_3RDEXT),no)
+                        $(_DET_VAR_HAS_) := $(subst $(subst x, ,x),$(PTHSEP),$(_DET_INC_DEFP))
                      endif
                   endif
                   ifeq ($($(_DET_VAR_INC_)),local)

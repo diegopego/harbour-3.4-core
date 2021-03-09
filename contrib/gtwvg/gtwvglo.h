@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,12 +53,21 @@
    #endif
 #endif
 
+#include "hbapi.h"
 #include "hbwapi.h"
 #include "hbwinole.h"
 
 #if ! defined( HB_OS_WIN_CE )
-#include <olectl.h>
+#  if defined( _MSC_VER )
+#     pragma warning(push)
+#     pragma warning(disable:4201)  /* warning C4201: nonstandard extension used: nameless struct/union */
+#  endif
+#  include <olectl.h>
+#  if defined( _MSC_VER )
+#     pragma warning(pop)
+#  endif
 #endif
+
 #include <commctrl.h>
 #include <commdlg.h>
 #include <shellapi.h>
@@ -66,6 +75,7 @@
 #include "hbgtcore.h"
 #include "hbapicdp.h"
 #include "hbapierr.h"
+#include "hbapifs.h"
 #include "hbapiitm.h"
 #include "hbset.h"
 #include "hbinit.h"
@@ -108,67 +118,6 @@ HB_EXTERN_BEGIN
 #define SYS_EV_MARK                 1000
 #define HB_MSG_NOTIFYICON           ( WM_USER + 1399 )
 #define HB_ID_NOTIFYICON            99
-
-#if defined( __DMC__ )
-   #if ( _WIN32_IE >= 0x0300 )
-      #if ! defined( ICC_BAR_CLASSES )
-         #define ICC_BAR_CLASSES    0x00000004
-      #endif
-      #if ! defined( COLOR16 )
-         typedef USHORT COLOR16;
-      #endif
-      #if ! defined( TRIVERTEX )
-         typedef struct _TRIVERTEX
-         {
-            LONG    x;
-            LONG    y;
-            COLOR16 Red;
-            COLOR16 Green;
-            COLOR16 Blue;
-            COLOR16 Alpha;
-            } TRIVERTEX, * PTRIVERTEX, * LPTRIVERTEX;
-      #endif
-      #if ! defined( INITCOMMONCONTROLSEX )
-         typedef struct tagINITCOMMONCONTROLSEX
-         {
-            DWORD dwSize;             /* size of this structure */
-            DWORD dwICC;              /* flags indicating which classes to be initialized */
-         } INITCOMMONCONTROLSEX, * LPINITCOMMONCONTROLSEX;
-      #endif
-      #if ! defined( InitCommonControlsEx )
-         WINCOMMCTRLAPI BOOL WINAPI InitCommonControlsEx( LPINITCOMMONCONTROLSEX );
-      #endif
-   #endif
-
-   typedef struct _GRADIENT_RECT
-   {
-      ULONG UpperLeft;
-      ULONG LowerRight;
-   } GRADIENT_RECT, * PGRADIENT_RECT, * LPGRADIENT_RECT;
-
-   #ifndef TTM_SETTIPBKCOLOR
-      #define TTM_SETTIPBKCOLOR     ( WM_USER + 19 )
-   #endif
-   #ifndef TTM_SETTIPTEXTCOLOR
-      #define TTM_SETTIPTEXTCOLOR   ( WM_USER + 20 )
-   #endif
-   #ifndef TTM_GETTIPBKCOLOR
-      #define TTM_GETTIPBKCOLOR     ( WM_USER + 22 )
-   #endif
-   #ifndef TTM_GETTIPTEXTCOLOR
-      #define TTM_GETTIPTEXTCOLOR   ( WM_USER + 23 )
-   #endif
-   #ifndef TTM_SETMAXTIPWIDTH
-      #define TTM_SETMAXTIPWIDTH    ( WM_USER + 24 )
-   #endif
-   #ifndef TTM_GETMAXTIPWIDTH
-      #define TTM_GETMAXTIPWIDTH    ( WM_USER + 25 )
-   #endif
-   #ifndef TTM_SETMARGIN
-      #define TTM_SETMARGIN         ( WM_USER + 26 )
-   #endif
-
-#endif
 
 #if defined( __BORLANDC__ ) && ( __BORLANDC__ == 0x0550 )
    #ifdef __cplusplus

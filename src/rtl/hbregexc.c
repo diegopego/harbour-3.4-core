@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,6 +45,7 @@
  */
 
 #define _HB_REGEX_INTERNAL_
+#include "hbapi.h"
 #include "hbregex.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -174,7 +175,7 @@ HB_BOOL hb_regexMatch( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen, HB
    fMatch = ( s_reg_exec )( pRegEx, szString, nLen, 1, aMatches ) > 0;
    fMatch = fMatch && ( ! fFull ||
             ( HB_REGMATCH_SO( aMatches, 0 ) == 0 &&
-              ( int ) HB_REGMATCH_EO( aMatches, 0 ) == ( int ) nLen ) );
+              ( HB_SIZE ) HB_REGMATCH_EO( aMatches, 0 ) == nLen ) );
 
 #if defined( HB_HAS_PCRE2 )
    pcre2_match_data_free( aMatches );

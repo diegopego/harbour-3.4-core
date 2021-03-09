@@ -31,9 +31,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -297,8 +297,8 @@ HB_FUNC( ATAN )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
          else
          {
-            /* atan normally don't error, but it's save to return Pi()/2
-               or -Pi()/2, respectively, as these
+            /* atan() normally doesn't error, but it's safe to return Pi() / 2
+               or -Pi() / 2, respectively, as these
                are the boundary result values */
             if( dArg < 0.0 )
                hb_retnd( -CT_PI / 2.0 );
@@ -343,11 +343,12 @@ HB_FUNC( ATN2 )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
          else
          {
-            /* DOMAIN error: both arguments to atan2 have been 0 */
-            /* CT3 behaves very strange here: atn2 (0.0, 0.0) == -PI
-               atn2 (0.0, -0.0) == 0.0
-               atn2 (-0.0, 0.0) == -PI
-               atn2 (-0.0, -0.0) == -2*PI */
+            /* DOMAIN error: both arguments to atan2() have been 0 */
+            /* CT3 behaves very strange here:
+               Atn2( 0.0, 0.0 ) == -Pi()
+               Atn2( 0.0, -0.0 ) == 0.0
+               Atn2( -0.0, 0.0 ) == -PI
+               Atn2( -0.0, -0.0 ) == -2 * Pi() */
             if( dX >= 0.0 )
                hb_retnd( -CT_PI );
             else if( dY < 0.0 )

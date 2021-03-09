@@ -1,9 +1,8 @@
 #include <assert.h>
-#include <stdint.h>
+#include "_compat.h"
 #include <string.h>
 
 #include "insecure_memzero.h"
-#include "hbcrypto.h"
 
 #include "sha256.h"
 
@@ -21,7 +20,7 @@ be32enc_vect(uint8_t * dst, const uint32_t * src, size_t len)
 
 	/* Encode vector, one word at a time. */
 	for (i = 0; i < len / 4; i++)
-		HB_PUT_BE_UINT32(dst + i * 4, src[i]);
+		be32enc(dst + i * 4, src[i]);
 }
 
 /*
@@ -38,7 +37,7 @@ be32dec_vect(uint32_t * dst, const uint8_t * src, size_t len)
 
 	/* Decode vector, one word at a time. */
 	for (i = 0; i < len / 4; i++)
-		dst[i] = HB_GET_BE_UINT32(src + i * 4);
+		dst[i] = be32dec(src + i * 4);
 }
 
 /* SHA256 round constants. */
@@ -94,9 +93,9 @@ static const uint32_t Krnd[64] = {
  * the 512-bit input block to produce a new state.
  */
 static void
-SHA256_Transform(uint32_t state[static restrict 8],
-    const uint8_t block[static restrict 64],
-    uint32_t W[static restrict 64], uint32_t S[static restrict 8])
+SHA256_Transform(uint32_t state[HB_C99_STATIC HB_C99_RESTRICT 8],
+    const uint8_t block[HB_C99_STATIC HB_C99_RESTRICT 64],
+    uint32_t W[HB_C99_STATIC HB_C99_RESTRICT 64], uint32_t S[HB_C99_STATIC HB_C99_RESTRICT 8])
 {
 	int i;
 
@@ -159,7 +158,7 @@ static const uint8_t PAD[64] = {
 
 /* Add padding and terminating bit-count. */
 static void
-SHA256_Pad(SHA256_CTX * ctx, uint32_t tmp32[static restrict 72])
+SHA256_Pad(SHA256_CTX * ctx, uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72])
 {
 	size_t r;
 
@@ -180,7 +179,7 @@ SHA256_Pad(SHA256_CTX * ctx, uint32_t tmp32[static restrict 72])
 	}
 
 	/* Add the terminating bit-count. */
-	HB_PUT_BE_UINT64(&ctx->buf[56], ctx->count);
+	be64enc(&ctx->buf[56], ctx->count);
 
 	/* Mix in the final block. */
 	SHA256_Transform(ctx->state, ctx->buf, &tmp32[0], &tmp32[64]);
@@ -213,7 +212,7 @@ SHA256_Init(SHA256_CTX * ctx)
  */
 static void
 _SHA256_Update(SHA256_CTX * ctx, const void * in, size_t len,
-    uint32_t tmp32[static restrict 72])
+    uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72])
 {
 	uint32_t r;
 	const uint8_t * src = in;
@@ -271,7 +270,7 @@ SHA256_Update(SHA256_CTX * ctx, const void * in, size_t len)
  */
 static void
 _SHA256_Final(uint8_t digest[32], SHA256_CTX * ctx,
-    uint32_t tmp32[static restrict 72])
+    uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72])
 {
 
 	/* Add padding. */
@@ -323,8 +322,8 @@ SHA256_Buf(const void * in, size_t len, uint8_t digest[32])
  */
 static void
 _HMAC_SHA256_Init(HMAC_SHA256_CTX * ctx, const void * _K, size_t Klen,
-    uint32_t tmp32[static restrict 72], uint8_t pad[static restrict 64],
-    uint8_t khash[static restrict 32])
+    uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72], uint8_t pad[HB_C99_STATIC HB_C99_RESTRICT 64],
+    uint8_t khash[HB_C99_STATIC HB_C99_RESTRICT 32])
 {
 	const uint8_t * K = _K;
 	size_t i;
@@ -376,7 +375,7 @@ HMAC_SHA256_Init(HMAC_SHA256_CTX * ctx, const void * _K, size_t Klen)
  */
 static void
 _HMAC_SHA256_Update(HMAC_SHA256_CTX * ctx, const void * in, size_t len,
-    uint32_t tmp32[static restrict 72])
+    uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72])
 {
 
 	/* Feed data to the inner SHA256 operation. */
@@ -403,7 +402,7 @@ HMAC_SHA256_Update(HMAC_SHA256_CTX * ctx, const void * in, size_t len)
  */
 static void
 _HMAC_SHA256_Final(uint8_t digest[32], HMAC_SHA256_CTX * ctx,
-    uint32_t tmp32[static restrict 72], uint8_t ihash[static restrict 32])
+    uint32_t tmp32[HB_C99_STATIC HB_C99_RESTRICT 72], uint8_t ihash[HB_C99_STATIC HB_C99_RESTRICT 32])
 {
 
 	/* Finish the inner SHA256 operation. */
@@ -488,7 +487,7 @@ PBKDF2_SHA256(const uint8_t * passwd, size_t passwdlen, const uint8_t * salt,
 	/* Iterate through the blocks. */
 	for (i = 0; i * 32 < dkLen; i++) {
 		/* Generate INT(i + 1). */
-		HB_PUT_BE_UINT32(ivec, (uint32_t)(i + 1));
+		be32enc(ivec, (uint32_t)(i + 1));
 
 		/* Compute U_1 = PRF(P, S || INT(i)). */
 		memcpy(&hctx, &PShctx, sizeof(HMAC_SHA256_CTX));

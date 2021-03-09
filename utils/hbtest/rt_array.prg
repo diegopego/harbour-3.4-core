@@ -1,7 +1,7 @@
 /*
  * Regression tests for the runtime library (array)
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -212,14 +212,15 @@ PROCEDURE Main_ARRAY()
    HBTEST Array( 5000 )                   IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
 #endif
    HBTEST Array( 1 )                      IS "{.[1].}"
-   HBTEST Array( -1 )                     IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
 #ifdef __HARBOUR__
    /* disable Harbour extended optimizations to test correct RTE message */
    #pragma -ko-
 #endif
 #ifdef HB_CLP_STRICT
+   HBTEST Array( -1 )                     IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
    HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
 #else
+   HBTEST Array( -1 )                     IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 A:1:N:-1 "
    HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 A:3:N:1;N:0;N:-10 "
 #endif
    HBTEST Array( 1, 0, "A" )              IS NIL
@@ -404,15 +405,12 @@ PROCEDURE Main_ARRAY()
    HBTEST AScan( saAllTypes, scStringZ  ) IS 3
    Set( _SET_EXACT, .F. )
 
-#ifdef __CLIPPER__
-   HBTEST TAEVSM()                        IS "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0"  /* Bug in CA-Cl*pper 5.x */
-   HBTEST TASOSM1()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0NN 0NN 0         0{  }"
-   HBTEST TASOSM2()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }"
-#else
-   HBTEST TAEVSM()                        IS "N10N 9N 8N 7N 6         5"
-   HBTEST TASOSM1()                       IS "NN 5NN 4         3{ 2, 1, 3 }"
-   HBTEST TASOSM2()                       IS "NN 5NN 4         3{ 2, 1, 3 }"
-#endif
+   HBTEST TAEVSM()                        IS "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0" /* Bug in CA-Cl*pper 5.x */, ;
+                                             "N10N 9N 8N 7N 6         5"
+   HBTEST TASOSM1()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0NN 0NN 0         0{  }"      , ;
+                                             "NN 5NN 4         3{ 2, 1, 3 }"
+   HBTEST TASOSM2()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }"              , ;
+                                             "NN 5NN 4         3{ 2, 1, 3 }"
 
    RETURN
 

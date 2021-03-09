@@ -1,15 +1,3 @@
-diff --strip-trailing-cr -urN zlib.orig/crc32.c zlib/crc32.c
---- zlib.orig/crc32.c	2017-01-15 17:29:40.000000000 +0000
-+++ zlib/crc32.c	2017-01-15 21:36:52.000000000 +0000
-@@ -21,6 +21,8 @@
-   DYNAMIC_CRC_TABLE and MAKECRCH can be #defined to write out crc32.h.
-  */
- 
-+#define NOBYFOUR
-+
- #ifdef MAKECRCH
- #  include <stdio.h>
- #  ifndef DYNAMIC_CRC_TABLE
 diff --strip-trailing-cr -urN zlib.orig/deflate.c zlib/deflate.c
 --- zlib.orig/deflate.c	2017-01-15 17:29:40.000000000 +0000
 +++ zlib/deflate.c	2017-01-15 21:36:52.000000000 +0000
@@ -51,14 +39,14 @@ diff --strip-trailing-cr -urN zlib.orig/deflate.c zlib/deflate.c
      for (;;) {
 diff --strip-trailing-cr -urN zlib.orig/gzguts.h zlib/gzguts.h
 --- zlib.orig/gzguts.h	2017-01-15 17:29:40.000000000 +0000
-+++ zlib/gzguts.h	2017-01-15 21:36:52.000000000 +0000
++++ zlib/gzguts.h	2017-10-18 09:17:05.000000000 +0000
 @@ -35,7 +35,8 @@
  #  include <stddef.h>
  #endif
  
 -#if defined(__TURBOC__) || defined(_MSC_VER) || defined(_WIN32)
 +#if defined(__TURBOC__) || defined(_MSC_VER) || defined(_WIN32) || \
-+    defined(__XCC__) || defined(__POCC__)
++    defined(__POCC__)
  #  include <io.h>
  #endif
  
@@ -74,13 +62,13 @@ diff --strip-trailing-cr -urN zlib.orig/gzguts.h zlib/gzguts.h
  #  endif
 diff --strip-trailing-cr -urN zlib.orig/gzlib.c zlib/gzlib.c
 --- zlib.orig/gzlib.c	2017-01-15 17:29:40.000000000 +0000
-+++ zlib/gzlib.c	2017-01-15 21:36:52.000000000 +0000
++++ zlib/gzlib.c	2017-11-27 22:26:11.000000000 +0000
 @@ -5,7 +5,11 @@
  
  #include "gzguts.h"
  
 -#if defined(_WIN32) && !defined(__BORLANDC__) && !defined(__MINGW32__)
-+#if defined(__XCC__) || defined(__DMC__) || defined(__MINGW32CE__)
++#if defined(__MINGW32CE__)
 +#  define LSEEK lseek
 +#elif defined(__POCC__)
 +#  define LSEEK _lseek64

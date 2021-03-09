@@ -1,9 +1,7 @@
-description=HTTP server
+description=HTTP/HTTPS server
 
 incpaths=.
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
 mt=yes
-
-libs=hbtip.hbc

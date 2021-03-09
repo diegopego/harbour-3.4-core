@@ -1,4 +1,4 @@
-/* Copyright 2011-2017 Viktor Szakats (vszakats.net/harbour) */
+/* Copyright 2011-present Viktor Szakats (vsz.me/hb) */
 
 #if !( defined( OS2 ) || defined( __OS2__ ) || defined( OS_2 ) )
 
@@ -9,10 +9,10 @@
 1 ICON DISCARDABLE "../package/harbour.ico"
 #endif
 
-/* NOTE: BCC 5.5 has a RC preprocessor bug that in certain cases will append
-         a trash byte to the return value of this macro. Such trash bytes
+/* NOTE: BCC 5.5 has an RC preprocessor bug that in certain cases will append
+         a trash byte to the return value of this macro. Such trash byte
          will result in a broken manifest record and the executable rejected
-         by the OS (f.e. Windows 10) to run. It can be "fixed" by using
+         by the OS (e.g. Windows 10) to run. It can be "fixed" by using
          a macro name shorter or longer by one character. But, instead of
          such non-zero-cost hacks, please switch to a modern compiler. */
 #define HB_MACRO2STRING( macro )   HB_MACRO2STRING_( macro )
@@ -29,13 +29,13 @@
 
 #include <winver.h>
 
-VS_VERSION_INFO VERSIONINFO
-FILEVERSION    HB_VER_FILE
-PRODUCTVERSION HB_VER_PROD
-FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
-FILEFLAGS      0
-FILEOS         VOS__WINDOWS32
-FILETYPE       VFT_APP
+VS_VERSION_INFO  VERSIONINFO
+FILEVERSION      HB_VER_FILE
+PRODUCTVERSION   HB_VER_PROD
+FILEFLAGSMASK    VS_FFI_FILEFLAGSMASK
+FILEFLAGS        0
+FILEOS           VOS__WINDOWS32
+FILETYPE         VFT_APP
 BEGIN
    BLOCK "StringFileInfo"
    BEGIN
@@ -45,7 +45,7 @@ BEGIN
          VALUE "CompanyName",      HB_NAME "\0"
          VALUE "FileDescription",  HB_NAME "\0"
          VALUE "FileVersion",      HB_VER_FILE_STR HB_VER_STATUS "\0"
-         VALUE "LegalCopyright",   "Copyright © 1999-2017 (see application banner)" "\0"
+         VALUE "LegalCopyright",   "Copyright © 1999-present (see application banner)" "\0"
          VALUE "ProductName",      HB_NAME "\0"
          VALUE "ProductVersion",   HB_VER_PROD_STR HB_VER_STATUS "\0"
       END

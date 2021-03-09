@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -131,7 +131,7 @@ PROCEDURE __dbgShowWorkAreas()
 
    oCol:ColorBlock := {|| iif( aAlias[ n1 ][ 1 ] == Select() .AND. n2 == 1, { 3, 4 }, { 1, 2 } ) }
 
-   /* Struc browse */
+   /* Structure browser */
 
    aStruc := ( aAlias[ n1 ][ 1 ] )->( dbStruct() )
 
@@ -145,10 +145,13 @@ PROCEDURE __dbgShowWorkAreas()
       aBrw[ 3 ]:Cargo := n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ), ;
       Max( 1, n3 + nSkip ) ), n3 - nPos }
 
-   aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", {|| hb_UPadR( aStruc[ n3 ][ DBS_NAME ], 10 ) + " " + ;
-      hb_UPadR( aStruc[ n3 ][ DBS_TYPE ], 4 ) + " " + ;
-      Str( aStruc[ n3 ][ DBS_LEN ], 3 ) + " " + ;
-      Str( aStruc[ n3 ][ DBS_DEC ], 2 ) } ) )
+   IF ! Empty( aStruc )
+      aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", {|| ;
+         hb_UPadR( aStruc[ n3 ][ DBS_NAME ], 10 ) + " " + ;
+         hb_UPadR( aStruc[ n3 ][ DBS_TYPE ], 4 ) + " " + ;
+         Str( aStruc[ n3 ][ DBS_LEN ], 3 ) + " " + ;
+         Str( aStruc[ n3 ][ DBS_DEC ], 2 ) } ) )
+   ENDIF
 
    /* Show dialog */
 

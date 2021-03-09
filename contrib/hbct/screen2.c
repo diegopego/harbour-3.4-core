@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,6 +45,7 @@
  *
  */
 
+#include "hbapi.h"
 #include "hbapigt.h"
 #include "hbapistr.h"
 #include "hbdate.h"
@@ -140,9 +141,9 @@ HB_FUNC( SAYSPREAD )
          hb_gtBeginWrite();
          do
          {
-            HB_SIZE ul;
-            for( ul = 0; ul < nLen && iCol + ( int ) ul <= iMaxCol; ++ul )
-               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pwText[ nPos + ul ] );
+            HB_SIZE nPos2;
+            for( nPos2 = 0; nPos2 < nLen && iCol + ( int ) nPos2 <= iMaxCol; ++nPos2 )
+               hb_gtPutChar( iRow, iCol + ( int ) nPos2, iColor, 0, pwText[ nPos + nPos2 ] );
             nLen += 2;
             if( lDelay )
             {
@@ -200,21 +201,21 @@ HB_FUNC( SAYMOVEIN )
          hb_gtBeginWrite();
          do
          {
-            HB_SIZE ul;
+            HB_SIZE nPos;
 
             if( fBack )
             {
                if( iCol <= iMaxCol )
                {
-                  for( ul = 0; ul < nChars; ++ul )
-                     hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pwText[ ul ] );
+                  for( nPos = 0; nPos < nChars; ++nPos )
+                     hb_gtPutChar( iRow, iCol + ( int ) nPos, iColor, 0, pwText[ nPos ] );
                }
                --iCol;
             }
             else
             {
-               for( ul = 0; ul < nChars; ++ul )
-                  hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pwText[ ul ] );
+               for( nPos = 0; nPos < nChars; ++nPos )
+                  hb_gtPutChar( iRow, iCol + ( int ) nPos, iColor, 0, pwText[ nPos ] );
                --pwText;
             }
             if( ( int ) nChars + iCol <= iMaxCol )
@@ -324,7 +325,7 @@ HB_FUNC( SCREENSTR )  /* TODO: Unicode support */
 {
    int iRow, iCol, iMaxRow, iMaxCol;
    char * pBuffer;
-   HB_SIZE ulCount = HB_SIZE_MAX;
+   HB_SIZE nCount = HB_SIZE_MAX;
 
    hb_gtGetPos( &iRow, &iCol );
    if( HB_ISNUM( 1 ) )
@@ -332,17 +333,17 @@ HB_FUNC( SCREENSTR )  /* TODO: Unicode support */
    if( HB_ISNUM( 2 ) )
       iCol = hb_parni( 2 );
    if( HB_ISNUM( 3 ) )
-      ulCount = hb_parns( 3 );
+      nCount = hb_parns( 3 );
    iMaxRow = hb_gtMaxRow();
    iMaxCol = hb_gtMaxCol();
 
-   if( iRow >= 0 && iRow <= iMaxRow && iCol >= 0 && iCol <= iMaxCol && ulCount )
+   if( iRow >= 0 && iRow <= iMaxRow && iCol >= 0 && iCol <= iMaxCol && nCount )
    {
       char * szText;
       HB_SIZE nSize = ( HB_SIZE ) ( iMaxRow - iRow + 1 ) * ( iMaxCol - iCol + 1 );
-      if( nSize > ulCount )
-         nSize = ulCount;
-      ulCount = nSize;
+      if( nSize > nCount )
+         nSize = nCount;
+      nCount = nSize;
       nSize <<= 1;
       szText = pBuffer = ( char * ) hb_xgrab( nSize + 1 );
       do
@@ -357,9 +358,9 @@ HB_FUNC( SCREENSTR )  /* TODO: Unicode support */
             *szText++ = ( char ) usChar;
             *szText++ = ( char ) iColor;
          }
-         while( --ulCount && ++iC <= iMaxCol );
+         while( --nCount && ++iC <= iMaxCol );
       }
-      while( ulCount && ++iRow <= iMaxRow );
+      while( nCount && ++iRow <= iMaxRow );
 
       hb_retclen_buffer( pBuffer, nSize );
    }

@@ -17,7 +17,7 @@
 #include "box.ch"
 
 /* NOTE: In original NF, flag parameters were also accepted when
-         having extra characters (f.e. "DOUBLE" instead of "D"),
+         having extra characters (e.g. "DOUBLE" instead of "D"),
          but only if _SET_EXACT was set to .F., Harbour accepts them
          that way regardless of _SET_EXACT setting. [vszakats] */
 
@@ -64,7 +64,7 @@ PROCEDURE ft_XBox( ;
    nBRow := nTRow + nNumRows + 1
 
    // form box and border
-   hb_Scroll( nTRow, nLCol, nBRow, nRCol )
+   Scroll( nTRow, nLCol, nBRow, nRCol )
    SetColor( hb_defaultValue( cBorColor, "N/W" ) )
    hb_DispBox( nTRow, nLCol, nBRow, nRCol, iif( hb_LeftEq( cBorType, "D" ), HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ) )
    hb_Shadow( nTRow, nLCol, nBRow, nRCol )

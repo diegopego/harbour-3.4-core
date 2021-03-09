@@ -2,8 +2,9 @@
  * Memvar (PRIVATE/PUBLIC) runtime support
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *   __mvSave(), __mvRestore() (Thanks to Dave Pearson and Jo French for the original Clipper function FReadMem() to read .mem files)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
+ *   __mvSave(), __mvRestore() (Thanks to Dave Pearson and Jo French for
+ *   the original Clipper function FReadMem() to read .mem files)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,8 +60,8 @@
 #include "hbstack.h"
 
 #if ! defined( HB_MT_VM )
-   #define hb_dynsymGetMemvar( p )     ( ( PHB_ITEM ) ( p )->pMemvar )
-   #define hb_dynsymSetMemvar( p, h )  do { ( p )->pMemvar = ( h ); } while( 0 )
+#  define hb_dynsymGetMemvar( p )     ( ( PHB_ITEM ) ( p )->pMemvar )
+#  define hb_dynsymSetMemvar( p, h )  do { ( p )->pMemvar = ( h ); } while( 0 )
 #endif
 
 #define TABLE_INITHB_VALUE    100
@@ -101,7 +102,7 @@ static PHB_ITEM hb_memvarValueNew( void )
 #undef hb_memvarValueIncRef
 void hb_memvarValueIncRef( PHB_ITEM pMemvar )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarValueIncRef(%p)", pMemvar ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarValueIncRef(%p)", ( void * ) pMemvar ) );
 
    hb_xRefInc( pMemvar );
 }
@@ -112,7 +113,7 @@ void hb_memvarValueIncRef( PHB_ITEM pMemvar )
  */
 void hb_memvarValueDecRef( PHB_ITEM pMemvar )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarValueDecRef(%p)", pMemvar ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarValueDecRef(%p)", ( void * ) pMemvar ) );
 
    if( hb_xRefDec( pMemvar ) )
    {
@@ -129,7 +130,7 @@ static void hb_memvarDetachDynSym( PHB_DYNS pDynSym, PHB_ITEM pPrevMemvar )
 {
    PHB_ITEM pMemvar;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarDetachDynSym(%p,%p)", pDynSym, pPrevMemvar ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarDetachDynSym(%p,%p)", ( void * ) pDynSym, ( void * ) pPrevMemvar ) );
 
    pMemvar = hb_dynsymGetMemvar( pDynSym );
    hb_dynsymSetMemvar( pDynSym, pPrevMemvar );
@@ -142,7 +143,7 @@ static void hb_memvarDetachDynSym( PHB_DYNS pDynSym, PHB_ITEM pPrevMemvar )
  */
 PHB_ITEM hb_memvarDetachLocal( PHB_ITEM pLocal )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarDetachLocal(%p)", pLocal ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarDetachLocal(%p)", ( void * ) pLocal ) );
 
    if( HB_IS_BYREF( pLocal ) )
    {
@@ -208,7 +209,7 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
    PHB_PRIVATE_STACK pPrivateStack;
    PHB_ITEM pMemvar;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarAddPrivate(%p,%p)", pDynSym, pValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarAddPrivate(%p,%p)", ( void * ) pDynSym, ( void * ) pValue ) );
 
    pPrivateStack = hb_stackGetPrivateStack();
 
@@ -318,7 +319,7 @@ void hb_memvarSetPrivatesBase( HB_SIZE nBase )
 }
 
 /*
- * Update PRIVATE base ofsset so they will not be removed
+ * Update PRIVATE base offset so they will not be removed
  * when function return
  */
 void hb_memvarUpdatePrivatesBase( void )
@@ -354,7 +355,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, PHB_ITEM pItem )
 {
    PHB_DYNS pDyn;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarSetValue(%p, %p)", pMemvarSymb, pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarSetValue(%p, %p)", ( void * ) pMemvarSymb, ( void * ) pItem ) );
 
    pDyn = pMemvarSymb->pDynSym;
    if( pDyn )
@@ -363,7 +364,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, PHB_ITEM pItem )
 
       pMemvar = hb_dynsymGetMemvar( pDyn );
 
-      HB_TRACE( HB_TR_INFO, ( "Memvar item (%p)(%s) assigned", pMemvar, pMemvarSymb->szName ) );
+      HB_TRACE( HB_TR_INFO, ( "Memvar item (%p)(%s) assigned", ( void * ) pMemvar, pMemvarSymb->szName ) );
 
       if( pMemvar )
       {
@@ -385,9 +386,9 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, PHB_ITEM pItem )
 HB_ERRCODE hb_memvarGet( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 {
    PHB_DYNS pDyn;
-   HB_ERRCODE bSuccess = HB_FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGet(%p, %p)", pItem, pMemvarSymb ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGet(%p, %p)", ( void * ) pItem, ( void * ) pMemvarSymb ) );
 
    pDyn = pMemvarSymb->pDynSym;
    if( pDyn )
@@ -396,7 +397,7 @@ HB_ERRCODE hb_memvarGet( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 
       pMemvar = hb_dynsymGetMemvar( pDyn );
 
-      HB_TRACE( HB_TR_INFO, ( "Memvar item (%p)(%s) queried", pMemvar, pMemvarSymb->szName ) );
+      HB_TRACE( HB_TR_INFO, ( "Memvar item (%p)(%s) queried", ( void * ) pMemvar, pMemvarSymb->szName ) );
 
       if( pMemvar )
       {
@@ -406,18 +407,18 @@ HB_ERRCODE hb_memvarGet( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
             hb_itemCopy( pItem, hb_itemUnRef( pMemvar ) );
          else
             hb_itemCopy( pItem, pMemvar );
-         bSuccess = HB_SUCCESS;
+         errCode = HB_SUCCESS;
       }
    }
    else
       hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
 
-   return bSuccess;
+   return errCode;
 }
 
 void hb_memvarGetValue( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetValue(%p, %p)", pItem, pMemvarSymb ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetValue(%p, %p)", ( void * ) pItem, ( void * ) pMemvarSymb ) );
 
    if( hb_memvarGet( pItem, pMemvarSymb ) == HB_FAILURE )
    {
@@ -444,7 +445,7 @@ void hb_memvarGetRefer( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 {
    PHB_DYNS pDyn;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetRefer(%p, %p)", pItem, pMemvarSymb ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetRefer(%p, %p)", ( void * ) pItem, ( void * ) pMemvarSymb ) );
 
    pDyn = ( PHB_DYNS ) pMemvarSymb->pDynSym;
    if( pDyn )
@@ -453,7 +454,7 @@ void hb_memvarGetRefer( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 
       pMemvar = hb_dynsymGetMemvar( pDyn );
 
-      HB_TRACE( HB_TR_INFO, ( "Memvar item (%p)(%s) referenced", pMemvar, pMemvarSymb->szName ) );
+      HB_TRACE( HB_TR_INFO, ( "Memvar item (%p)(%s) referenced", ( void * ) pMemvar, pMemvarSymb->szName ) );
 
       if( pMemvar )
       {
@@ -504,7 +505,7 @@ void hb_memvarGetRefer( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 
 PHB_ITEM hb_memvarGetItem( PHB_SYMB pMemvarSymb )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetItem(%p)", pMemvarSymb ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetItem(%p)", ( void * ) pMemvarSymb ) );
 
    if( pMemvarSymb->pDynSym )
    {
@@ -525,7 +526,7 @@ PHB_ITEM hb_memvarGetItem( PHB_SYMB pMemvarSymb )
  */
 void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarNewParameter(%p, %p)", pSymbol, pValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarNewParameter(%p, %p)", ( void * ) pSymbol, ( void * ) pValue ) );
 
    hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, HB_VSCOMP_PRIVATE, pValue );
 }
@@ -534,7 +535,7 @@ static PHB_DYNS hb_memvarFindSymbol( const char * szArg, HB_SIZE nLen )
 {
    PHB_DYNS pDynSym = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarFindSymbol(%p,%" HB_PFS "u)", szArg, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarFindSymbol(%p,%" HB_PFS "u)", ( const void * ) szArg, nLen ) );
 
    if( nLen && szArg && *szArg )
    {
@@ -573,7 +574,7 @@ char * hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pnLen )
    PHB_DYNS pDynVar;
    char * szValue = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetStrValuePtr(%s, %p)", szVarName, pnLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetStrValuePtr(%s, %p)", ( void * ) szVarName, ( void * ) pnLen ) );
 
    pDynVar = hb_memvarFindSymbol( szVarName, *pnLen );
 
@@ -619,7 +620,7 @@ void hb_memvarCreateFromItem( PHB_ITEM pMemvar, int iScope, PHB_ITEM pValue )
 {
    PHB_DYNS pDynVar = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarCreateFromItem(%p, %d, %p)", pMemvar, iScope, pValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarCreateFromItem(%p, %d, %p)", ( void * ) pMemvar, iScope, ( void * ) pValue ) );
 
    /* find dynamic symbol or create one */
    if( HB_IS_SYMBOL( pMemvar ) )
@@ -639,7 +640,7 @@ void hb_memvarCreateFromItem( PHB_ITEM pMemvar, int iScope, PHB_ITEM pValue )
 
 static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, int iScope, PHB_ITEM pValue )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarCreateFromDynSymbol(%p, %d, %p)", pDynVar, iScope, pValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarCreateFromDynSymbol(%p, %d, %p)", ( void * ) pDynVar, iScope, ( void * ) pValue ) );
 
    if( iScope & HB_VSCOMP_PUBLIC )
    {
@@ -664,8 +665,8 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, int iScope, PHB_ITEM
              */
             pMemvar->type = HB_IT_LOGICAL;
 
-            /* NOTE: PUBLIC variables named CLIPPER and HARBOUR are initialized */
-            /*       to .T., this is normal Clipper behaviour. [vszakats] */
+            /* NOTE: PUBLIC variables named CLIPPER and HARBOUR are initialized
+                     to .T., this is normal Clipper behaviour. [vszakats] */
 
             pMemvar->item.asLogical.value =
                         ( strcmp( pDynVar->pSymbol->szName, "HARBOUR" ) == 0 ||
@@ -687,7 +688,7 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, int iScope, PHB_ITEM
  */
 static void hb_memvarRelease( PHB_ITEM pMemvar )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarRelease(%p)", pMemvar ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarRelease(%p)", ( void * ) pMemvar ) );
 
    if( HB_IS_STRING( pMemvar ) )
    {
@@ -706,7 +707,7 @@ static void hb_memvarRelease( PHB_ITEM pMemvar )
          {
             if( pDynSymbol == hb_stackGetPrivateStack()->stack[ --nBase ].pDynSym )
             {
-               /* reset current value to NIL - the overriden variables will be
+               /* reset current value to NIL - the overridden variables will be
                 * visible after exit from current procedure
                 */
                pMemvar = hb_dynsymGetMemvar( pDynSymbol );
@@ -746,7 +747,7 @@ static void hb_memvarReleaseWithMask( const char * szMask, HB_BOOL bInclude )
       PHB_ITEM pMemvar;
 
       pDynVar = hb_stackGetPrivateStack()->stack[ nCount ].pDynSym;
-      /* reset current value to NIL - the overriden variables will be
+      /* reset current value to NIL - the overridden variables will be
        * visible after exit from current procedure
        */
       pMemvar = hb_dynsymGetMemvar( pDynVar );
@@ -763,7 +764,7 @@ static void hb_memvarReleaseWithMask( const char * szMask, HB_BOOL bInclude )
  */
 static int hb_memvarScopeGet( PHB_DYNS pDynVar )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarScopeGet(%p)", pDynVar ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarScopeGet(%p)", ( void * ) pDynVar ) );
 
    if( hb_dynsymGetMemvar( pDynVar ) == 0 )
       return HB_MV_UNKNOWN;
@@ -927,7 +928,7 @@ static PHB_ITEM hb_memvarDebugVariable( int iScope, int iPos, const char ** pszN
 
    *pszName = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarDebugVariable(%d, %d, %p)", iScope, iPos, pszName ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarDebugVariable(%d, %d, %p)", iScope, iPos, ( const void * ) pszName ) );
 
    if( iPos > 0 )
    {
@@ -1325,7 +1326,7 @@ HB_FUNC( __MVPUT )
                                               pName->item.asString.length );
       if( pDynVar )
       {
-         /* variable was declared somwhere - assign a new value
+         /* variable was declared somewhere - assign a new value
           */
          hb_memvarSetValue( pDynVar->pSymbol, pValue );
       }
@@ -1683,7 +1684,7 @@ HB_FUNC( __MVRESTORE )
                   PHB_DYNS pDynVar = hb_memvarFindSymbol( pszName, strlen( pszName ) );
 
                   if( pDynVar )
-                     /* variable was declared somwhere - assign a new value */
+                     /* variable was declared somewhere - assign a new value */
                      hb_memvarSetValue( pDynVar->pSymbol, pItem );
                   else
                      /* attempt to assign a value to undeclared variable create the PRIVATE one */

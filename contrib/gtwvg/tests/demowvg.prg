@@ -106,7 +106,7 @@ PROCEDURE Main()
 
    oLastMenu:setItem( 14, { "This is Set Against Prev Menu", {|| wapi_MessageBox( , "Hi" ) } } )
 
-   SetMode( MaxRow() + 1, MaxCol() + 1 )  /* Needed to accomodate attached menu */
+   SetMode( MaxRow() + 1, MaxCol() + 1 )  /* Needed to accommodate attached menu */
 
    SetKey( K_F12        , {|| hb_gtInfo( HB_GTI_ACTIVATESELECTCOPY ) } )
    SetKey( K_CTRL_V     , {|| __Keyboard( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) ) } )
@@ -116,7 +116,7 @@ PROCEDURE Main()
 
    pGT := SetGT( 1, hb_gtSelect() )
 
-   /*  Force mouse pointer right below the Harbour label */
+   /* Force mouse pointer right below the Harbour label */
    wvt_SetMousePos( 2, 40 )
 
    AAdd( aBlocks, {|| wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
@@ -255,7 +255,7 @@ STATIC PROCEDURE WvtNextGets_X()
    LOCAL scr        := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL wvtScr     := wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
 
-   // Change the values of pallatte arbitrarily though yu can fine tune
+   // Change the values of palette arbitrarly though you can fine-tune
    // these values with realistic values.
    aNewPalette[ 8 ] += 100000 * ++s_nPalletMultiplier
 

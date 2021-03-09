@@ -1,5 +1,7 @@
-ifeq ($(HB_COMPILER_VER),)
-   $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let auto-detection detect it, or set HB_COMPILER_VER manually according to your C compiler version (f.e. 0406 for 4.6.x).)
+ifeq ($(__HB_COMPILER_VER),)
+   $(info ! Warning: __HB_COMPILER_VER internal variable empty. If the variable \
+      was manually set, it must be removed and if it still/otherwise fails, this \
+      may indicate an auto-detection failure and should be reported.)
 endif
 
 ifeq ($(HB_BUILD_MODE),cpp)
@@ -19,21 +21,19 @@ CC_OUT := -o
 CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 # Similar to MSVC -GS (default) option:
-ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407 0408),)
+ifeq ($(filter $(__HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407 0408),)
    #CFLAGS += -fstack-protector-strong
    #SYSLIBS += ssp
-else
-ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400),)
+else ifeq ($(filter $(__HB_COMPILER_VER),0209 0304 0400),)
    # too weak
    #CFLAGS += -fstack-protector
    # too slow
    #CFLAGS += -fstack-protector-all
    #SYSLIBS += ssp
 endif
-endif
 
-ifneq ($(HB_COMPILER_VER),)
-   ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407),)
+ifneq ($(__HB_COMPILER_VER),)
+   ifeq ($(filter $(__HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407),)
       LDFLAGS += -static-libgcc
       DFLAGS += -static-libgcc
 #     ifeq ($(HB_BUILD_MODE),cpp)
@@ -43,10 +43,10 @@ ifneq ($(HB_COMPILER_VER),)
 endif
 
 # It is also supported by official mingw 4.4.x and mingw64 4.4.x,
-# but not supported by mingw tdm 4.4.x, so I only enable it on or
+# but not supported by mingw TDM 4.4.x, so I only enable it on or
 # above 4.5.0.
-ifneq ($(HB_COMPILER_VER),)
-   ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404),)
+ifneq ($(__HB_COMPILER_VER),)
+   ifeq ($(filter $(__HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404),)
       LDFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
       DFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
       ifeq ($(HB_COMPILER),mingw64)
@@ -54,7 +54,7 @@ ifneq ($(HB_COMPILER_VER),)
       else
          LDFLAGS += -Wl,--pic-executable,-e,_mainCRTStartup
       endif
-      ifeq ($(filter $(HB_COMPILER_VER),0405 0406 0407 0408 0409),)
+      ifeq ($(filter $(__HB_COMPILER_VER),0405 0406 0407 0408 0409),)
          ifeq ($(HB_COMPILER),mingw64)
             LDFLAGS += -Wl,--high-entropy-va -Wl,--image-base,0x140000000
             DFLAGS += -Wl,--high-entropy-va -Wl,--image-base,0x180000000
@@ -72,18 +72,18 @@ ifneq ($(HB_COMPILER_VER),)
 endif
 
 # Enable this, once better than a no-op
-#ifeq ($(filter $(HB_COMPILER_VER),0209 0304),)
+#ifeq ($(filter $(__HB_COMPILER_VER),0209 0304),)
 #   CFLAGS += -D_FORTIFY_SOURCE=2
 #endif
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
    # CFLAGS += -Wextra -Wformat-security
-#  ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401),)
+#  ifeq ($(filter $(__HB_COMPILER_VER),0209 0304 0400 0401),)
 #     # https://gcc.gnu.org/gcc-4.2/changes.html
 #     CFLAGS += -Wstrict-overflow=4
 #  endif
-   ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407 0408 0409 0501 0502 0503 0504),)
+   ifeq ($(filter $(__HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407 0408 0409 0501 0502 0503 0504),)
       CFLAGS += -Wlogical-op -Wduplicated-cond -Wshift-negative-value -Wnull-dereference
    endif
 else
@@ -101,7 +101,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
       # It makes debugging hard or impossible on x86 systems.
       ifneq ($(HB_BUILD_DEBUG),yes)
          # It's the default in 4.6 and up
-         ifneq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405),)
+         ifneq ($(filter $(__HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405),)
             CFLAGS += -fomit-frame-pointer
          endif
       endif
@@ -131,7 +131,7 @@ RC_OUT := -o$(subst x,x, )
 RCFLAGS += -I. -I$(HB_HOST_INC) -O coff -c65001
 
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
-   ARSTRIP = && ${HB_CCPATH}${HB_CCPREFIX}strip -S $(LIB_DIR)/$@
+   ARSTRIP = && strip -S $(LIB_DIR)/$@
 endif
 ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
    LDSTRIP := -s
@@ -155,9 +155,14 @@ LDFLAGS += $(LIBPATHS)
 
 ifneq ($(HB_CODESIGN_KEY),)
    define create_exe_signed
-      $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) $(LD_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $(^F) $(LDLIBS) $(LDSTRIP)
+      $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) \
+         $(LD_OUT)$(subst /,$(DIRSEP),$(BIN_DIR)/$@) $(^F) \
+         $(LDLIBS) $(LDSTRIP)
       @$(ECHO) $(ECHOQUOTE)! Code signing: $(subst /,$(DIRSEP),$(BIN_DIR)/$@)$(ECHOQUOTE)
-      @osslsigncode sign -h sha256 -pkcs12 $(HB_CODESIGN_KEY) -pass "$(HB_CODESIGN_KEY_PASS)" -ts http://timestamp.digicert.com -in $(subst /,$(DIRSEP),$(BIN_DIR)/$@) -out $(subst /,$(DIRSEP),$(BIN_DIR)/$@)-signed
+      @osslsigncode sign -h sha256 -pkcs12 $(HB_CODESIGN_KEY) \
+         -pass "$(HB_CODESIGN_KEY_PASS)" -ts $(HB_SIGN_TIMEURL) \
+         -in $(subst /,$(DIRSEP),$(BIN_DIR)/$@) \
+         -out $(subst /,$(DIRSEP),$(BIN_DIR)/$@)-signed
       @$(CP) $(subst /,$(DIRSEP),$(BIN_DIR)/$@)-signed $(subst /,$(DIRSEP),$(BIN_DIR)/$@)
       @$(RM) $(subst /,$(DIRSEP),$(BIN_DIR)/$@)-signed
    endef
@@ -174,7 +179,9 @@ endef
 define create_library
    $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
    $(foreach file,$^,$(library_object))
-   ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
+   ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) \
+      $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) \
+      || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
 endef
 
 AR_RULE = $(create_library)
@@ -193,9 +200,16 @@ ifneq ($(HB_CODESIGN_KEY),)
    define create_dynlib_signed
       $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
       $(foreach file,$^,$(dynlib_object))
-      $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DEF_FILE) $(DLIBS) -Wl,--out-implib,$(IMP_FILE),--output-def,$(DYN_DIR)/$(basename $@).def -Wl,--major-image-version,$(HB_VER_MAJOR) -Wl,--minor-image-version,$(HB_VER_MINOR) $(DYSTRIP)
+      $(DY) $(DFLAGS) $(HB_USER_DFLAGS) \
+         $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DEF_FILE) $(DLIBS) \
+         -Wl,--out-implib,$(IMP_FILE),--output-def,$(DYN_DIR)/$(basename $@).def \
+         -Wl,--major-image-version,$(HB_VER_MAJOR) \
+         -Wl,--minor-image-version,$(HB_VER_MINOR) $(DYSTRIP)
       @$(ECHO) $(ECHOQUOTE)! Code signing: $(DYN_DIR)/$@$(ECHOQUOTE)
-      @osslsigncode sign -h sha256 -pkcs12 $(HB_CODESIGN_KEY) -pass $(HB_CODESIGN_KEY_PASS) -ts http://timestamp.digicert.com -in $(DYN_DIR)/$@ -out $(DYN_DIR)/$@-signed
+      @osslsigncode sign -h sha256 -pkcs12 $(HB_CODESIGN_KEY) \
+         -pass $(HB_CODESIGN_KEY_PASS) -ts $(HB_SIGN_TIMEURL) \
+         -in $(DYN_DIR)/$@ \
+         -out $(DYN_DIR)/$@-signed
       @$(CP) $(DYN_DIR)/$@-signed $(DYN_DIR)/$@
       @$(RM) $(DYN_DIR)/$@-signed
    endef
@@ -204,7 +218,11 @@ else
    define create_dynlib
       $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
       $(foreach file,$^,$(dynlib_object))
-      $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DEF_FILE) $(DLIBS) -Wl,--out-implib,$(IMP_FILE),--output-def,$(DYN_DIR)/$(basename $@).def -Wl,--major-image-version,$(HB_VER_MAJOR) -Wl,--minor-image-version,$(HB_VER_MINOR) $(DYSTRIP)
+      $(DY) $(DFLAGS) $(HB_USER_DFLAGS) \
+         $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DEF_FILE) $(DLIBS) \
+         -Wl,--out-implib,$(IMP_FILE),--output-def,$(DYN_DIR)/$(basename $@).def \
+         -Wl,--major-image-version,$(HB_VER_MAJOR) \
+         -Wl,--minor-image-version,$(HB_VER_MINOR) $(DYSTRIP)
    endef
    DY_RULE = $(create_dynlib)
 endif

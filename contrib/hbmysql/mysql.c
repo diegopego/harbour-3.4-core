@@ -1,7 +1,7 @@
 /*
- * MySQL DBMS low level (client api) interface code.
+ * MySQL DBMS low-level (client API) interface code.
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (GC support)
+ * Copyright 2010 Viktor Szakats (vsz.me/hb) (GC support)
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net> (DATATOSQL(), FILETOSQLBINARY())
  *
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,10 +56,30 @@
    #include <winsock2.h>
 #endif
 
+#if defined( HB_GCC_HAS_DIAG ) && defined( __clang__ )
+   #pragma GCC diagnostic push
+   #pragma GCC diagnostic ignored "-Wignored-attributes"  /* Windows */
+   #pragma GCC diagnostic ignored "-Wstrict-prototypes"   /* darwin */
+#endif
+
 #include "mysql.h"
 
-/* NOTE: OS/2 EMX port of MySQL needs libmysqlclient.a from 3.21.33b build which has st and mt
-         versions of client library. I'm using ST version since Harbour is single threaded.
+#if defined( HB_GCC_HAS_DIAG ) && defined( __clang__ )
+   #pragma GCC diagnostic pop
+#endif
+
+#if ! defined( MYSQL_VERSION_ID )
+   #if defined( MARIADB_VERSION_ID )
+      /* Required since MariaDB ~10.2.* */
+      #define MYSQL_VERSION_ID  MARIADB_VERSION_ID
+   #else
+      #define MYSQL_VERSION_ID  0
+   #endif
+#endif
+
+/* NOTE: OS/2 EMX port of MySQL needs libmysqlclient.a from 3.21.33b build
+         which has ST and MT versions of client library. I'm using ST version
+         since Harbour is single threaded.
          You need also .h files from same distribution. */
 
 /* GC object handlers */
@@ -157,7 +177,7 @@ HB_FUNC( MYSQL_REAL_CONNECT ) /* MYSQL * mysql_real_connect( MYSQL *, char * hos
    const char * szHost = hb_parc( 1 );
    const char * szUser = hb_parc( 2 );
    const char * szPass = hb_parc( 3 );
-   unsigned int port   = ( unsigned int ) hb_parnidef( 4, MYSQL_PORT );
+   unsigned int port   = ( unsigned int ) hb_parni( 4 );
    unsigned int flags  = ( unsigned int ) hb_parni( 5 );
 
 #if MYSQL_VERSION_ID > 32200
@@ -181,7 +201,7 @@ HB_FUNC( MYSQL_REAL_CONNECT ) /* MYSQL * mysql_real_connect( MYSQL *, char * hos
 
       /* from 3.22.x of MySQL there is a new parameter in mysql_real_connect() call, that is char * db
          which is not used here */
-      if( mysql_real_connect( mysql, szHost, szUser, szPass, 0, port, NULL, flags ) )
+      if( mysql_real_connect( mysql, szHost, szUser, szPass, NULL, port, NULL, flags ) )
          hb_MYSQL_ret( mysql );
       else
       {
@@ -596,4 +616,23 @@ HB_FUNC( MYSQL_ESCAPE_STRING_FROM_FILE )
       hb_retclen_buffer( buffer, nSize );
       hb_xfree( from );
    }
+}
+
+HB_FUNC( MYSQL_GET_CLIENT_INFO )
+{
+   hb_retc( mysql_get_client_info() );
+}
+
+HB_FUNC( MYSQL_GET_CLIENT_VERSION )
+{
+#if MYSQL_VERSION_ID >= 40101
+   hb_retnl( mysql_get_client_version() );
+#else
+   hb_retnl( 0 );
+#endif
+}
+
+HB_FUNC( MYSQL_VERSION_ID )
+{
+   hb_retnl( MYSQL_VERSION_ID );
 }

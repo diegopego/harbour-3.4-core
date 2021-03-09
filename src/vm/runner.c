@@ -2,7 +2,8 @@
  * Harbour Portable Object (.hrb) file runner
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
- * Copyright 2002 Alexander Kresin <alex@belacy.belgorod.su> (hb_hrbLoad(), hb_hrbDo(), hb_hrbUnload(), hb_hrbGetFunSym())
+ * Copyright 2002 Alexander Kresin <alex@belacy.belgorod.su>
+ *   (hb_hrbLoad(), hb_hrbDo(), hb_hrbUnload(), hb_hrbGetFunSym())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -97,7 +98,7 @@ static int hb_hrbReadHead( const char * szBody, HB_SIZE nBodySize, HB_SIZE * pnB
    const char * pVersion;
    HB_SIZE nSigSize;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbReadHead(%p,%" HB_PFS "u,%p)", szBody, nBodySize, pnBodyOffset ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbReadHead(%p,%" HB_PFS "u,%p)", ( const void * ) szBody, nBodySize, ( void * ) pnBodyOffset ) );
 
    nSigSize = hb_hrbCheckSig( szBody, nBodySize );
 
@@ -112,7 +113,7 @@ static int hb_hrbReadHead( const char * szBody, HB_SIZE nBodySize, HB_SIZE * pnB
 
 static HB_BOOL hb_hrbReadValue( const char * szBody, HB_SIZE nBodySize, HB_SIZE * pnBodyOffset, HB_ULONG * pulValue )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbReadValue(%p,%" HB_PFS "u,%p,%p)", szBody, nBodySize, pnBodyOffset, pulValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbReadValue(%p,%" HB_PFS "u,%p,%p)", ( const void * ) szBody, nBodySize, ( void * ) pnBodyOffset, ( void * ) pulValue ) );
 
    if( *pnBodyOffset + 4 < nBodySize )
    {
@@ -132,7 +133,7 @@ static char * hb_hrbReadId( const char * szBody, HB_SIZE nBodySize, HB_SIZE * pn
 {
    const char * szIdx;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbReadId(%p,%" HB_PFS "u,%p)", szBody, nBodySize, pnBodyOffset ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbReadId(%p,%" HB_PFS "u,%p)", ( const void * ) szBody, nBodySize, ( void * ) pnBodyOffset ) );
 
    szIdx = &szBody[ *pnBodyOffset ];
 
@@ -150,7 +151,7 @@ static HB_ULONG hb_hrbFindSymbol( const char * szName, PHB_DYNF pDynFunc, HB_ULO
 {
    HB_ULONG ulRet;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbFindSymbol(%s, %p, %lu)", szName, pDynFunc, ulLoaded ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbFindSymbol(%s, %p, %lu)", szName, ( void * ) pDynFunc, ulLoaded ) );
 
    for( ulRet = 0; ulRet < ulLoaded; ++ulRet )
    {
@@ -526,7 +527,7 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
          {
             /*
              * Old unused symbol table has been recycled - free the one
-             * we allocated and disactivate static initialization [druzus]
+             * we allocated and deactivate static initialization [druzus]
              */
             pHrbBody->pSymRead = pHrbBody->pModuleSymbols->pModuleSymbols;
             hb_xfree( pSymRead );
@@ -660,7 +661,7 @@ static void hb_hrbReturn( PHRB_BODY pHrbBody )
 }
 
 /*
-   hb_hrbRun( [ <nOptions>, ] <cHrb> [, <xparams,...> ] ) -> <retVal>
+   hb_hrbRun( [ <nOptions>, ] <cHrb> [, <xparams,...> ] ) --> <retVal>
 
    This program will get the data from the .hrb file and run the p-code
    contained in it.

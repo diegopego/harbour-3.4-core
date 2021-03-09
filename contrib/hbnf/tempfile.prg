@@ -4,9 +4,9 @@
    Deleted #define for FLAG_CARRY as Toolkit v2.1's ftint86.ch has it.
 
       Rev 1.6   03 Oct 1991 18:36:28   GLENN
-   Tim Wong from Nantucket pointed out that this DOS function actually
+   Tim Wong from Nantucket pointed out that this MS-DOS function actually
    leaves a file handle in AX.  In order to preserve the functionality,
-   I now close that handle if the call is succsessful.
+   I now close that handle if the call is successful.
 
       Rev 1.5   15 Aug 1991 23:05:04   GLENN
    Forest Belt proofread/edited/cleaned up doc
@@ -40,7 +40,7 @@ FUNCTION ft_TempFil( cPath, lHide, /* @ */ hFile )  /* <hFile> is a Harbour exte
 
    hFile := hb_vfTempFile( @cFile, cPath,, iif( hb_defaultValue( lHide, .F. ), FC_HIDDEN, FC_NORMAL ) )
 
-   IF ! hb_PIsByRef( 3 )
+   IF ! hb_PIsByRef( 3 ) .AND. hFile != NIL
       hb_vfClose( hFile )
    ENDIF
 

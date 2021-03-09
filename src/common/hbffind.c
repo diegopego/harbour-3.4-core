@@ -2,7 +2,7 @@
  * Harbour File Find API (C level)
  *
  * Copyright 2001-2002 Luiz Rafael Culik <culik@sl.conex.net>
- * Copyright 2001-2002 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2001-2002 Viktor Szakats (vsz.me/hb)
  * Copyright 2001-2002 Paul Tucker <ptucker@sympatico.ca>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,7 +47,7 @@
  */
 
 #if ! defined( _LARGEFILE64_SOURCE )
-   #define _LARGEFILE64_SOURCE  1
+#  define _LARGEFILE64_SOURCE  1
 #endif
 
 #define _HB_FFIND_INTERNAL_
@@ -62,10 +62,8 @@
 
 #if defined( HB_OS_DOS )
 
-   #if defined( __DJGPP__ ) || defined( __RSX32__ )
+   #if defined( __DJGPP__ )
       #include <sys/param.h>
-   #endif
-   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __BORLANDC__ )
       #include <sys/stat.h>
    #endif
    #include <dos.h>
@@ -140,18 +138,6 @@
          ( ( info->dwAttr & info->pFindFileData.dwFileAttributes & _HB_WIN_MASKATTR ) != 0 ) \
       )
 
-   #if defined( __DMC__ )
-      #if ! defined( FILE_ATTRIBUTE_ENCRYPTED )
-         #define FILE_ATTRIBUTE_ENCRYPTED      0x00004000L
-      #endif
-      #if ! defined( FILE_ATTRIBUTE_SPARSE_FILE )
-         #define FILE_ATTRIBUTE_SPARSE_FILE    0x00000200L
-      #endif
-      #if ! defined( FILE_ATTRIBUTE_REPARSE_POINT )
-         #define FILE_ATTRIBUTE_REPARSE_POINT  0x00000400L
-      #endif
-   #endif
-
 #elif defined( HB_OS_UNIX )
 
    #include <sys/types.h>
@@ -181,8 +167,8 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * defined and effectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
+       * defined and effectively enables lseek64()/flock64()/ftruncate64()
+       * functions on 32-bit machines.
        */
       #define HB_USE_LARGEFILE64
    #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
@@ -347,7 +333,7 @@ HB_FATTR hb_fsAttrToRaw( HB_FATTR nAttr )
 }
 
 /* Converts a CA-Cl*pper compatible file attribute string
-   to the internal reprensentation. */
+   to the internal representation. */
 
 HB_FATTR hb_fsAttrEncode( const char * szAttr )
 {
@@ -355,7 +341,7 @@ HB_FATTR hb_fsAttrEncode( const char * szAttr )
    char ch;
    HB_FATTR nAttr = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrEncode(%p)", szAttr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrEncode(%p)", ( const void * ) szAttr ) );
 
    while( ( ch = ( char ) HB_TOUPPER( *pos ) ) != '\0' )
    {
@@ -385,7 +371,7 @@ char * hb_fsAttrDecode( HB_FATTR nAttr, char * szAttr )
 {
    char * ptr = szAttr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrDecode(%u, %p)", nAttr, szAttr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrDecode(%u, %p)", nAttr, ( void * ) szAttr ) );
 
    /* Using the same order as CA-Cl*pper did: RHSVDA. */
    if( nAttr & HB_FA_READONLY   ) *ptr++ = 'R';
@@ -426,7 +412,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    ffind->szName[ 0 ] = '\0';
    ffind->size = 0;
 
-   /* Do platform dependant first/next search */
+   /* Do platform dependent first/next search */
 
    hb_vmUnlock();
 
@@ -442,7 +428,9 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       {
          ffind->bFirst = HB_FALSE;
 
-         /* tzset(); */
+         #if 0
+         tzset();
+         #endif
 
 #if defined( __WATCOMC__ )
          bFound = ( _dos_findfirst( ffind->pszFileMask, ( HB_USHORT ) hb_fsAttrToRaw( ffind->attrmask ), &info->entry ) == 0 );
@@ -688,8 +676,8 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                ffind->size = 0;
             else
             {
-#if defined( __XCC__ ) || ( defined( __POCC__ ) && __POCC__ >= 500 )
-               /* NOTE: PellesC 5.00.1 will go into an infinite loop if we don't
+#if defined( __POCC__ ) && __POCC__ >= 500
+               /* NOTE: Pelles C 5.00.1 will go into an infinite loop if we don't
                         split this into two operations. [vszakats] */
                ffind->size  = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow;
                ffind->size += ( HB_FOFFSET ) info->pFindFileData.nFileSizeHigh << 32;
@@ -759,7 +747,9 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          if( info->pattern[ 0 ] == '.' )
             ffind->attrmask |= HB_FA_HIDDEN;
 
-         /* tzset(); */
+         #if 0
+         tzset();
+         #endif
 
          info->dir = opendir( dirname );
          hb_strncpy( info->path, dirname, sizeof( info->path ) - 1 );
@@ -818,11 +808,11 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                raw_attr = sStat.st_mode;
 
                ftime = sStat.st_mtime;
-   #if defined( HB_HAS_LOCALTIME_R )
+#  if defined( HB_HAS_LOCALTIME_R )
                localtime_r( &ftime, &lt );
-   #else
+#  else
                lt = *localtime( &ftime );
-   #endif
+#  endif
 
                iYear  = lt.tm_year + 1900;
                iMonth = lt.tm_mon + 1;
@@ -832,18 +822,18 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                iMin  = lt.tm_min;
                iSec  = lt.tm_sec;
 
-   #if defined( HB_OS_LINUX ) && \
+#  if defined( HB_OS_LINUX ) && \
       defined( __GLIBC__ ) && defined( __GLIBC_MINOR__ ) && \
       ( __GLIBC__ > 2 || ( __GLIBC__ == 2 && __GLIBC_MINOR__ >= 6 ) )
-      #if defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
+#     if defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
          ( __GLIBC_MINOR__ >= 12 && \
            ( ( defined( _POSIX_C_SOURCE ) || _POSIX_C_SOURCE >= 200809L ) || \
              ( defined( _XOPEN_SOURCE ) || _XOPEN_SOURCE >= 700 ) ) )
                iMSec = sStat.st_mtim.tv_nsec / 1000000;
-      #else
+#     else
                iMSec = sStat.st_mtimensec / 1000000;
-      #endif
-   #endif
+#     endif
+#  endif
             }
             else
                bFound = HB_FALSE;
@@ -857,7 +847,9 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    {
       int iTODO; /* TODO: for given platform */
 
-      /* HB_SYMBOL_UNUSED( ffind ); */
+      #if 0
+      HB_SYMBOL_UNUSED( ffind );
+      #endif
 
       HB_SYMBOL_UNUSED( iYear );
       HB_SYMBOL_UNUSED( iMonth );
@@ -967,7 +959,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
       if( ffind->pszFree )
          hb_xfree( ffind->pszFree );
 
-      /* Do platform dependant cleanup */
+      /* Do platform dependent cleanup */
 
       if( ffind->info )
       {
@@ -979,11 +971,11 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
 #if defined( HB_OS_DOS )
 
-   #if defined( __WATCOMC__ )
+#  if defined( __WATCOMC__ )
             _dos_findclose( &info->entry );
-   #elif ! defined( __DJGPP__ ) && ! defined( __BORLANDC__ )
+#  elif ! defined( __DJGPP__ )
             findclose( &info->entry );
-   #endif
+#  endif
 
 #elif defined( HB_OS_OS2 )
 

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -149,7 +149,7 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 #endif
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -205,7 +205,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
                IF ::isParentCrt()
                   ::oParent:setFocus()
                ENDIF
-               Eval( ::sl_lbClick, ::aItems[ nObj, 2 ], NIL, Self )
+               Eval( ::sl_lbClick, ::aItems[ nObj ][ 2 ], , Self )
 
             ENDIF
          ENDIF
@@ -262,7 +262,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
    HB_SYMBOL_UNUSED( xHotImage )
    HB_SYMBOL_UNUSED( cDLL )
 
-   /* Issue this at the begining of first item */
+   /* Issue this at the beginning of first item */
    IF ! ::lSized
 #if 0
       ::SendToolbarMessage( TB_SETBUTTONWIDTH, ::buttonWidth, ::buttonWidth )
@@ -284,12 +284,12 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
          hb_vfExists( xImage )
          pBitmap := wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
       ELSE
-         pBitmap := wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
+         pBitmap := wvg_PrepareBitmapFromResource( xImage, ::imageWidth, ::imageHeight, .T. )
       ENDIF
       EXIT
 
    CASE "N"
-      pBitmap := wvg_PrepareBitmapFromResourceId( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
+      pBitmap := wvg_PrepareBitmapFromResource( xImage, ::imageWidth, ::imageHeight, .T. )
       EXIT
 
    CASE "P"

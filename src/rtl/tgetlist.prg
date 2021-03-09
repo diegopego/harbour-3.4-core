@@ -2,7 +2,7 @@
  * HBGetList Class
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * Copyright 2001 Luiz Rafael Culik (Support for CA-Cl*pper 5.3 Getsystem)
+ * Copyright 2001 Luiz Rafael Culik (Support for CA-Cl*pper 5.3 GET-system)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -170,7 +170,7 @@ METHOD ReadModal() CLASS HBGetList
          cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 
-      hb_Scroll( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
+      Scroll( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
 
       ::cMsgSaveS := SaveScreen( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
    ENDIF
@@ -910,7 +910,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
             oGet:varPut( oGUI:value )
             EXIT
          ENDIF
-         /* fall through */
+         /* fallthrough */
       OTHERWISE
          oGet:varPut( oGUI:buffer )
       ENDSWITCH
@@ -1190,7 +1190,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
             xNewValue := oGUI:value
             EXIT
          ENDIF
-         /* fall through */
+         /* fallthrough */
       OTHERWISE
          xNewValue := oGUI:buffer
       ENDSWITCH

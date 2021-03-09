@@ -15,8 +15,8 @@
       This function stored an global comment to an zip archive.
       It should be called before any of the compression functions.
    $EXAMPLES$
-      hb_SetZipComment( "This is an Test" )
-      hb_ZipFile( "test.zip", { "ios.ini", "win.ini" } )
+      ? hb_SetZipComment( "This is an Test" )
+      ? hb_ZipFile( "test.zip", { "test.xml", "test.ini" } )
    $STATUS$
       R
    $COMPLIANCE$
@@ -115,7 +115,7 @@
       It always returns True
    $DESCRIPTION$
       This function will set a codeblock that will be evaluated every time
-      that an changedisk event is necessary. <bBlock> receives <nDisk> as a
+      that an change-disk event is necessary. <bBlock> receives <nDisk> as a
       codeblock param that corresponds to the diskette number to be processed.
 
       Set this function before opening archives that are in removable media.
@@ -225,36 +225,32 @@
       file. Default is to overwrite the file, otherwise if <lOverWrite> is
       false the new files are added to the <cFile>.
 
-      If <lWithPath> is used, it tells thats the path should also be stored
+      If <lWithPath> is used, it tells that the path should also be stored
       with the file name. Default is false.
 
-      If <lWithDrive> is used, it tells thats the Drive and path should also
+      If <lWithDrive> is used, it tells that the Drive and path should also
       be stored with the file name. Default is false.
 
       If <pFileProgress> is used, a codeblock is evaluated, `showing` the total
       of that file has being processed.
       The codeblock must be defined as: `{| nPos, nTotal | GaugeUpdate( aGauge1, nPos / nTotal ) }`
    $EXAMPLES$
-      PROCEDURE Main()
+      LOCAL aFiles, nLen, aGauge
 
-         IF hb_ZipFileByTDSpan( "test.zip", "test.prg" )
-            ? "File was successfully created"
-         ENDIF
+      IF hb_ZipFileByTDSpan( "test.zip", "test.prg" )
+         ? "File was successfully created"
+      ENDIF
 
-         IF hb_ZipFileByTDSpan( "test1.zip", { "test.prg", "test.hbp" } )
-            ? "File was successfully created"
-         ENDIF
+      IF hb_ZipFileByTDSpan( "test1.zip", { "test.prg", "test.hbp" } )
+         ? "File was successfully created"
+      ENDIF
 
-         IF hb_ZipFileByTDSpan( "test2.zip", { "test.prg", "test.hbp" }, 9, {| nPos, cFile | QOut( cFile ) }, "hello",, 521421 )
-            ? "File was successfully created"
-         ENDIF
+      IF hb_ZipFileByTDSpan( "test2.zip", { "test.prg", "test.hbp" }, 9, {| cFile, nPos | QOut( cFile ) }, "hello",, 521421 )
+         ? "File was successfully created"
+      ENDIF
 
-         aFiles := { "test.prg", "test.hbp" }
-         nLen   := Len( aFiles )
-         aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
-         GaugeDisplay( aGauge )
-         hb_ZipFileByTDSpan( "test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello",, 6585452 )
-         RETURN
+      aFiles := { "test.prg", "test.hbp" }
+      hb_ZipFileByTDSpan( "test33.zip", aFiles, 9,,, "hello",, 6585452 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -315,48 +311,45 @@
       If <bBlock> is used, every time the file is opened to compress it
       will evaluate <bBlock>. Parameters of <bBlock> are <cFile> and <nPos>.
 
-      If <lOverWrite> is used , it toggles to overwrite or not the existing
+      If <lOverWrite> is used, it toggles to overwrite or not the existing
       file. Default is to overwrite the file, otherwise if <lOverWrite> is false
       the new files are added to the <cFile>.
 
       If <cPassword> is used, all files that are added to the archive are encrypted
       with the password.
 
-      If <lWithPath> is used, it tells thats the path should also be stored with
+      If <lWithPath> is used, it tells that the path should also be stored with
       the file name. Default is false.
 
-      If <lWithDrive> is used, it tells thats the Drive and path should also be stored
+      If <lWithDrive> is used, it tells that the Drive and path should also be stored
       with the file name. Default is false.
 
       If <pFileProgress> is used, a codeblock is evaluated, showing the total
       of that file has being processed.
       The codeblock must be defined as: `{| nPos, nTotal | GaugeUpdate( aGauge1, nPos / nTotal ) }`
 
-      Before calling this function, Set an Changedisk codeblock by calling
+      Before calling this function, set a change-disk codeblock by calling
       the hb_SetDiskZip().
    $EXAMPLES$
-      PROCEDURE Main()
+      LOCAL aFiles, nLen, aGauge
 
-         hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + hb_ntos( nDisk ) ) } )
+      hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + hb_ntos( nDisk ) ) } )
 
-         IF hb_ZipFileByPKSpan( "test.zip", "test.prg" )
-            ? "File was successfully created"
-         ENDIF
+      IF hb_ZipFileByPKSpan( "test.zip", "test.prg" )
+         ? "File was successfully created"
+      ENDIF
 
-         IF hb_ZipFileByPKSpan( "test1.zip", { "test.prg", "test.hbp" } )
-            ? "File was successfully created"
-         ENDIF
+      IF hb_ZipFileByPKSpan( "test1.zip", { "test.prg", "test.hbp" } )
+         ? "File was successfully created"
+      ENDIF
 
-         IF hb_ZipFileByPKSpan( "test2.zip", { "test.prg", "test.hbp" }, 9, {| nPos, cFile | QOut( cFile ) } )
-            ? "File was successfully created"
-         ENDIF
+      IF hb_ZipFileByPKSpan( "test2.zip", { "test.prg", "test.hbp" }, 9, {| cFile, nPos | QOut( cFile ) } )
+         ? "File was successfully created"
+      ENDIF
 
-         aFiles := { "test.prg", "test.hbp" }
-         nLen   := Len( aFiles )
-         aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
-         GaugeDisplay( aGauge )
-         hb_ZipFileByPKSpan( "test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello" )
-         RETURN
+      aFiles := { "test.prg", "test.hbp" }
+      nLen   := Len( aFiles )
+      hb_ZipFileByPKSpan( "test33.zip", aFiles, 9,,, "hello" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -426,33 +419,30 @@
       If <lWithPath> is used, it tells  the path should also be stored with
       the file name. Default is false.
 
-      If <lWithDrive> is used, it tells thats the Drive and path should also be stored
+      If <lWithDrive> is used, it tells that the Drive and path should also be stored
       with the file name. Default is false.
 
       If <pFileProgress> is used, a codeblock is evaluated, showing the total
       of that file has being processed.
       The codeblock must be defined as: `{| nPos, nTotal | GaugeUpdate( aGauge1, nPos / nTotal ) }`
    $EXAMPLES$
-      PROCEDURE Main()
+      LOCAL aFiles, nLen, aGauge
 
-         IF hb_ZipFile( "test.zip", "test.prg" )
-            ? "File was successfully created"
-         ENDIF
+      IF hb_ZipFile( "test.zip", "test.prg" )
+         ? "File was successfully created"
+      ENDIF
 
-         IF hb_ZipFile( "test1.zip", { "test.prg", "test.hbp" } )
-            ? "File was successfully created"
-         ENDIF
+      IF hb_ZipFile( "test1.zip", { "test.prg", "test.hbp" } )
+         ? "File was successfully created"
+      ENDIF
 
-         IF hb_ZipFile( "test2.zip", { "test.prg", "test.hbp" }, 9, {| cFile, nPos | QOut( cFile ) } )
-            ? "File was successfully created"
-         ENDIF
+      IF hb_ZipFile( "test2.zip", { "test.prg", "test.hbp" }, 9, {| cFile, nPos | QOut( cFile ) } )
+         ? "File was successfully created"
+      ENDIF
 
-         aFiles := { "test.prg", "test.hbp" }
-         nLen   := Len( aFiles )
-         aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B" , "." )
-         GaugeDisplay( aGauge )
-         hb_ZipFile( "test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello" )
-         RETURN
+      aFiles := { "test.prg", "test.hbp" }
+      nLen   := Len( aFiles )
+      hb_ZipFile( "test33.zip", aFiles, 9,,, "hello" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -508,21 +498,16 @@
       of that file has being processed.
       The codeblock must be defined as: `{| nPos, nTotal | GaugeUpdate( aGauge1, nPos / nTotal ) }`
    $EXAMPLES$
-      PROCEDURE Main()
+      LOCAL aExtract := hb_GetFilesInZip( "test.zip" )  // extract all files in zip
 
-         LOCAL aExtract
+      IF hb_UnzipFile( "test.zip",,,, hb_DirSepToOS( "./" ), aExtract )
+         ? "File was successfully extracted"
+      ENDIF
 
-         aExtract := hb_GetFilesInZip( "test.zip" )  // extract all files in zip
-         IF hb_UnzipFile( "test.zip",,,, "." + hb_ps(), aExtract )
-            ? "File was successfully extracted"
-         ENDIF
-
-         aExtract := hb_GetFilesInZip( "test2.zip" )  // extract all files in zip
-         IF hb_UnzipFile( "test2.zip", {| cFile | QOut( cFile ) },,, "." + hb_ps(), aExtract )
-            ? "File was successfully extracted"
-         ENDIF
-
-         RETURN
+      aExtract := hb_GetFilesInZip( "test2.zip" )  // extract all files in zip
+      IF hb_UnzipFile( "test2.zip", {| cFile | QOut( cFile ) },,, hb_DirSepToOS( "./" ), aExtract )
+         ? "File was successfully extracted"
+      ENDIF
    $STATUS$
       R
    $COMPLIANCE$

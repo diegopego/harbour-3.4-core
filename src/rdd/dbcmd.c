@@ -3,7 +3,8 @@
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * Copyright 2002 Horacio Roldan <harbour_ar@yahoo.com.ar> (hb_rddIterateWorkAreas(), hb_rddGetTempAlias())
+ * Copyright 2002 Horacio Roldan <harbour_ar@yahoo.com.ar>
+ *   (hb_rddIterateWorkAreas(), hb_rddGetTempAlias())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,7 +54,7 @@
 #include "hbvm.h"
 #include "hbset.h"
 
-/* The 5-th parameter is Harbour extensions */
+/* The 5th parameter is Harbour extension */
 HB_FUNC( AFIELDS )
 {
    HB_USHORT uiFields, uiCount;
@@ -259,7 +260,7 @@ HB_FUNC( BOF )
    hb_retl( bBof );
 }
 
-/* dbAppend( [<lUnLockAll>=.T.] ) -> <lSuccess> */
+/* dbAppend( [<lUnLockAll>=.T.] ) --> <lSuccess> */
 HB_FUNC( DBAPPEND )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -305,10 +306,10 @@ HB_FUNC( DBCOMMITALL )
 
 /*
  * In Clipper the arguments are:
- *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg ) -> NIL
+ *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg ) --> NIL
  * In Harbour (HB_EXTENSION):
  *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, ;
- *              cCodePage, nConnection ) -> <lSuccess>
+ *              cCodePage, nConnection ) --> <lSuccess>
  */
 HB_FUNC( DBCREATE )
 {
@@ -319,11 +320,11 @@ HB_FUNC( DBCREATE )
    HB_ULONG ulConnection;
 
    /*
-    * NOTE: 4-th, 5-th and 6-th parameters are undocumented Clipper ones
-    * 4-th is boolean flag indicating if file should stay open (any boolean
-    *      value will enable this behavior)
-    * 5-th is alias - if not given then WA is open without alias
-    * 6-th is optional DELIMITED value used by some RDDs like DELIM
+    * NOTE: 4th, 5th and 6th parameters are undocumented Clipper ones
+    * 4th is boolean flag indicating if file should stay open (any boolean
+    *     value will enable this behavior)
+    * 5th is alias - if not given then WA is open without alias
+    * 6th is optional DELIMITED value used by some RDDs like DELIM
     */
 
    szFileName = hb_parc( 1 );
@@ -338,7 +339,7 @@ HB_FUNC( DBCREATE )
 
    /*
     * Clipper allows to use empty struct array for RDDs which does not
-    * support fields, f.e.: DBFBLOB in CL5.3
+    * support fields, e.g.: DBFBLOB in CL5.3
     * In CL5.3 it's also possible to create DBF file without fields.
     * if some RDD wants to block it then they should serve it in lower
     * level, [druzus]
@@ -378,7 +379,7 @@ HB_FUNC( DBCREATE )
 }
 
 /*
- * hb_dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <cCodePage>, <nConnection> ) -> <lSuccess>
+ * hb_dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <cCodePage>, <nConnection> ) --> <lSuccess>
  */
 HB_FUNC( HB_DBCREATETEMP )
 {
@@ -395,7 +396,7 @@ HB_FUNC( HB_DBCREATETEMP )
 
    /*
     * Clipper allows to use empty struct array for RDDs which does not
-    * support fields, f.e.: DBFBLOB in CL5.3
+    * support fields, e.g.: DBFBLOB in CL5.3
     * In CL5.3 it's also possible to create DBF file without fields.
     * if some RDD wants to block it then they should serve it in lower
     * level, [druzus]
@@ -443,7 +444,7 @@ HB_FUNC( HB_DBCREATETEMP )
          if .F. it will be opened in the current one. */
 /* NOTE: Has an identical parameter list with dbCreate() */
 
-/* __dbOpenSDF( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) -> <lSuccess> */
+/* __dbOpenSDF( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) --> <lSuccess> */
 HB_FUNC( __DBOPENSDF )
 {
    const char * szFileName, * szAlias, * szDriver, * szCpId;
@@ -454,9 +455,9 @@ HB_FUNC( __DBOPENSDF )
    HB_ERRCODE errCode;
 
    /*
-    * NOTE: 4-th and 5-th parameters are undocumented Clipper ones
-    * 4-th is boolean flag indicating if file should stay open and
-    * 5-th is alias - if not given then WA is open without alias
+    * NOTE: 4th and 5th parameters are undocumented Clipper ones
+    * 4th is boolean flag indicating if file should stay open and
+    * 5th is alias - if not given then WA is open without alias
     */
 
    szFileName = hb_parc( 1 );
@@ -909,7 +910,7 @@ HB_FUNC( DBUNLOCKALL )
 
 /* dbUseArea( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>], ;
               [<lShared>], [<lReadonly>], [<cCodePage>], ;
-              [<nConnection>] ) -> <lSuccess> */
+              [<nConnection>] ) --> <lSuccess> */
 HB_FUNC( DBUSEAREA )
 {
    hb_retl( hb_rddOpenTable( hb_parc( 3 ), hb_parc( 2 ),
@@ -1268,7 +1269,7 @@ HB_FUNC( ORDCONDSET )
       /* 19th parameter is CL5.2 USEFILTER parameter which means
          that RDD should respect SET FILTER and SET DELETED flag */
       lpdbOrdCondInfo->fUseFilter    = hb_parl( 19 );
-      /* 20th parameter is Harbour extenstion and informs RDD that
+      /* 20th parameter is Harbour extension and informs RDD that
          index is not shared between other clients */
       lpdbOrdCondInfo->fExclusive    = hb_parl( 20 );
 
@@ -1965,7 +1966,7 @@ HB_FUNC( __DBARRANGE )
    hb_retl( errCode == HB_SUCCESS );
 }
 
-/* __dbTrans( nDstArea, aFieldsStru, bFor, bWhile, nNext, nRecord, lRest ) -> <lSuccess> */
+/* __dbTrans( nDstArea, aFieldsStru, bFor, bWhile, nNext, nRecord, lRest ) --> <lSuccess> */
 HB_FUNC( __DBTRANS )
 {
    if( HB_ISNUM( 1 ) )
@@ -2044,7 +2045,7 @@ HB_FUNC( __DBTRANS )
 /* __dbApp( <cNameName>, [<aFields>], ;
             [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], [<lRest>], ;
             [<cRDD>], [<nConnection>], [<cCodePage>], ;
-            [<xDelimiter>] ) -> <lSuccess> */
+            [<xDelimiter>] ) --> <lSuccess> */
 HB_FUNC( __DBAPP )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -2072,7 +2073,7 @@ HB_FUNC( __DBAPP )
 /* __dbCoppy( <cNameName>, [<aFields>], ;
               [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], [<lRest>], ;
               [<cRDD>], [<nConnection>], [<cCodePage>], ;
-              [<xDelimiter>] ) -> <lSuccess> */
+              [<xDelimiter>] ) --> <lSuccess> */
 HB_FUNC( __DBCOPY )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();

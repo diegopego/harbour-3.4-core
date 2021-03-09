@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -75,12 +75,12 @@
 #define objTypeScrollBar                          21
 #define objTypeTabPage                            22
 
-/*  NMHDR info */
+/* NMHDR info */
 
 #define NMH_code                                  1
 #define NMH_controlID                             2
 #define NMH_hWnd                                  3
-#define NMH_dwItemSpec                            4  /* NMHMOUSE    */
+#define NMH_dwItemSpec                            4  /* NMHMOUSE */
 #define NMH_action                                4  /* NMHTREEVIEW */
 
 /*-*/
@@ -120,7 +120,7 @@
 
 #define WVGTOOLBAR_BUTTON_DEFAULT                 0
 
-/*      Statusbar Manipulation Constants         */
+/* StatusBar Manipulation Constants */
 
 #define WVGSTATUSBAR_AUTOSIZE_NONE                0
 #define WVGSTATUSBAR_AUTOSIZE_SPRING              1
@@ -179,7 +179,7 @@
 
 #define WVGLISTBOX_MM_SINGLE                      1
 
-/* Generic Pres Parameters */
+/* Generic Presentation Parameters */
 #define WVG_PP_FGCLR                              2
 #define WVG_PP_BGCLR                              4
 #define WVG_PP_COMPOUNDNAME                       15
@@ -192,7 +192,7 @@
 #define WVGMENUBAR_MIS_SEPARATOR                  4
 #define WVGMENUBAR_MIS_BUTTONSEPARATOR            512
 
-/* SCROLLBAR */
+/* ScrollBar */
 #define WVGSCROLL_HORIZONTAL                      1
 #define WVGSCROLL_VERTICAL                        2
 

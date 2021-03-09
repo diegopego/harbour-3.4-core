@@ -5,8 +5,8 @@
  *
  * Credits:
  *    Many thanks for Mindaugas Kavaliauskas for his assistance,
- *    informations about HSX internals, code checking and general
- *    helping in many things when this library was written.
+ *    information about HSX internals, code checking and general
+ *    help in many things when this library was written.
  *                                                          Przemek.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,9 +20,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,7 +54,7 @@
 /*
    LOCKING/IO operations done by HiPpe-SEEK/CFTS library:
       A. in exclusive mode:
-         Unimportant. Thogugh tests shows that CFTS uses buffers
+         Unimportant. Though tests shows that CFTS uses buffers
          only in ADD and NEXT operations. Other causes immediate
          IO call
       B. in shared mode
@@ -137,7 +137,7 @@
          REPLACE operations or to not use any locks at all.
          The last important notice is that if we set that automatic HSX
          index update by RDD which uses exclusive record locking for update
-         (f.e. DBF and related) then we do not have to set _any_ locks at
+         (e.g. DBF and related) then we do not have to set _any_ locks at
          all and we can use _only_ the REPLACE operation hacked to not
          check file size so the index will be automatically growing up by
          writing in the new offset related to appended records.
@@ -161,7 +161,7 @@
    They blocks other stations against reading from the locked region. It
    means that the original HS/CFTS locking schemes is buggy because it can
    cause unexpected errors in NEXT operation. To avoid this problem many
-   systems use "phantom locking" (f.e. DBF/CDX/NTX locks). If we want to
+   systems use "phantom locking" (e.g. DBF/CDX/NTX locks). If we want to
    use locks we should care about it. Now I made it safe by setting
    exclusive lock on the header area for each (whole to eliminate race
    condition) update operation and shared lock for header reading.
@@ -184,7 +184,7 @@
       are called without key expression. When the key expression is
       set as string then it is also stored in HSX header and later
       is automatically retrieve by HS_OPEN.
-   3. HS_CREATE has optional 6-th parameter with key expression. It works
+   3. HS_CREATE has optional 6th parameter with key expression. It works
       in the same way as key parameter in HS_INDEX.
    4. other functions which accept the index key can receive it as
       direct the key value (string item) or codeblock
@@ -334,7 +334,7 @@ typedef struct _HSXINFO
    int       iArea;             /* work area number if bound with WA or 0 */
    char *    szKeyExpr;         /* key expression when bound with WA for automatic update */
    PHB_ITEM  pKeyItem;          /* item with compiled key expression */
-   HB_BOOL   fFlush;            /* data was written to file and not commited */
+   HB_BOOL   fFlush;            /* data was written to file and not committed */
 } HSXINFO;
 typedef HSXINFO * LPHSXINFO;
 
@@ -500,18 +500,18 @@ static int hb_hsxStrCmp( const char * pSub, HB_SIZE nSub, const char * pStr, HB_
 {
    HB_BOOL fResult = HB_FALSE;
    HB_UCHAR c1, c2;
-   HB_SIZE ul;
 
    if( nSub == 0 )
       return HSX_SUCCESSFALSE;
 
    while( ! fResult && nLen >= nSub )
    {
+      HB_SIZE nPos;
       fResult = HB_TRUE;
-      for( ul = 0; fResult && ul < nSub; ul++ )
+      for( nPos = 0; fResult && nPos < nSub; nPos++ )
       {
-         c1 = ( HB_UCHAR ) pSub[ ul ];
-         c2 = ( HB_UCHAR ) pStr[ ul ];
+         c1 = ( HB_UCHAR ) pSub[ nPos ];
+         c2 = ( HB_UCHAR ) pStr[ nPos ];
          if( fNoCase )
          {
             if( iFilter == 3 )
@@ -932,7 +932,7 @@ static int hb_hsxLock( int iHandle, int iAction, HB_ULONG ulRecord )
             }
             if( iRetVal == HSX_SUCCESS )
             {
-               /* discrad buffers in shared mode */
+               /* discard buffers in shared mode */
                pHSX->ulFirstRec = pHSX->ulBufRec = 0;
                if( iAction == HSX_APPENDLOCK )
                   hb_hsxGetRecCount( pHSX );
@@ -972,12 +972,14 @@ static int hb_hsxLock( int iHandle, int iAction, HB_ULONG ulRecord )
             iRetVal = hb_hsxFlush( iHandle );
             if( iAction == HSX_APPENDLOCK )
                pHSX->fWrLocked = HB_FALSE;
+            /* fallthrough */
          case HSX_HDRWRITEUNLOCK:
          {
             int iRet = hb_hsxHdrFlush( iHandle );
             if( iRetVal == HSX_SUCCESS )
                iRetVal = iRet;
          }
+         /* fallthrough */
          case HSX_HDRREADUNLOCK:
             if( ! hb_fileLock( pHSX->pFile, HSX_HDRLOCKPOS, HSX_HDRLOCKSIZE,
                                FL_UNLOCK ) )
@@ -1292,7 +1294,7 @@ static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE nLen,
       iResult = HSX_SUCCESSFALSE;
    else
    {
-      HB_SIZE ul, ull;
+      HB_SIZE nPos1, nPos2;
 
       switch( iType )
       {
@@ -1306,31 +1308,31 @@ static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE nLen,
             break;
          case HSX_VERIFY_AND:
             iResult = HSX_SUCCESS;
-            for( ul = 0; ul < nSub && iResult == HSX_SUCCESS; ul++ )
+            for( nPos1 = 0; nPos1 < nSub && iResult == HSX_SUCCESS; nPos1++ )
             {
-               while( szSub[ ul ] == ' ' && ul < nSub )
-                  ++ul;
-               ull = ul;
-               while( szSub[ ull ] != ' ' && ull < nSub )
-                  ++ull;
-               iResult = hb_hsxStrCmp( &szSub[ ul ], ull - ul, szText, nLen,
+               while( szSub[ nPos1 ] == ' ' && nPos1 < nSub )
+                  ++nPos1;
+               nPos2 = nPos1;
+               while( szSub[ nPos2 ] != ' ' && nPos2 < nSub )
+                  ++nPos2;
+               iResult = hb_hsxStrCmp( &szSub[ nPos1 ], nPos2 - nPos1, szText, nLen,
                                        pHSX->fIgnoreCase, pHSX->iFilterType );
-               ul = ull;
+               nPos1 = nPos2;
             }
             break;
 #if 0
          case HSX_VERIFY_OR:
             iResult = HSX_SUCCESSFALSE;
-            for( ul = 0; ul < nSub && iResult == HSX_SUCCESSFALSE; ul++ )
+            for( nPos1 = 0; nPos1 < nSub && iResult == HSX_SUCCESSFALSE; nPos1++ )
             {
-               while( szSub[ ul ] == ' ' && ul < nSub )
-                  ++ul;
-               ull = ul;
-               while( szSub[ ull ] != ' ' && ull < nSub )
-                  ++ull;
-               iResult = hb_hsxStrCmp( &szSub[ ul ], ull - ul, szText, nLen,
+               while( szSub[ nPos1 ] == ' ' && nPos1 < nSub )
+                  ++nPos1;
+               nPos2 = nPos1;
+               while( szSub[ nPos2 ] != ' ' && nPos2 < nSub )
+                  ++nPos2;
+               iResult = hb_hsxStrCmp( &szSub[ nPos1 ], nPos2 - nPos1, szText, nLen,
                                        pHSX->fIgnoreCase, pHSX->iFilterType );
-               ul = ull;
+               nPos1 = nPos2;
             }
             break;
 #endif
@@ -1701,7 +1703,7 @@ static int hb_hsxFilter( int iHandle, const char * pSeek, HB_SIZE nSeek,
 /* ************************************************************************ */
 
 /* hs_Create( <cFile>, <nBufSize>, <nKeySize>, <lCase>, <nFiltSet>, <xExpr> )
-                     -> nVal >=0 (OK: <hIndex>), nVal < 0 (ERROR CODE)
+                     --> nVal >=0 (OK: <hIndex>), nVal < 0 (ERROR CODE)
    Creates a new, empty HiPer-SEEK index file */
 HB_FUNC( HS_CREATE )
 {
@@ -1711,7 +1713,7 @@ HB_FUNC( HS_CREATE )
 }
 
 /* hs_Open( <cFile>, <nBufSize>, <nOpenMode> )
-                     -> nVal >=0 (OK: <hIndex>), nVal < 0 (ERROR CODE)
+                     --> nVal >=0 (OK: <hIndex>), nVal < 0 (ERROR CODE)
    Opens an existing HiPer-SEEK index file */
 HB_FUNC( HS_OPEN )
 {
@@ -1719,7 +1721,7 @@ HB_FUNC( HS_OPEN )
              hb_param( 3, HB_IT_NUMERIC ) ? hb_parni( 3 ) : HSXDEFOPENMODE ) );
 }
 
-/* hs_Close( <hIndex> ) -> nVal = 1 (OK), nVal < 0 (ERROR CODE)
+/* hs_Close( <hIndex> ) --> nVal = 1 (OK), nVal < 0 (ERROR CODE)
    Closes a previously opened HiPer-SEEK index file */
 HB_FUNC( HS_CLOSE )
 {
@@ -1730,7 +1732,7 @@ HB_FUNC( HS_CLOSE )
 }
 
 /* hs_Index( <cFile>, <cExpr>, <nKeySize>, <nOpenMode>, <nBufSize>, <lCase>,
-             <nFiltSet> ) -> nVal >=0 (OK: <hIndex>), nVal < 0 (ERROR CODE)
+             <nFiltSet> ) --> nVal >=0 (OK: <hIndex>), nVal < 0 (ERROR CODE)
    Creates and populates a new HiPer-SEEK index */
 HB_FUNC( HS_INDEX )
 {
@@ -1741,7 +1743,7 @@ HB_FUNC( HS_INDEX )
                           hb_parni( 7 ) ) );
 }
 
-/* hs_Add( <hIndex>, [<xExpr>], [lDel] ) -> nVal >= 1 (RECNO), nVal < 0 (ERROR CODE)
+/* hs_Add( <hIndex>, [<xExpr>], [lDel] ) --> nVal >= 1 (RECNO), nVal < 0 (ERROR CODE)
    Adds a text string entry to a HiPer-SEEK index file */
 HB_FUNC( HS_ADD )
 {
@@ -1763,7 +1765,7 @@ HB_FUNC( HS_ADD )
       hb_retni( HSX_BADPARMS );
 }
 
-/* hs_Replace( <hIndex>, [<xExpr>], <nRecNo>, [lDel] ) -> nVal = 1 (OK), nVal < 0 (ERROR CODE)
+/* hs_Replace( <hIndex>, [<xExpr>], <nRecNo>, [lDel] ) --> nVal = 1 (OK), nVal < 0 (ERROR CODE)
    Replaces current HiPer-SEEK index entry with a new value */
 HB_FUNC( HS_REPLACE )
 {
@@ -1775,7 +1777,7 @@ HB_FUNC( HS_REPLACE )
       hb_retni( HSX_BADPARMS );
 }
 
-/* hs_IfDel( <hIndex>, <nRecNo> ) -> nVal = {0|1} (DELETED), nVal < 0 (ERROR CODE)
+/* hs_IfDel( <hIndex>, <nRecNo> ) --> nVal = {0|1} (DELETED), nVal < 0 (ERROR CODE)
    Determines if a HiPer-SEEK record is marked as deleted */
 HB_FUNC( HS_IFDEL )
 {
@@ -1785,7 +1787,7 @@ HB_FUNC( HS_IFDEL )
       hb_retni( HSX_BADPARMS );
 }
 
-/* hs_Delete( <hIndex>, <nRecNo> ) -> nVal = 1 (OK), nVal < 0 (ERROR CODE)
+/* hs_Delete( <hIndex>, <nRecNo> ) --> nVal = 1 (OK), nVal < 0 (ERROR CODE)
    Deletes specifed index record from HiPer-SEEK index file */
 HB_FUNC( HS_DELETE )
 {
@@ -1795,7 +1797,7 @@ HB_FUNC( HS_DELETE )
       hb_retni( HSX_BADPARMS );
 }
 
-/* hs_Undelete( <hIndex>, <nRecNo> ) -> nVal = 1 (OK), nVal < 0 (ERROR CODE)
+/* hs_Undelete( <hIndex>, <nRecNo> ) --> nVal = 1 (OK), nVal < 0 (ERROR CODE)
    Unmarks the specified HiPer-SEEK record as being deleted */
 HB_FUNC( HS_UNDELETE )
 {
@@ -1805,7 +1807,7 @@ HB_FUNC( HS_UNDELETE )
       hb_retni( HSX_BADPARMS );
 }
 
-/* hs_KeyCount( <hIndex> ) -> nVal >= 0 (RECCOUNT), nVal < 0 (ERROR CODE)
+/* hs_KeyCount( <hIndex> ) --> nVal >= 0 (RECCOUNT), nVal < 0 (ERROR CODE)
    Returns the number of entries in a HiPer-SEEK index */
 HB_FUNC( HS_KEYCOUNT )
 {
@@ -1827,7 +1829,7 @@ HB_FUNC( HS_KEYCOUNT )
       hb_retni( HSX_BADPARMS );
 }
 
-/* hs_Set( <hIndex>, <cExpr> ) -> nVal = 1 (OK), nVal < 0 (ERROR CODE)
+/* hs_Set( <hIndex>, <cExpr> ) --> nVal = 1 (OK), nVal < 0 (ERROR CODE)
    Sets up parameters for a subsequent hs_Next() call */
 HB_FUNC( HS_SET )
 {
@@ -1839,13 +1841,13 @@ HB_FUNC( HS_SET )
    hb_retni( iRetVal );
 }
 
-/* hs_Filter( <cIndex>, <cVal>, [xRealExp], [nBufSize], [nOpenMode] ) -> nRecMatch
+/* hs_Filter( <cIndex>, <cVal>, [xRealExp], [nBufSize], [nOpenMode] ) --> nRecMatch
    Sets a WA RM filter using a HiPer-SEEK index */
 HB_FUNC( HS_FILTER )
 {
    const char * szText = hb_parc( 2 );
    char * pBuff = NULL;
-   HB_SIZE nLen = hb_parclen( 2 ), ull, ul;
+   HB_SIZE nLen = hb_parclen( 2 );
    HB_ULONG ulRecords = 0;
    int iHandle = -1, iResult = HSX_BADPARMS;
    HB_BOOL fNew = HB_FALSE, fToken = HB_TRUE;
@@ -1903,17 +1905,19 @@ HB_FUNC( HS_FILTER )
          /* to be SIX compatible divide given text on space delimited tokens */
          if( fToken )
          {
+            HB_SIZE nPos2, nPos1;
+
             iResult = HSX_SUCCESS;
-            for( ul = 0; ul < nLen && iResult == HSX_SUCCESS; ul++ )
+            for( nPos1 = 0; nPos1 < nLen && iResult == HSX_SUCCESS; nPos1++ )
             {
-               while( szText[ ul ] == ' ' && ul < nLen )
-                  ++ul;
-               ull = ul;
-               while( szText[ ull ] != ' ' && ull < nLen )
-                  ++ull;
-               iResult = hb_hsxFilter( iHandle, &szText[ ul ], ull - ul,
+               while( szText[ nPos1 ] == ' ' && nPos1 < nLen )
+                  ++nPos1;
+               nPos2 = nPos1;
+               while( szText[ nPos2 ] != ' ' && nPos2 < nLen )
+                  ++nPos2;
+               iResult = hb_hsxFilter( iHandle, &szText[ nPos1 ], nPos2 - nPos1,
                                        hb_param( 3, HB_IT_ANY ), HSX_VERIFY_PHRASE );
-               ul = ull;
+               nPos1 = nPos2;
             }
          }
          else
@@ -1945,7 +1949,7 @@ HB_FUNC( HS_FILTER )
       hb_retnint( ulRecords );
 }
 
-/* hs_Next( <hIndex> ) -> nVal >= 0 (RECNO), nVal < 0 (ERROR CODE)
+/* hs_Next( <hIndex> ) --> nVal >= 0 (RECNO), nVal < 0 (ERROR CODE)
    Searches a HiPer-SEEK index file for first/next match */
 HB_FUNC( HS_NEXT )
 {
@@ -1962,8 +1966,8 @@ HB_FUNC( HS_NEXT )
 }
 
 /* hs_Verify( <hIndex>, <bSource>, <cValue>, <nType> )
-          -> nVal = {0|1} (VERIFIED), nVal < 0 (ERROR CODE)
-   hs_Verify( <bSource>, <cValue> ) -> lOK
+          --> nVal = {0|1} (VERIFIED), nVal < 0 (ERROR CODE)
+   hs_Verify( <bSource>, <cValue> ) --> lOK
    Verifies hs_Next() hit against code block expression */
 HB_FUNC( HS_VERIFY )
 {
@@ -2021,7 +2025,7 @@ HB_FUNC( HS_VERIFY )
    }
 }
 
-/* hs_Version() -> <cVersion> */
+/* hs_Version() --> <cVersion> */
 HB_FUNC( HS_VERSION )
 {
    static const char sc_szVer[] = "HiPer-SEEK / FTS library emulation";

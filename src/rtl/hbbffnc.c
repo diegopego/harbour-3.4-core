@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -57,7 +57,7 @@ static const HB_BLOWFISH * hb_bf_keyparam( void )
       return NULL;
 }
 
-/* hb_blowfishKey( <cPasswd> ) -> <cBfKey>
+/* hb_blowfishKey( <cPasswd> ) --> <cBfKey>
  */
 HB_FUNC( HB_BLOWFISHKEY )
 {
@@ -72,7 +72,7 @@ HB_FUNC( HB_BLOWFISHKEY )
    }
 }
 
-/* hb_blowfishEncrypt( <cBfKey>, <cText> [, <lRaw>=.F. ] ) -> <cCipher> | NIL
+/* hb_blowfishEncrypt( <cBfKey>, <cText> [, <lRaw>=.F. ] ) --> <cCipher> | NIL
  * return string encrypted using ECB (electronic codebook) mode or
  * NIL on error (wrong parameters),
  * in raw mode passed string is padded to 8 bytes with '\0'
@@ -119,7 +119,7 @@ HB_FUNC( HB_BLOWFISHENCRYPT )
    }
 }
 
-/* hb_blowfishDecrypt( <cBfKey>, <cCipher> [, <lRaw>=.F. ] ) -> <cText> | NIL
+/* hb_blowfishDecrypt( <cBfKey>, <cCipher> [, <lRaw>=.F. ] ) --> <cText> | NIL
  * return string decrypted using ECB (electronic codebook) mode or
  * NIL on error (wrong parameters),
  * in raw mode whole passed string is decoded as is
@@ -196,7 +196,7 @@ static void hb_bf_encode( const HB_BLOWFISH * bf, HB_BYTE * vect )
 }
 
 /* hb_blowfishEncrypt_CFB( <cBfKey>, <cText> [, <cInitSeed> ] )
- *          -> <cCipher> | NIL
+ *          --> <cCipher> | NIL
  * return string encrypted using CFB (cipher feedback) mode or
  * NIL on error (wrong parameters)
  */
@@ -233,7 +233,7 @@ HB_FUNC( HB_BLOWFISHENCRYPT_CFB )
 }
 
 /* hb_blowfishDecrypt_CFB( <cBfKey>, <cCipher> [, <cInitSeed> ] )
- *          -> <cText> | NIL
+ *          --> <cText> | NIL
  * return string decrypted using CFB (cipher feedback) mode or
  * NIL on error (wrong parameters),
  */

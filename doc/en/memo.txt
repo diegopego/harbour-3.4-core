@@ -27,7 +27,8 @@
       Returns a string/memo with carriage return chars converted to
       specified chars.
    $EXAMPLES$
-      ? MemoTran( DATA->CNOTES )
+      // FIXME
+      ? MemoTran( data->CNOTES )
    $STATUS$
       R
    $COMPLIANCE$
@@ -62,7 +63,8 @@
       Returns a string/memo with soft carriage return chars converted to
       hard carriage return chars.
    $EXAMPLES$
-      ? HardCR( Data->CNOTES )
+      // FIXME
+      ? HardCR( data->CNOTES )
    $STATUS$
       R
    $COMPLIANCE$
@@ -90,7 +92,7 @@
    $SYNTAX$
       MemoRead( <cFileName> ) --> cString
    $ARGUMENTS$
-      <cFileName> is the filename to read from disk.
+      <cFileName> is the file name to read from disk.
                   It must include the file extension. If file to be read
                   lives in another directory, you must include the path.
    $RETURNS$
@@ -100,7 +102,7 @@
       string ("").
    $DESCRIPTION$
       MemoRead() is a function that reads the content of a text file (till
-      now) from disk (floppy, HD, CD-ROM, etc.) into a memory string.
+      now) from disk (floppy, HDD, CD-ROM, etc.) into a memory string.
       In that way you can manipulate as any character string or assigned
       to a memo field to be saved in a database.
 
@@ -119,15 +121,15 @@
       mode and shared.  If the file is used in mode exclusive by another
       process, the function will returns a null string ("").
    $EXAMPLES$
-      //  This example uses MemoRead() to assign the contents of a text
-      //  file to a character variable for later search
+      // This example uses MemoRead() to assign the contents of a text
+      // file to a character variable for later search
 
-      cFile   := "account.prg"
-      cString := MemoRead( cFile )
-      cCopyright := "Melina"
+      LOCAL cFile := "account.prg"
+      LOCAL cString := MemoRead( cFile )
+      LOCAL cCopyright := "Melina"
 
-      IF ! cCopyright $ cString                  // check for copyright
-         MemoWrit( cFile, cCopyright + cString ) // if not, add it!
+      IF ! cCopyright $ cString                     // check for copyright
+         ? MemoWrit( cFile, cCopyright + cString )  // if not, add it!
       ENDIF
    $STATUS$
       R
@@ -158,7 +160,7 @@
    $SYNTAX$
       hb_MemoRead( <cFileName> ) --> cString
    $ARGUMENTS$
-      <cFileName> is the filename to read from disk.
+      <cFileName> is the file name to read from disk.
                   It must include the file extension. If file to be read
                   lives in another directory, you must include the path.
    $RETURNS$
@@ -168,7 +170,7 @@
       string ("").
    $DESCRIPTION$
       hb_MemoRead() is a function that reads the content of a text file
-      (till now) from disk (floppy, HD, CD-ROM, etc.) into a memory string.
+      (till now) from disk (floppy, HDD, CD-ROM, etc.) into a memory string.
       In that way you can manipulate as any character string or assigned
       to a memo field to be saved in a database.
 
@@ -191,15 +193,15 @@
       hb_MemoRead() is identical to MemoRead() except it won't truncate the
       last byte (on non-Unix compatible systems) if it's a EOF char.
    $EXAMPLES$
-      //  This example uses hb_MemoRead() to assign the contents of a text
-      //  file to a character variable for later search
+      // This example uses hb_MemoRead() to assign the contents of a text
+      // file to a character variable for later search
 
-      cFile   := "account.prg"
-      cString := hb_MemoRead( cFile )
-      cCopyright := "Melina"
+      LOCAL cFile := "account.prg"
+      LOCAL cString := hb_MemoRead( cFile )
+      LOCAL cCopyright := "Melina"
 
-      IF ! cCopyright $ cString                     // check for copyright
-         hb_MemoWrit( cFile, cCopyright + cString ) // if not, add it!
+      IF ! cCopyright $ cString                        // check for copyright
+         ? hb_MemoWrit( cFile, cCopyright + cString )  // if not, add it!
       ENDIF
    $STATUS$
       R
@@ -230,7 +232,7 @@
    $SYNTAX$
       MemoWrit( <cFileName>, <cString> ) --> lSuccess
    $ARGUMENTS$
-      <cFileName> is the filename to be written to disk.
+      <cFileName> is the file name to be written to disk.
                   It must include the file extension. If file to be read
                   lives in another directory, you must include the path.
 
@@ -241,7 +243,7 @@
       otherwise, it returns false (.F.).
    $DESCRIPTION$
       This a function that writes a memo field or character string to a
-      text file on disk (floppy, HD, CD-ROM, etc.)
+      text file on disk (floppy, HDD, CD-ROM, etc.)
       If you not specified a path, MemoWrit() writes <cFileName> to the
       current directory. If <cFileName> exists, it is overwritten.
 
@@ -254,11 +256,12 @@
       //  This example uses MemoWrit() to write the contents of a character
       // variable to a text file.
 
-      cFile   := "account.prg"
-      cString := MemoRead( cFile )
+      LOCAL cFile := "account.prg"
+      LOCAL cString := MemoRead( cFile )
+      LOCAL cCopyright := "Melina"
 
-      IF ! cCopyright $ cString                  // check for copyright
-         MemoWrit( cFile, cCopyright + cString ) // if not, add it!
+      IF ! cCopyright $ cString                     // check for copyright
+         ? MemoWrit( cFile, cCopyright + cString )  // if not, add it!
       ENDIF
    $STATUS$
       R
@@ -289,7 +292,7 @@
    $SYNTAX$
       hb_MemoWrit( <cFileName>, <cString> ) --> lSuccess
    $ARGUMENTS$
-      <cFileName> is the filename to be written to disk.
+      <cFileName> is the file name to be written to disk.
                   It must include the file extension. If file to be read
                   lives in another directory, you must include the path.
 
@@ -300,7 +303,7 @@
       otherwise, it returns false (.F.).
    $DESCRIPTION$
       This a function that writes a memo field or character string to a
-      text file on disk (floppy, HD, CD-ROM, etc.)
+      text file on disk (floppy, HDD, CD-ROM, etc.)
       If you not specified a path, hb_MemoWrit() writes <cFileName> to the
       current directory. If <cFileName> exists, it is overwritten.
 
@@ -316,12 +319,12 @@
       //  This example uses hb_MemoWrit() to write the contents of a character
       //  variable to a text file.
 
-      cFile   := "account.prg"
-      cString := hb_MemoRead( cFile )
-      cCopyright := "Melina"
+      LOCAL cFile := "account.prg"
+      LOCAL cString := hb_MemoRead( cFile )
+      LOCAL cCopyright := "Melina"
 
-      IF ! cCopyright $ cString                     // check for copyright
-         hb_MemoWrit( cFile, cCopyright + cString ) // if not, add it!
+      IF ! cCopyright $ cString                        // check for copyright
+         ? hb_MemoWrit( cFile, cCopyright + cString )  // if not, add it!
       ENDIF
    $STATUS$
       R

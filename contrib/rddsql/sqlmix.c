@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -143,15 +143,15 @@ static PMIXKEY hb_mixKeyPutItem( PMIXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRecNo,
    {
       case 'C':
       {
-         HB_SIZE ul = hb_itemGetCLen( pItem );
+         HB_SIZE nLen = hb_itemGetCLen( pItem );
 
-         if( ul > ( HB_SIZE ) pTag->uiKeyLen )
-            ul = pTag->uiKeyLen;
+         if( nLen > ( HB_SIZE ) pTag->uiKeyLen )
+            nLen = pTag->uiKeyLen;
 
-         memcpy( pKey->val, hb_itemGetCPtr( pItem ), ul );
+         memcpy( pKey->val, hb_itemGetCPtr( pItem ), nLen );
 
-         if( ul < ( HB_SIZE ) pTag->uiKeyLen )
-            memset( pKey->val + ul, ' ', ( HB_SIZE ) pTag->uiKeyLen - ul );
+         if( nLen < ( HB_SIZE ) pTag->uiKeyLen )
+            memset( pKey->val + nLen, ' ', ( HB_SIZE ) pTag->uiKeyLen - nLen );
 
          break;
       }
@@ -326,13 +326,11 @@ static void hb_mixTagPrintNode( PMIXTAG pTag, PMIXNODE pNode, int iLevel )
 
 static PMIXNODE hb_mixTagCreateNode( PMIXTAG pTag, HB_BOOL fLeaf )
 {
-   PMIXNODE pNode;
-   HB_SIZE  ulSize;
+   HB_SIZE  nSize = ( fLeaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + MIX_NODE_ORDER * pTag->uiTotalLen;
+   PMIXNODE pNode = ( PMIXNODE ) hb_xgrabz( nSize );
 
-   ulSize = ( fLeaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + MIX_NODE_ORDER * pTag->uiTotalLen;
-
-   pNode = ( PMIXNODE ) hb_xgrabz( ulSize );
    pNode->Leaf = fLeaf ? 1 : 0;
+
    return pNode;
 }
 
@@ -584,7 +582,7 @@ static HB_BOOL hb_mixTagAddKey( PMIXTAG pTag, PMIXKEY pKey )
 
    i = hb_mixTagFindKey( pTag, pKey, pTag->uiKeyLen, &pNode, &ui, HB_FALSE );
 
-   /* Key can not be duplicated */
+   /* Key cannot be duplicated */
    if( ! i )
       return HB_FALSE;
 
@@ -766,7 +764,7 @@ static PMIXTAG hb_mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_I
    pTag->szKeyExpr = ( char * ) hb_xgrab( hb_itemGetCLen( pKeyExpr ) + 1 );
    hb_strncpyTrim( pTag->szKeyExpr, hb_itemGetCPtr( pKeyExpr ), hb_itemGetCLen( pKeyExpr ) );
 
-   /* TODO: FOR expresion */
+   /* TODO: FOR expression */
    pTag->szForExpr = NULL;
 
    pTag->pKeyItem = pKeyItem;
@@ -954,7 +952,9 @@ static void hb_mixTagSkip( PMIXTAG pTag, HB_LONG lSkip )
    pNode = pTag->CurNode;
    uiPos = pTag->CurPos;
 
-/*   printf("hb_mixTagSkip: CurNode=%p, CurPos=%d lSkip=%d\n", pNode, uiPos, lSkip ); */
+   #if 0
+   printf( "hb_mixTagSkip: CurNode=%p, CurPos=%d lSkip=%d\n", pNode, uiPos, lSkip );
+   #endif
 
    if( lSkip > 0 )
    {
@@ -1801,7 +1801,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, HB_USHORT uiIndex, LPDBORD
          break;
 
       case DBOI_NUMBER:
-         pOrderInfo->itmResult = hb_itemPutNI( pOrderInfo->itmResult, uiTag );  /* kitaip */
+         pOrderInfo->itmResult = hb_itemPutNI( pOrderInfo->itmResult, uiTag );  /* otherwise */
          break;
 
       case DBOI_ISCOND:

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,7 +50,7 @@
 #if ! ( defined( HB_DYNLIB ) && defined( __WATCOMC__ ) )
 
 HB_EXTERN_BEGIN
-#if defined( __MINGW32__ )
+#if defined( __MINGW32__ ) && ! defined( __clang__ )
 int _CRT_glob = 0;
 #elif defined( __DJGPP__ )
 
@@ -67,7 +67,7 @@ char ** __crt0_glob_function( char * _arg )
 }
 #endif
 
-#if ( defined( __WATCOMC__ ) || defined( __TINYC__ ) ) && \
+#if defined( __WATCOMC__ ) && \
    ( defined( HB_OS_LINUX ) || defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) )
 void hb_forceLinkMainStd( void ) {}
 #endif
@@ -76,7 +76,7 @@ HB_EXTERN_END
 
 int main( int argc, char * argv[] )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "main(%d, %p)", argc, argv ) );
+   HB_TRACE( HB_TR_DEBUG, ( "main(%d, %p)", argc, ( void * ) argv ) );
 
 #if defined( __DJGPP__ )
    __system_flags =

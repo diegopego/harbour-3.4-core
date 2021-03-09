@@ -20,9 +20,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,7 +52,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-/* TOFIX: MT support */
+/* FIXME: MT support */
 
 #ifndef HB_WVW_H_
 #define HB_WVW_H_
@@ -61,10 +61,19 @@
 #define _WIN32_IE   0x0500
 #endif
 
+#include "hbapi.h"
 #include "hbwapi.h"
 #include "hbwinole.h"
 
+#if defined( _MSC_VER )
+#  pragma warning(push)
+#  pragma warning(disable:4201)  /* warning C4201: nonstandard extension used: nameless struct/union */
+#endif
 #include <olectl.h>
+#if defined( _MSC_VER )
+#  pragma warning(pop)
+#endif
+
 #include <commctrl.h>
 #include <commdlg.h>
 
@@ -281,7 +290,7 @@ typedef struct
 
    POINT     caretPos;                                 /* the current caret position */
    int       CaretSize;                                /* this may be specific to each windows, eg. different font size */
-   POINT     mousePos;                                 /* the last mousedown position */
+   POINT     mousePos;                                 /* the last mouse down position */
    HB_BOOL   MouseMove;                                /* Flag to say whether to return mouse movement events */
    HWND      hWnd;                                     /* the window handle */
    int       Keys[ WVW_CHAR_QUEUE_SIZE ];              /* Array to hold the characters & events */
@@ -310,7 +319,7 @@ typedef struct
    HB_BOOL   InvalidateWindow;          /* Flag for controlling whether to use ScrollWindowEx() */
    HB_BOOL   EnableShortCuts;           /* Determines whether ALT key enables menu or system menu */
 
-   HDC       hdc;                       /* Handle to Windows Device Context (TOFIX: ? non-MT compatible to store it, even with CS_OWNDC?) */
+   HDC       hdc;                       /* Handle to Windows Device Context (FIXME: ? non-MT compatible to store it, even with CS_OWNDC?) */
    HMENU     hPopup;                    /* Handle of context menu invokable with right click */
 
    HDC       hCompDC;                   /* Compatible DC to _s.hdc */
@@ -389,9 +398,9 @@ typedef struct
       HPEN   currentPen;                        /* Handle to current pen settable at runtime */
       HPEN   gridPen;                           /* Handle da Pen para Grid */
       HBRUSH currentBrush;                      /* Handle to current brush settable by runtime */
-      HBRUSH diagonalBrush;                     /* Handle to diaoganl brush to draw scrollbars */
+      HBRUSH diagonalBrush;                     /* Handle to diagonal brush to draw scrollbars */
       HBRUSH solidBrush;                        /* Handle to solid brush */
-      HBRUSH wvwWhiteBrush;                     /* Wvw specific White colored brush */
+      HBRUSH wvwWhiteBrush;                     /* WVW specific White colored brush */
       HBRUSH OriginalBrush;                     /* Handle da Brush original do Device Context */
 
       IPicture * pPicture[ 20 ];                /* Array to hold the Picture Streams to avoid recurring loading and unloading */
@@ -412,7 +421,7 @@ typedef struct
       WVW_BMP *  pbhBitmapList;
       WVW_IPIC * pphPictureList;
 
-      WVW_BMP * pbhUserBitmap;            /* User bitmap (wvw_drawimage) */
+      WVW_BMP * pbhUserBitmap;            /* User bitmap (wvw_DrawImage()) */
       int       iBMcache;                 /* number of bitmap cached */
       int       iMaxBMcache;              /* maximum number of bitmap cached */
 
@@ -507,7 +516,7 @@ extern void       hb_gt_wvw_CloseWindow( void );
 extern int        hb_gt_wvw_SetCurWindow( int nWin );
 extern void       hb_gt_wvw_CreateToolTipWindow( PWVW_WIN wvw_win );
 
-/* bitmap caching functions for user drawn bitmaps (wvw_drawimage) */
+/* bitmap caching functions for user drawn bitmaps (wvw_DrawImage()) */
 extern HBITMAP    hb_gt_wvw_FindUserBitmapHandle( const char * szFileName, int * piWidth, int * piHeight );
 extern void       hb_gt_wvw_AddUserBitmapHandle( const char * szFileName, HBITMAP hBitmap, int iWidth, int iHeight );
 

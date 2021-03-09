@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -68,7 +68,7 @@
  *
  * example:
  * wvw_pgCreate( , 5, 10, 5, 30)
- *  :: creates horiz progressbar on current window at (5,10) to (5,30)
+ *  :: creates horizontal progressbar on current window at (5,10) to (5,30)
  *     colors using default ones.
  *
  * wvw_pgCreate( , 5, 10, 5, 30, {-1, 0, +1, 0} )

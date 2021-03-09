@@ -676,6 +676,9 @@ DYNAMIC hb_MemoWrit
 DYNAMIC hb_MethodName
 DYNAMIC hb_MGetBounds
 DYNAMIC hb_MilliSeconds
+DYNAMIC hb_mimeStr
+DYNAMIC hb_mimeFName
+DYNAMIC hb_mimeFile
 DYNAMIC hb_Minute
 DYNAMIC hb_MLEval
 DYNAMIC hb_MMiddleDown
@@ -683,6 +686,7 @@ DYNAMIC hb_MSecToT
 DYNAMIC hb_mtvm
 DYNAMIC hb_mutexCreate
 DYNAMIC hb_mutexEval
+DYNAMIC hb_mutexExists
 DYNAMIC hb_mutexLock
 DYNAMIC hb_mutexNotify
 DYNAMIC hb_mutexNotifyAll
@@ -837,6 +841,7 @@ DYNAMIC hb_StrToUTF8
 DYNAMIC hb_StrXor
 DYNAMIC hb_threadDetach
 DYNAMIC hb_threadID
+DYNAMIC hb_threadIsMain
 DYNAMIC hb_threadJoin
 DYNAMIC hb_threadOnce
 DYNAMIC hb_threadOnceInit
@@ -926,6 +931,7 @@ DYNAMIC hb_vfLinkSym
 DYNAMIC hb_vfLoad
 DYNAMIC hb_vfLock
 DYNAMIC hb_vfLockTest
+DYNAMIC hb_vfMoveFile
 DYNAMIC hb_vfOpen
 DYNAMIC hb_vfRead
 DYNAMIC hb_vfReadAt
@@ -1558,6 +1564,7 @@ DYNAMIC __TracePrgCalls
 DYNAMIC __TypeFile
 DYNAMIC __vmCountThreads
 DYNAMIC __vmItemID
+DYNAMIC __vmItemRefs
 DYNAMIC __vmModulesVerify
 DYNAMIC __vmNoInternals
 DYNAMIC __Wait
@@ -1570,6 +1577,7 @@ DYNAMIC __XSaveGetAttr
 DYNAMIC __XSaveGetChar
 DYNAMIC __XSaveGetColor
 DYNAMIC __XSaveScreen
+DYNAMIC __XSaveSetCell
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HARBOUR__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

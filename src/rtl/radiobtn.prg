@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -64,7 +64,7 @@ CREATE CLASS RadioButtn FUNCTION HBRadioButton
 
    EXPORTED:
 
-   VAR cargo                                 /* NOTE: CA-Cl*pper 5.3 has a bug, where this var is filled with NIL everytime its value is read ( cargo := o:cargo ). */
+   VAR cargo                                 /* NOTE: CA-Cl*pper 5.3 has a bug, where this var is filled with NIL every time its value is read ( cargo := o:cargo ). */
 
    METHOD display()
    METHOD hitTest( nMRow, nMCol )
@@ -195,7 +195,7 @@ METHOD isAccel( xKey ) CLASS RadioButtn
       RETURN .F.
    ENDCASE
 
-   RETURN ! cKey == "" .AND. hb_AtI( "&" + cKey, ::cCaption ) > 0  /* TOFIX: Use hb_UAtI() */
+   RETURN ! cKey == "" .AND. hb_AtI( "&" + cKey, ::cCaption ) > 0  /* FIXME: Use hb_UAtI() */
 
 METHOD hitTest( nMRow, nMCol ) CLASS RadioButtn
 

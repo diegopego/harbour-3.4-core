@@ -1,7 +1,7 @@
 /*
  * FileStats() function
  *
- * Copyright 2004 Giancarlo Niccolai <gc -at- niccolai [dot] ws>
+ * Copyright 2004 Giancarlo Niccolai <gc@niccolai.ws>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,7 +50,7 @@
 #include "hbapierr.h"
 
 #if ! defined( _LARGEFILE64_SOURCE )
-   #define _LARGEFILE64_SOURCE  1
+#  define _LARGEFILE64_SOURCE  1
 #endif
 
 #if defined( HB_OS_UNIX )
@@ -71,8 +71,8 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * defined and effectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
+       * defined and effectively enables lseek64()/flock64()/ftruncate64()
+       * functions on 32-bit machines.
        */
       #define HB_USE_LARGEFILE64
    #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
@@ -96,13 +96,13 @@ HB_FUNC( FILESTATS )
 
 #if defined( HB_OS_UNIX )
    {
-   #if defined( HB_USE_LARGEFILE64 )
+#  if defined( HB_USE_LARGEFILE64 )
       struct stat64 statbuf;
       if( stat64( hb_parc( 1 ), &statbuf ) == 0 )
-   #else
+#  else
       struct stat statbuf;
       if( stat( hb_parc( 1 ), &statbuf ) == 0 )
-   #endif
+#  endif
       {
          /* determine if we can read/write/execute the file */
          HB_FATTR usAttr, ushbAttr = 0;
@@ -215,7 +215,7 @@ HB_FUNC( FILESTATS )
 
          hb_fsAttrDecode( hb_fsAttrFromRaw( dwAttribs ), szAttr );
 
-         /* If file existed, do a findfirst */
+         /* If file existed, do a find-first */
          hFind = FindFirstFile( lpFileName, &ffind );
          if( hFind != INVALID_HANDLE_VALUE )
          {
@@ -255,7 +255,7 @@ HB_FUNC( FILESTATS )
 
 #else
 
-   /* Generic algorithm based on findfirst */
+   /* Generic algorithm based on find-first */
    {
       PHB_FFIND findinfo = hb_fsFindFirst( hb_parc( 1 ), HB_FA_ALL );
 

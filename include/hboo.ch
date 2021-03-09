@@ -1,7 +1,7 @@
 /*
  * Header file for low-level object engine
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
  * Copyright 2000 JF Lefebvre <jfl@mafact.com> and RA Cuylen <rac@mafact.com> (Many enhancements (scopes, class methods))
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,16 +50,16 @@
 #ifndef HB_OO_CH_
 #define HB_OO_CH_
 
-/* Used by objfunc.prg (__objGetMsgList) and classes.c (hb___msgClsSel()) */
-#define HB_MSGLISTALL   0
-#define HB_MSGLISTCLASS 1
-#define HB_MSGLISTPURE  2
+/* Used by objfunc.prg (__objGetMsgList()) and classes.c (hb___msgClsSel()) */
+#define HB_MSGLISTALL    0
+#define HB_MSGLISTCLASS  1
+#define HB_MSGLISTPURE   2
 
 /* Method or Data attribute (nScope)*/
 #define HB_OO_CLSTP_EXPORTED        1 /* No comment, default */
-#define HB_OO_CLSTP_PROTECTED       2 /* Only usable from one of the object's method (even sublclassed object) */
-#define HB_OO_CLSTP_HIDDEN          4 /* Only usable from one of the object's method (and not from sublclassed one) */
-#define HB_OO_CLSTP_CTOR            8 /* Constructor  (Not yet used) */
+#define HB_OO_CLSTP_PROTECTED       2 /* Only usable from one of the object's method (even subclassed object) */
+#define HB_OO_CLSTP_HIDDEN          4 /* Only usable from one of the object's method (and not from subclassed one) */
+#define HB_OO_CLSTP_CTOR            8 /* Constructor (not yet used) */
 #define HB_OO_CLSTP_READONLY       16 /* No comment */
 #define HB_OO_CLSTP_SHARED         32 /* Allow a classvar (or classmethod) to be shared by all the subclasses.
                                          Not the default behaviour as each subclass will have its own copy by default. */

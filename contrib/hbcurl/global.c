@@ -1,7 +1,7 @@
 /*
- * curl_global_*() - Global initialization/deinitialization
+ * curl_global_*() - Global initialization/de-initialization
  *
- * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2017 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,6 +51,9 @@
 #include <curl/curl.h>
 
 #include "hbapi.h"
+#include "hbapiitm.h"
+
+#include "hbcurl.ch"
 
 static void * hb_curl_xgrab( size_t size )
 {
@@ -78,6 +81,44 @@ static void * hb_curl_calloc( size_t nelem, size_t elsize )
    size_t size = nelem * elsize;
 
    return size > 0 ? hb_xgrabz( size ) : NULL;
+}
+
+HB_FUNC( CURL_GLOBAL_SSLSET )
+{
+#if LIBCURL_VERSION_NUM >= 0x073800
+   const curl_ssl_backend ** avail = NULL;
+   int tmp;
+   hb_retni( tmp = curl_global_sslset(
+      ( curl_sslbackend ) hb_parni( 1 ),
+      hb_parc( 2 ),
+      &avail ) );
+   if( HB_ISBYREF( 3 ) )
+   {
+      PHB_ITEM pAvail = hb_hashNew( NULL );
+      if( avail )
+      {
+         PHB_ITEM pKey = hb_itemNew( NULL );
+         PHB_ITEM pVal = hb_itemNew( NULL );
+         HB_SIZE nLen = 0;
+         for( nLen = 0; avail[ nLen ]; ++nLen )
+            hb_hashAdd( pAvail,
+               hb_itemPutNI( pKey, ( int ) avail[ nLen ]->id ),
+               hb_itemPutCConst( pVal, avail[ nLen ]->name ) );
+         hb_itemRelease( pVal );
+         hb_itemRelease( pKey );
+      }
+      if( ! hb_itemParamStoreRelease( 3, pAvail ) )
+         hb_itemRelease( pAvail );
+   }
+#else
+   hb_retni( HB_CURLSSLSET_NOT_IMPLEMENTED );
+   if( HB_ISBYREF( 3 ) )
+   {
+      PHB_ITEM pAvail = hb_hashNew( NULL );
+      if( ! hb_itemParamStoreRelease( 3, pAvail ) )
+         hb_itemRelease( pAvail );
+   }
+#endif
 }
 
 HB_FUNC( CURL_GLOBAL_INIT )

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -79,7 +79,8 @@
 
 #define FI_RGBA_RGB_MASK      hb_bitOr( FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK )
 
-// The 16bit macros only include masks and shifts, since each color element is not byte aligned
+/* The 16-bit macros only include masks and shifts, since each color element
+   is not byte aligned */
 
 #define FI16_555_RED_MASK    0x7C00
 #define FI16_555_GREEN_MASK  0x03E0
@@ -259,7 +260,7 @@
 #define CUT_DEFAULT          0
 #define DDS_DEFAULT          0
 #define GIF_DEFAULT          0
-#define GIF_LOAD256          1       // Load the image as a 256 color image with ununsed palette entries, if it's 16 or 2 color
+#define GIF_LOAD256          1       // Load the image as a 256 color image with unused palette entries, if it's 16 or 2 color
 #define GIF_PLAYBACK         2       // 'Play' the GIF to generate each frame (as 32bpp) instead of returning raw frame data when loading
 #define HDR_DEFAULT          0
 #define ICO_DEFAULT          0

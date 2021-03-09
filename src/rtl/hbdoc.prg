@@ -1,7 +1,7 @@
 /*
  * HBDOC reader
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2017 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -103,7 +103,6 @@ FUNCTION __hbdoc_DirLastModified( cDir )
 FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
 
    LOCAL hMeta
-   LOCAL nCount
    LOCAL aFile
    LOCAL aEntry
 
@@ -120,19 +119,13 @@ FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
             hMeta[ "_COMPONENT" ] := cName
          ENDIF
 
-         nCount := 0
-         FOR EACH aFile IN hb_vfDirectory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" )
+         FOR EACH aFile IN ASort( hb_vfDirectory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" ),,, {| tmp1, tmp2 | tmp1[ F_NAME ] < tmp2[ F_NAME ] } )
             IF "D" $ aFile[ F_ATTR ] .AND. ;
                !( aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".." )
 
                __hbdoc__read_langdir( aEntry, cDir + _HBDOC_SRC_SUBDIR + hb_ps() + aFile[ F_NAME ], hMeta, aErrMsg )
-               ++nCount
             ENDIF
          NEXT
-
-         IF nCount == 0
-            _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: Component (%1$s) has no language subdirs", cDir ) )
-         ENDIF
       ENDIF
    ENDIF
 
@@ -146,7 +139,7 @@ STATIC PROCEDURE __hbdoc__read_langdir( aEntry, cDir, hMeta, aErrMsg )
    hMeta[ "_LANG" ] := hb_FNameName( hb_DirSepDel( cDir ) )
 
    nCount := 0
-   FOR EACH aFile IN hb_vfDirectory( cDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
+   FOR EACH aFile IN ASort( hb_vfDirectory( cDir + hb_ps() + "*" + _HBDOC_SRC_EXT ),,, {| tmp1, tmp2 | tmp1[ F_NAME ] < tmp2[ F_NAME ] } )
       __hbdoc__read_file( aEntry, cDir + hb_ps() + aFile[ F_NAME ], hMeta, aErrMsg )
       ++nCount
    NEXT
@@ -194,8 +187,13 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
    LOCAL nLine
    LOCAL nStartCol
 
+   IF hb_UChar( 9 ) $ cFile .OR. ;
+      hb_UChar( 160 ) $ cFile
+      _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: Tab/non-breaking space found. Use normal space instead.", cFileName ) )
+   ENDIF
+
    nLine := 0
-   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 9 ), " " ), .T. )
+   FOR EACH cLine IN hb_ATokens( cFile, .T. )
 
       cLine := hb_USubStr( cLine, 4 )
       ++nLine
@@ -300,7 +298,7 @@ FUNCTION __hbdoc_FilterOut( cFile )
    LOCAL nToSkip := 0
    LOCAL nEmpty := 0
 
-   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 9 ), " " ), .T. )
+   FOR EACH cLine IN hb_ATokens( cFile, .T. )
 
       SWITCH AllTrim( hb_USubStr( cLine, 4 ) )
       CASE "$DOC$"
@@ -356,9 +354,9 @@ FUNCTION __hbdoc_FilterOut( cFile )
    hb_BChar( 0x01 ) + ;
    hb_BChar( 0x00 ) )
 
-FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
+FUNCTION __hbdoc_SaveHBD( cFileName, aEntry, cFormat )
 
-   LOCAL hFile
+   LOCAL hFile, cEOL
 
    IF HB_ISSTRING( cFileName ) .AND. ;
       HB_ISARRAY( aEntry )
@@ -368,8 +366,19 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
       ENDIF
 
       IF ( hFile := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
-         hb_vfWrite( hFile, _HBDOC_SIGNATURE )
-         hb_vfWrite( hFile, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
+         SWITCH hb_defaultValue( cFormat, "" )
+         CASE "binary"
+            hb_vfWrite( hFile, _HBDOC_SIGNATURE )
+            hb_vfWrite( hFile, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
+         CASE "json-dense"
+            hb_vfWrite( hFile, hb_jsonEncode( aEntry ) )
+         CASE "json"
+            /* fallthrough */
+         OTHERWISE
+            cEOL := Set( _SET_EOL, Chr( 10 ) )
+            hb_vfWrite( hFile, hb_jsonEncode( aEntry, .T. ) )
+            Set( _SET_EOL, cEOL )
+         ENDSWITCH
          hb_vfClose( hFile )
          RETURN .T.
       ENDIF
@@ -401,12 +410,18 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
 
             aEntry := hb_Deserialize( cBuffer )
             cBuffer := NIL
-
-            IF ! HB_ISARRAY( aEntry )
-               aEntry := NIL
-            ENDIF
          ELSE
+            cBuffer := Space( hb_vfSize( hFile ) )
+            hb_vfSeek( hFile, 0, FS_SET )
+            hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
             hb_vfClose( hFile )
+
+            aEntry := hb_jsonDecode( cBuffer )
+            cBuffer := NIL
+         ENDIF
+
+         IF ! HB_ISARRAY( aEntry )
+            aEntry := NIL
          ENDIF
       ENDIF
    ENDIF

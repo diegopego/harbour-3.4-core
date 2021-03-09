@@ -25,9 +25,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -58,24 +58,24 @@
 /* Direct WinApi Functions - Prefixed wvg_*() */
 
 #if defined( __BORLANDC__ )
-   #if ! defined( NONAMELESSUNION )
-      #define NONAMELESSUNION
-   #endif
-   #if defined( DUMMYUNIONNAME )
-      #undef DUMMYUNIONNAME
-   #endif
-   #if defined( DUMMYUNIONNAME2 )
-      #undef DUMMYUNIONNAME2
-   #endif
-   #if defined( DUMMYUNIONNAME3 )
-      #undef DUMMYUNIONNAME3
-   #endif
-   #if defined( DUMMYUNIONNAME4 )
-      #undef DUMMYUNIONNAME4
-   #endif
-   #if defined( DUMMYUNIONNAME5 )
-      #undef DUMMYUNIONNAME5
-   #endif
+#  if ! defined( NONAMELESSUNION )
+#     define NONAMELESSUNION
+#  endif
+#  if defined( DUMMYUNIONNAME )
+#     undef DUMMYUNIONNAME
+#  endif
+#  if defined( DUMMYUNIONNAME2 )
+#     undef DUMMYUNIONNAME2
+#  endif
+#  if defined( DUMMYUNIONNAME3 )
+#     undef DUMMYUNIONNAME3
+#  endif
+#  if defined( DUMMYUNIONNAME4 )
+#     undef DUMMYUNIONNAME4
+#  endif
+#  if defined( DUMMYUNIONNAME5 )
+#     undef DUMMYUNIONNAME5
+#  endif
 #endif
 
 #include "gtwvg.h"
@@ -85,54 +85,50 @@
 #endif
 
 #if defined( NONAMELESSUNION )
-   #define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
+#  define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
 #else
-   #define HB_WIN_V_UNION( x, z )  ( ( x ).z )
+#  define HB_WIN_V_UNION( x, z )  ( ( x ).z )
 #endif
 
 #if defined( HB_OS_WIN_CE )
    #ifndef LR_LOADMAP3DCOLORS
-   #define LR_LOADMAP3DCOLORS   0
+   #define LR_LOADMAP3DCOLORS  0
    #endif
 #endif
 
 #define WIN_STATUSBAR_MAX_PARTS  256
 
-/* Bitmap Management Function. Coutesy GTWVW */
+/* Bitmap Management Function. Courtesy GTWVW */
 
-static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
+static BITMAPINFO * PackedDibLoad( const char * pszFileName )
 {
    BITMAPINFO * pbmi = NULL;
 
-   HANDLE hFile = CreateFile( szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
-                              OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL );
-
-   if( hFile != INVALID_HANDLE_VALUE )
+   PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL,
+                                    FO_READ | FO_SHARED | FO_PRIVATE |
+                                    FXO_DEFAULTS | FXO_SHARELOCK,
+                                    NULL, NULL );
+   if( pFile )
    {
       BITMAPFILEHEADER bmfh;
-      DWORD            dwBytesRead;
 
-      HB_BOOL bSuccess = ReadFile( hFile, &bmfh, sizeof( bmfh ), &dwBytesRead, NULL );
-
-      if( bSuccess && dwBytesRead == sizeof( bmfh ) &&
+      if( hb_fileRead( pFile, &bmfh, sizeof( bmfh ), -1 ) == sizeof( bmfh ) &&
           bmfh.bfType == 0x4d42 /* "BM" */ &&
           bmfh.bfSize > sizeof( bmfh ) &&
           bmfh.bfSize <= ( 32 * 1024 * 1024 ) /* an arbitrary size limit */ )
       {
-         DWORD dwPackedDibSize = bmfh.bfSize - sizeof( bmfh );
+         HB_SIZE nPackedDibSize = bmfh.bfSize - sizeof( bmfh );
 
-         pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
+         pbmi = ( BITMAPINFO * ) hb_xgrab( nPackedDibSize );
 
-         bSuccess = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
-
-         if( ! bSuccess || dwBytesRead != dwPackedDibSize )
+         if( hb_fileRead( pFile, pbmi, nPackedDibSize, -1 ) != nPackedDibSize )
          {
             hb_xfree( pbmi );
             pbmi = NULL;
          }
       }
 
-      CloseHandle( hFile );
+      hb_fileClose( pFile );
    }
 
    return pbmi;
@@ -167,11 +163,9 @@ static int PackedDibGetInfoHeaderSize( BITMAPINFO * pPackedDib )
 {
    if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
       return ( ( PBITMAPCOREINFO ) pPackedDib )->bmciHeader.bcSize;
-
    else if( pPackedDib->bmiHeader.biSize == sizeof( BITMAPINFOHEADER ) )
       return pPackedDib->bmiHeader.biSize +
              ( pPackedDib->bmiHeader.biCompression == BI_BITFIELDS ? 12 : 0 );
-
    else
       return pPackedDib->bmiHeader.biSize;
 }
@@ -186,9 +180,7 @@ static int PackedDibGetColorsUsed( BITMAPINFO * pPackedDib )
 
 static int PackedDibGetNumColors( BITMAPINFO * pPackedDib )
 {
-   int iNumColors;
-
-   iNumColors = PackedDibGetColorsUsed( pPackedDib );
+   int iNumColors = PackedDibGetColorsUsed( pPackedDib );
 
    if( iNumColors == 0 && PackedDibGetBitCount( pPackedDib ) < 16 )
       iNumColors = 1 << PackedDibGetBitCount( pPackedDib );
@@ -212,160 +204,101 @@ static BYTE * PackedDibGetBitsPtr( BITMAPINFO * pPackedDib )
 }
 #endif
 
-static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
-                               int iExpWidth, int iExpHeight,
-                               HB_BOOL bMap3Dcolors,
-                               HWND hCtrl,
-                               int iMode )
+HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
 {
    HBITMAP hBitmap = NULL;
 
-   switch( iMode )
+   HB_BOOL fMap3Dcolors = hb_parl( 4 );
+   BITMAPINFO * pPackedDib = fMap3Dcolors ? NULL : PackedDibLoad( hb_parcx( 1 ) /* szFileName */ );
+
+   if( pPackedDib || fMap3Dcolors )
    {
-      case 0:
+      int iWidth, iExpWidth = hb_parni( 2 );
+      int iHeight, iExpHeight = hb_parni( 3 );
+      HWND hCtrl = hbwapi_par_raw_HWND( 5 );
 
-         if( szBitmap )
-         {
-            BITMAPINFO * pPackedDib = NULL;
+      HDC hdc = GetDC( hCtrl );
 
-            if( ! bMap3Dcolors )
-               pPackedDib = PackedDibLoad( szBitmap );
-
-            if( pPackedDib || bMap3Dcolors )
-            {
-               int iWidth, iHeight;
-
-               HDC hdc = GetDC( hCtrl );
-
-               if( ! bMap3Dcolors )
-               {
-#if ! defined( HB_OS_WIN_CE )
-                  hBitmap = CreateDIBitmap( hdc,
-                                            ( PBITMAPINFOHEADER ) pPackedDib,
-                                            CBM_INIT,
-                                            PackedDibGetBitsPtr( pPackedDib ),
-                                            pPackedDib,
-                                            DIB_RGB_COLORS );
-                  if( hBitmap == NULL )
-                     return NULL;
-
-                  iWidth  = PackedDibGetWidth( pPackedDib );
-                  iHeight = PackedDibGetHeight( pPackedDib );
-#else
-                  return NULL;
-#endif
-               }
-               else
-               {
-                  hBitmap = ( HBITMAP ) LoadImage( NULL,
-                                                   szBitmap,
-                                                   IMAGE_BITMAP,
-                                                   iExpWidth,
-                                                   iExpHeight,
-                                                   LR_LOADFROMFILE | LR_LOADMAP3DCOLORS );
-                  if( hBitmap == NULL )
-                     return NULL;
-
-                  iWidth  = iExpWidth;
-                  iHeight = iExpHeight;
-               }
-
-               if( iExpWidth == 0 && iExpHeight == 0 )
-               {
-                  iWidth  = iExpWidth;
-                  iHeight = iExpHeight;
-               }
-
-               if( iExpWidth != iWidth || iExpHeight != iHeight )
-               {
-                  HDC     hdcSource, hdcTarget;
-                  HBITMAP hBitmap2;
-                  HB_BOOL bResult;
-
-                  hdcSource = CreateCompatibleDC( hdc );
-                  SelectObject( hdcSource, hBitmap );
-
-                  hdcTarget = CreateCompatibleDC( hdc );
-                  hBitmap2  = CreateCompatibleBitmap( hdcSource, iExpWidth, iExpHeight );
-                  SelectObject( hdcTarget, hBitmap2 );
-
-                  bResult = StretchBlt(
-                     hdcTarget,   /* handle to destination DC */
-                     0,           /* x-coord of destination upper-left corner */
-                     0,           /* y-coord of destination upper-left corner */
-                     iExpWidth,   /* width of destination rectangle */
-                     iExpHeight,  /* height of destination rectangle */
-                     hdcSource,   /* handle to source DC */
-                     0,           /* x-coord of source upper-left corner */
-                     0,           /* y-coord of source upper-left corner */
-                     iWidth,      /* width of source rectangle */
-                     iHeight,     /* height of source rectangle */
-                     SRCCOPY      /* raster operation code */
-                     );
-
-                  if( ! bResult )
-                     DeleteObject( hBitmap2 );
-                  else
-                  {
-                     DeleteObject( hBitmap );
-                     hBitmap = hBitmap2;
-                  }
-
-                  DeleteDC( hdcSource );
-                  DeleteDC( hdcTarget );
-               }
-
-               ReleaseDC( hCtrl, hdc );
-               if( pPackedDib )
-                  hb_xfree( pPackedDib );
-            }
-         }
-         break;
-
-      case 1:
-         hBitmap = ( HBITMAP ) LoadImage( GetModuleHandle( NULL ), szBitmap,
-            IMAGE_BITMAP, iExpWidth, iExpHeight, bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR );
-         break;
-
-      case 2:  /* loading from resourceid */
+      if( fMap3Dcolors )
       {
-         char szResname[ MAX_PATH + 1 ];
+         void * hString;
 
-         hb_snprintf( szResname, sizeof( szResname ), "?%u", uiBitmap );
+         hBitmap = ( HBITMAP ) LoadImage( NULL,
+                                          HB_PARSTRDEF( 1, &hString, NULL ),
+                                          IMAGE_BITMAP,
+                                          iExpWidth,
+                                          iExpHeight,
+                                          LR_LOADFROMFILE | LR_LOADMAP3DCOLORS );
 
-         hBitmap = ( HBITMAP ) LoadImage( GetModuleHandle( NULL ), MAKEINTRESOURCE( uiBitmap ),
-            IMAGE_BITMAP, iExpWidth, iExpHeight, bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR );
-         break;
+         hb_strfree( hString );
+
+         iWidth  = iExpWidth;
+         iHeight = iExpHeight;
       }
+#if ! defined( HB_OS_WIN_CE )
+      else
+      {
+         hBitmap = CreateDIBitmap( hdc,
+                                   ( PBITMAPINFOHEADER ) pPackedDib,
+                                   CBM_INIT,
+                                   PackedDibGetBitsPtr( pPackedDib ),
+                                   pPackedDib,
+                                   DIB_RGB_COLORS );
+
+         iWidth  = PackedDibGetWidth( pPackedDib );
+         iHeight = PackedDibGetHeight( pPackedDib );
+      }
+#endif
+
+      if( iExpWidth == 0 && iExpHeight == 0 )
+      {
+         iWidth  = iExpWidth;
+         iHeight = iExpHeight;
+      }
+
+      if( hBitmap && ( iExpWidth != iWidth || iExpHeight != iHeight ) )
+      {
+         HDC     hdcSource, hdcTarget;
+         HBITMAP hBitmap2;
+
+         hdcSource = CreateCompatibleDC( hdc );
+         SelectObject( hdcSource, hBitmap );
+
+         hdcTarget = CreateCompatibleDC( hdc );
+         hBitmap2  = CreateCompatibleBitmap( hdcSource, iExpWidth, iExpHeight );
+         SelectObject( hdcTarget, hBitmap2 );
+
+         if( StretchBlt(
+            hdcTarget,   /* handle to destination DC */
+            0,           /* x-coord of destination upper-left corner */
+            0,           /* y-coord of destination upper-left corner */
+            iExpWidth,   /* width of destination rectangle */
+            iExpHeight,  /* height of destination rectangle */
+            hdcSource,   /* handle to source DC */
+            0,           /* x-coord of source upper-left corner */
+            0,           /* y-coord of source upper-left corner */
+            iWidth,      /* width of source rectangle */
+            iHeight,     /* height of source rectangle */
+            SRCCOPY      /* raster operation code */
+            ) )
+         {
+            DeleteObject( hBitmap );
+            hBitmap = hBitmap2;
+         }
+         else
+            DeleteObject( hBitmap2 );
+
+         DeleteDC( hdcSource );
+         DeleteDC( hdcTarget );
+      }
+
+      ReleaseDC( hCtrl, hdc );
+
+      if( pPackedDib )
+         hb_xfree( pPackedDib );
    }
 
-   return hBitmap;
-}
-
-HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
-{
-   void *  hText;
-
-   hb_retptr( ( void * ) hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                                         hbwapi_par_raw_HWND( 5 ), 0 ) );
-
-   hb_strfree( hText );
-}
-
-HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
-{
-   hb_retptr( ( void * ) hPrepareBitmap( NULL, hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                                         hbwapi_par_raw_HWND( 5 ), 2 ) );
-}
-
-HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
-{
-   void * hText;
-
-   hb_retptr( ( void * ) hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
-                                         hbwapi_par_raw_HWND( 5 ), 1 ) );
-
-   hb_strfree( hText );
+   hb_retptr( ( void * ) hBitmap );
 }
 
 HB_FUNC( WVG_STATUSBARCREATEPANEL )
@@ -379,12 +312,10 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
          case 0:
          {
             int  ptArray[ WIN_STATUSBAR_MAX_PARTS ];
-            int  iParts;
             RECT rc = { 0, 0, 0, 0 };
             int  n;
             int  width;
-
-            iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) HB_SIZEOFARRAY( ptArray ) - 1, ( LPARAM ) ( LPINT ) ptArray );
+            int  iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) HB_SIZEOFARRAY( ptArray ) - 1, ( LPARAM ) ( LPINT ) ptArray );
 
             GetClientRect( hWndSB, &rc );
             width = ( int ) ( rc.right / ( iParts + 1 ) );
@@ -552,7 +483,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
    }
 }
 
-/* wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:Caption ) -> hItem */
+/* wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:Caption ) --> hItem */
 HB_FUNC( WVG_TREEVIEW_ADDITEM )
 {
    TVINSERTSTRUCT tvis;
@@ -567,7 +498,7 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
 
    HB_WIN_V_UNION( tvis, item.state ) = 0;  /* TVI_BOLD */
    tvis.hParent = hbwapi_par_raw_HTREEITEM( 2 );
-   HB_WIN_V_UNION( tvis, item.pszText ) = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
+   HB_WIN_V_UNION( tvis, item.pszText ) = ( LPTSTR ) HB_UNCONST( HB_PARSTRDEF( 3, &hText, NULL ) );
 
    hbwapi_ret_raw_HANDLE( TreeView_InsertItem( hbwapi_par_raw_HWND( 1 ), &tvis ) );
 
@@ -686,10 +617,7 @@ static UINT_PTR CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wP
       }
    }
 
-   if( binit )
-      return 1;
-   else
-      return bret;
+   return binit ? 1 : bret;
 }
 #endif
 
@@ -881,8 +809,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
       case 1:  /* button from image */
       {
          void * hCaption;
-         /* set string */
-         int iNewString = ( int ) SendMessage( hWndTB, TB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
+         int iNewString = ( int ) SendMessage( hWndTB, TB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );  /* set string */
          hb_strfree( hCaption );
 
          if( hb_parl( 6 ) )
@@ -902,14 +829,12 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 #if ! defined( HB_OS_WIN_CE )
          SendMessage( hWndTB, TB_SETPADDING, 0, ( LPARAM ) MAKELPARAM( 10, 10 ) );
 #endif
-         return;
+         break;
       }
-
       case 2:  /* system bitmap */
 
-
-      case 3:                 /* separator */
-         tbb.iBitmap   = 0;   /* Can be width of the separator */
+      case 3:  /* separator */
+         tbb.iBitmap   = 0;  /* Can be the width of the separator */
          tbb.idCommand = 0;
          tbb.fsState   = TBSTATE_ENABLED;
          tbb.fsStyle   = TBSTYLE_SEP;
@@ -919,7 +844,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          /* Conversion of LRESULT to HB_BOOL:
             https://msdn.microsoft.com/library/bb787291 */
          hb_retl( ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb ) );
-         return;
+         break;
    }
 }
 
@@ -940,11 +865,9 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
    wndclass.lpszMenuName  = NULL;
    wndclass.lpszClassName = HB_PARSTR( 1, &hClass, NULL );
 
-   if( ! RegisterClass( &wndclass ) )
-   {
-      if( GetLastError() != ERROR_CLASS_ALREADY_EXISTS )
-         hb_errInternal( 10001, "Failed to register DA window class", NULL, NULL );
-   }
+   if( ! RegisterClass( &wndclass ) &&
+       GetLastError() != ERROR_CLASS_ALREADY_EXISTS )
+      hb_errInternal( 10001, "Failed to register DA window class", NULL, NULL );
 
    hb_strfree( hClass );
 }
@@ -985,8 +908,10 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
       hb_vmPushNumInt( ( HB_PTRUINT ) wParam );
       hb_vmPushNumInt( ( HB_PTRUINT ) lParam );
       hb_vmDo( 4 );
+
       return ( LRESULT ) hbwapi_par_RESULT( -1 );
    }
+
    return DefWindowProc( hwnd, msg, wParam, lParam );
 }
 
@@ -1018,7 +943,7 @@ HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
       hb_itemRelease( pBlock );
 }
 
-/* wvg_CreateToolTipWindow( hControl ) -> hWndTT */
+/* wvg_CreateToolTipWindow( hControl ) --> hWndTT */
 HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 {
    HWND hwndTip = CreateWindowEx( 0, TOOLTIPS_CLASS, 0,
@@ -1042,14 +967,11 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
       ti.uId      = ( UINT_PTR ) ti.hwnd;
       ti.lpszText = ( LPTSTR ) TEXT( "" );
 
-      if( SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &ti ) )
-      {
-         hbwapi_ret_raw_HANDLE( hwndTip );
-         return;
-      }
+      if( ! SendMessage( hwndTip, TTM_ADDTOOL, 0, ( LPARAM ) &ti ) )
+         hwndTip = NULL;
    }
 
-   hbwapi_ret_raw_HANDLE( NULL );
+   hbwapi_ret_raw_HANDLE( hwndTip );
 }
 
 HB_FUNC( WVG_SETTOOLTIPTEXT )
@@ -1063,7 +985,7 @@ HB_FUNC( WVG_SETTOOLTIPTEXT )
    ti.hwnd     = hbwapi_par_raw_HWND( 1 );
    ti.uFlags   = TTF_IDISHWND | TTF_SUBCLASS;
    ti.uId      = ( UINT_PTR ) ti.hwnd;
-   ti.lpszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
+   ti.lpszText = ( LPTSTR ) HB_UNCONST( HB_PARSTRDEF( 3, &hText, NULL ) );
 
    SendMessage( hbwapi_par_raw_HWND( 2 ), TTM_SETTOOLINFO, 0, ( LPARAM ) &ti );
 

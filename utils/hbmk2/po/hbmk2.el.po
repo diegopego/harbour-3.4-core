@@ -7,7 +7,7 @@ msgid ""
 msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-10-14 22:50+0000\nLast-Translator: vszakats\nLanguage-Team: Greek (https://www.transifex.com/projects/p/harbour/language/el/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: el\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, c-format
-msgid "Exit code: %1$d: %2$s"
+msgid "Exit status: %1$d: %2$s"
 msgstr "Κωδικός εξόδου: %1$d: %2$s"
 
 #, c-format
@@ -27,8 +27,8 @@ msgid "Processing environment options: %1$s"
 msgstr "Επεξεργασία επιλογών περιβάλλοντος: %1$s"
 
 #, c-format
-msgid "Warning: Old style HB_COMPILER_VER value (%1$d) detected. Update it to: %2$s"
-msgstr "Προσοχή: Ανινχεύτηκε παλιάς μορφής τιμή (%1$d) για την μεταβλητή περιβάλλοντος HB_COMPILER_VER. Ενημερώστε τη σε: %2$s"
+msgid "Warning: Old style __HB_COMPILER_VER value (%1$d) detected. Update it to: %2$s"
+msgstr "Προσοχή: Ανινχεύτηκε παλιάς μορφής τιμή (%1$d) για την μεταβλητή περιβάλλοντος __HB_COMPILER_VER. Ενημερώστε τη σε: %2$s"
 
 #, c-format
 msgid "Autodetected platform: %1$s"
@@ -1047,7 +1047,7 @@ msgid "create (or not) a map file"
 msgstr "δημιουργία (ή όχι) ενός map αρχείου"
 
 #, c-format
-msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added."
+msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a suffix added."
 msgstr "δημιουργία (ή όχι) βιβλιοθήκης εισαγωγής (in -hbdyn/-hbexe mode). Στο όνομα θα προστεθεί ένα επίθεμα."
 
 #, c-format
@@ -1359,8 +1359,8 @@ msgid "enable pure C mode"
 msgstr "ενεργοποίηση καθαρού C mode"
 
 #, c-format
-msgid "enable xhb mode"
-msgstr "ενεργοποίηση xhb mode"
+msgid "enable xHarbour mode"
+msgstr "ενεργοποίηση xHarbour mode"
 
 #, c-format
 msgid "Harbour compiler build information"
@@ -1535,11 +1535,11 @@ msgid "option %1$s"
 msgstr "επιλογή %1$s"
 
 #, c-format
-msgid "Exit codes (\"errorlevels\"):"
+msgid "Exit statuses (\"errorlevels\"):"
 msgstr "Κωδικοί εξόδου (\"errorlevels\"):"
 
 #, c-format
-msgid "when -run option is used, the exit code will be the one returned by the target executable"
+msgid "when -run option is used, the exit status will be the one returned by the target executable"
 msgstr "όταν γίνει χρήση της επιλογής -run, κωδικός εξόδου θα είναι αυτός που θα επιστραφεί από το δημιουργημένο εκτελέσιμο."
 
 #, c-format
@@ -1583,16 +1583,16 @@ msgid "options to be passed to resource compiler (before command-line options) (
 msgstr "επιλογές που θα περαστούν στον resource compiler (πρίν από επιλογές γραμμής-εντολών) (μόνο για Windows)"
 
 #, c-format
-msgid "override C compiler executable directory (gcc compiler families only)"
+msgid "override C compiler executable directory (gcc compiler family only)"
 msgstr "επικάλυψη του καταλόγου εκτελέσιμων του μεταγλωττιστή C (μόνο σε gcc οικογένειες μεταγλωττιστών)"
 
 #, c-format
-msgid "override C compiler executable prefix (gcc compiler families only)"
+msgid "override C compiler executable prefix (gcc compiler family only)"
 msgstr "επικάλυψη του προθέματος εκτελέσιμου του μεταγλωττιστή C (μόνο σε gcc οικογένειες μεταγλωττιστών)"
 
 #, c-format
-msgid "override C compiler executable suffix (gcc compiler families only)"
-msgstr "επικάλυψη του επιθέματος εκτελέσιμου του μεταγλωττιστή C (μόνο σε gcc οικογένειες μεταγλωττιστών)"
+msgid "override C compiler executable suffix (gcc/clang compiler families only)"
+msgstr "επικάλυψη του επιθέματος εκτελέσιμου του μεταγλωττιστή C (μόνο σε gcc/clang οικογένειες μεταγλωττιστών)"
 
 #, c-format
 msgid "override Harbour base add-ons directory"
@@ -1891,8 +1891,8 @@ msgid "static build (see -static and related options)"
 msgstr "κατασκευή static (δες -static και τις σχετικές επιλογές)"
 
 #, c-format
-msgid "target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc)"
-msgstr "ο χρησιμοποιούμενος μεταγλωττιστής C ανήκει στην οικογένεια gcc (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc)"
+msgid "target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, clang64, open64, pcc)"
+msgstr "ο χρησιμοποιούμενος μεταγλωττιστής C ανήκει στην οικογένεια gcc (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, clang64, open64, pcc)"
 
 #, c-format
 msgid "target C compiler is bcc* (bcc, bcc64)"
@@ -1923,8 +1923,8 @@ msgid "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh"
 msgstr "τύπος CPU εκτέλεσης του έργου. Οπου <cpu> μπορεί να είναι κάτι από: x86, x86_64, ia64, arm, mips, sh"
 
 #, c-format
-msgid "target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix)"
-msgstr "η παλτφόρμα-στόχος είναι *nix συμβατή (bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix)"
+msgid "target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, vxworks, linux, darwin, cygwin, minix, aix)"
+msgstr "η παλτφόρμα-στόχος είναι *nix συμβατή (bsd, hpux, sunos, beos, qnx, android, vxworks, linux, darwin, cygwin, minix, aix)"
 
 #, c-format
 msgid "target platform is Windows compatible (win, wce)"
@@ -1943,8 +1943,8 @@ msgid "Windows UNICODE (WIDE) mode (see -winuni option)"
 msgstr "κατάσταση λειτουργίας Windows UNICODE (WIDE) (δες επιλογή -winuni)"
 
 #, c-format
-msgid "xhb mode (see -xhb option)"
-msgstr "xhb μοντέλο (δες επιλογή -xhb)"
+msgid "xHarbour mode (see -xhb option)"
+msgstr "xHarbour μοντέλο (δες επιλογή -xhb)"
 
 #, c-format
 msgid ".hbc directives (they should be written in separate lines):"
@@ -2231,7 +2231,7 @@ msgid "callback state. Can be: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c',
 msgstr "δήλωση επίκλισης. Μπορεί να είναι: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
 
 #, c-format
-msgid "Current exit code"
+msgid "Current exit status"
 msgstr "Τρέχων κωδικός εξόδου"
 
 #, c-format

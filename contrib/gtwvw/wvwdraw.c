@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -602,7 +602,7 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
 }
 
 /* wvw_SetPen( nPenStyle, nWidth, nColor ) */
-/* IMPORTANT: in prev release this functions has nWinNum parameter
+/* IMPORTANT: in previous release this functions has nWinNum parameter
               PENs are now application-wide. */
 HB_FUNC( WVW_SETPEN )
 {
@@ -627,8 +627,32 @@ HB_FUNC( WVW_SETPEN )
    hb_retl( HB_FALSE );
 }
 
+/* wvw_SetGridPen( nPenStyle, nWidth, nColor ) */
+HB_FUNC( WVW_SETGRIDPEN )
+{
+   PWVW_GLO wvw = hb_gt_wvw();
+
+   if( wvw && HB_ISNUM( 1 ) )
+   {
+      HPEN hPen = CreatePen( hb_parni( 1 ), hb_parni( 2 ), hbwapi_par_COLORREF( 3 ) );
+
+      if( hPen )
+      {
+         if( wvw->a.gridPen )
+            DeleteObject( wvw->a.gridPen );
+
+         wvw->a.gridPen = hPen;
+
+         hb_retl( HB_TRUE );
+         return;
+      }
+   }
+
+   hb_retl( HB_FALSE );
+}
+
 /* wvw_SetBrush( nStyle, nColor, [ nHatch ] ) */
-/* IMPORTANT: in prev release this functions has nWinNum parameter
+/* IMPORTANT: in previous release this functions has nWinNum parameter
               BRUSHes are now application-wide. */
 HB_FUNC( WVW_SETBRUSH )
 {
@@ -675,7 +699,7 @@ HB_FUNC( WVW_SETBRUSH )
 }
 
 /* wvw_DrawBoxGet( [nWinNum], nRow, nCol, nWidth, ;
-                   aOffset )   <-- additional parm, not exist in GTWVT */
+                   aOffset )   <-- additional parameter, not exist in GTWVT */
 /* NOTES: unlike GTWVT, GTWVW draw white lines on outer right and outer bottom
           Besides, scope is the same as wvw_DrawBoxRecessed(), ie.
           two pixel out of char boundary */
@@ -747,7 +771,7 @@ HB_FUNC( WVW_DRAWBOXGET )
 }
 
 /* wvw_DrawBoxGet_XP( [nWinNum], nRow, nCol, nWidth, ;
-                      aOffset )   <-- additional parm, not exist in GTWVT */
+                      aOffset )   <-- additional parameter, not exist in GTWVT */
 /* NOTES: unlike GTWVT, GTWVW draw white lines on outer right and outer bottom
           Besides, scope is the same as wvw_DrawBoxRecessed(), ie.
           two pixel out of char boundary */
@@ -805,9 +829,9 @@ HB_FUNC( WVW_DRAWBOXGET_XP )  /* Not in WVT */
 
 /* if lTight, box is drawn inside the character region
    AND top and left lines are lower two pixel down to make room for above/left object
-   WARNING: gui object of this type subject to be overwritten by chars
+   WARNING: GUI object of this type subject to be overwritten by chars
    NOTE that these lines are to be overwritten by displayed char,
-        we are depending on the fact that gui object will be painted last
+        we are depending on the fact that GUI object will be painted last
 
    lTight may be replaced with aOffset parm {top,left,bottom,right}
      ie. offset in pixel unit */
@@ -864,11 +888,11 @@ HB_FUNC( WVW_DRAWBOXRAISED )
 
 /* if lTight, box is drawn inside the character region
    AND top and left lines are lower two pixel down to make room for above/left object
-   WARNING: gui object of this type subject to be overwritten by chars
+   WARNING: GUI object of this type subject to be overwritten by chars
    NOTE that these lines are to be overwritten by displayed char,
-        we are depending on the fact that gui object will be painted last
+        we are depending on the fact that GUI object will be painted last
 
-   lTight may be replaced with aOffset parm {top,left,bottom,right}
+   lTight may be replaced with aOffset parameter {top,left,bottom,right}
      ie. offset in pixel unit */
 HB_FUNC( WVW_DRAWBOXRECESSED )
 {
@@ -1512,8 +1536,12 @@ HB_FUNC( WVW_DRAWOUTLINE )
             hOldPen = ( HPEN ) SelectObject( hDC, hPen );
       }
       else
-         /* hPen = NULL; */
+      {
+         #if 0
+         hPen = NULL;
+         #endif
          SelectObject( hDC, wvw->a.penBlack );
+      }
 
       hb_gt_wvw_DrawOutline( hDC, iTop, iLeft, iBottom, iRight );
 
@@ -1947,7 +1975,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
 }
 
 /* wvw_DrawRoundRect( nWinNum, nTop, nLeft, nBottom, nRight, ;
-                      aOffset, ; <-- new parm
+                      aOffset, ; <-- new parameter
                       nRoundHeight, nRoundWidth */
 
 /* WARNING!!!
@@ -2106,14 +2134,12 @@ HB_FUNC( WVW_DRAWGRIDHORZ )
 
       SelectObject( hDC, wvw->a.gridPen );
 
-      for( i = 0; i < iRows; i++ )
+      for( i = 0; i < iRows; ++i, ++iAtRow )
       {
          int y = ( iAtRow * hb_gt_wvw_LineHeight( wvw_win ) ) + wvw_win->iTBHeight;
 
          MoveToEx( hDC, iLeft, y, NULL );
          LineTo( hDC, iRight, y );
-
-         iAtRow++;
       }
 
       hb_retl( HB_TRUE );
@@ -2158,7 +2184,7 @@ HB_FUNC( WVW_DRAWGRIDVERT )
 
       SelectObject( hDC, wvw->a.gridPen );
 
-      for( i = 1; i <= iTabs; i++ )
+      for( i = 1; i <= iTabs; ++i )
       {
          int iCol = hb_parvni( 4, i );
          int x;
@@ -2335,7 +2361,7 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
 
       HDC hDC = wvw_win->hdc;
 
-      for( i = 0; i < iPanels; i++ )
+      for( i = 0; i < iPanels; ++i )
       {
          iTop    = hb_parvni( 3, iNext + 1 );
          iLeft   = hb_parvni( 3, iNext + 2 );
@@ -2400,7 +2426,7 @@ HB_FUNC( WVW_DRAWSTATUSBAR )
    }
 }
 
-/* wvw_DrawPicture( [nWinNum], nTop, nLeft, nBottom, nRight, nSlot, lTight/aAdj ) -> lOk */
+/* wvw_DrawPicture( [nWinNum], nTop, nLeft, nBottom, nRight, nSlot, lTight/aAdj ) --> lOk */
 /* nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right } */
 HB_FUNC( WVW_DRAWPICTURE )
 {

@@ -14,10 +14,6 @@
 # For hbserv.c, maybe more
 #-c=gnu90
 
-hbct.hbc
-hbtip.hbc
-hbfship.hbc
-hbxpp.hbc
 hbwin.hbc{allwin}
 
 -hbx=${hb_name}
@@ -27,6 +23,7 @@ cstructc.c
 datesxhb.c
 dbf2txt.c
 dbgfxc.c
+dirdrivc.c
 filestat.c
 fparse.c
 freadlin.c
@@ -44,6 +41,7 @@ xhbcopyf.c
 xhbctbit.c
 xhbdate.c
 xhbenum.c
+xhberr2.c
 xhberrc.c
 xhbfs.c
 xhbfunc.c
@@ -79,6 +77,7 @@ arrayblk.prg
 cstruct.prg
 dbgfx.prg
 decode.prg
+dirdrive.prg
 dirrec.prg
 diskhb.prg
 dumpvar.prg

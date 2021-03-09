@@ -1,7 +1,7 @@
 /*
  * Compatibility header file for CA-Cl*pper base definitions
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -116,7 +116,7 @@ typedef HB_VMHANDLE HANDLE;
 typedef ERRCODE IHELP;
 typedef ERRCODE ICODE;
 
-/* default func ptr -- USHORT return, USHORT param */
+/* default function pointer -- USHORT return, USHORT param */
 typedef USHORT  ( * FUNCP )( USHORT param, ...);
 typedef FUNCP * FUNCPP;
 
@@ -124,16 +124,16 @@ typedef FUNCP * FUNCPP;
 #define CLIPPER HARBOUR
 
 #if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
-   #undef FALSE
-   #define FALSE      0
-   #undef TRUE
-   #define TRUE       1
+#  undef FALSE
+#  define FALSE      0
+#  undef TRUE
+#  define TRUE       1
 #endif
 #ifndef NIL
-   #define NIL     '\0'
+#  define NIL     '\0'
 #endif
 #ifndef NULL
-   #define NULL    0
+#  define NULL    0
 #endif
 
 /* Old types */

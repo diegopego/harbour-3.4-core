@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -66,7 +66,7 @@ HB_EXTERN_BEGIN
 
 /* File inheritance flags */
 #define FO_INHERITED  0x0000   /* Spawned processes can inherit this file handle */
-#define FO_PRIVATE    0x0080   /* Spawned processes can not inherit this file handle */
+#define FO_PRIVATE    0x0080   /* Spawned processes cannot inherit this file handle */
 
 /* Extended file open mode flags */
 #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
@@ -81,7 +81,7 @@ HB_EXTERN_BEGIN
 #define FXO_COPYNAME  0x8000        /* copy final szPath into pszFileName */
 
 /* these definitions should be cleared,
- * now they only help to clean lower level code
+ * now they only help to clean lower-level code
  */
 #define HB_FA_FIFO            HB_FA_TEMPORARY   /* S_ISFIFO() */
 #define HB_FA_FILE            HB_FA_ARCHIVE     /* S_ISREG() */
@@ -96,7 +96,7 @@ HB_EXTERN_BEGIN
 #define HB_FA_RWXO            ( HB_FA_ROTH | HB_FA_WOTH | HB_FA_XOTH )
 
 #if defined( HB_OS_VXWORKS ) && ! defined( S_ISVTX )
-   #define S_ISVTX 0
+#  define S_ISVTX 0
 #endif
 
 /* macros to convert Harbour attributes to POSIX ones */
@@ -135,31 +135,31 @@ extern HB_EXPORT int        hb_fsCurDrv      ( void ); /* retrieve current drive
 extern HB_EXPORT HB_BOOL    hb_fsDelete      ( const char * pszFileName ); /* delete a file */
 extern HB_EXPORT HB_BOOL    hb_fsEof         ( HB_FHANDLE hFileHandle ); /* determine if an open file is position at end-of-file */
 extern HB_EXPORT HB_ERRCODE hb_fsError       ( void ); /* retrieve file system error */
-extern HB_EXPORT HB_ERRCODE hb_fsOsError     ( void ); /* retrieve system dependant file system error */
+extern HB_EXPORT HB_ERRCODE hb_fsOsError     ( void ); /* retrieve system dependent file system error */
 extern HB_EXPORT HB_BOOL    hb_fsFile        ( const char * pszFileName ); /* determine if a file exists */
 extern HB_EXPORT HB_BOOL    hb_fsIsDirectory ( const char * pszFileName );
 extern HB_EXPORT HB_FOFFSET hb_fsFSize       ( const char * pszFileName, HB_BOOL bUseDirEntry ); /* determine the size of a file */
 extern HB_EXPORT HB_FHANDLE hb_fsExtOpen     ( const char * pszFileName, const char * pDefExt,
                                                HB_FATTR nFlags, const char * pPaths, PHB_ITEM pError ); /* open a file using default extension and a list of paths */
 extern HB_EXPORT char *     hb_fsExtName     ( const char * pszFileName, const char * pDefExt,
-                                               HB_FATTR nExFlags, const char * pPaths ); /* convert file name for hb_fsExtOpen, caller must free the returned buffer */
+                                               HB_FATTR nExFlags, const char * pPaths ); /* convert file name for hb_fsExtOpen(), caller must free the returned buffer */
 extern HB_EXPORT HB_ERRCODE hb_fsIsDrv       ( int iDrive ); /* determine if a drive number is a valid drive */
 extern HB_EXPORT HB_BOOL    hb_fsIsDevice    ( HB_FHANDLE hFileHandle ); /* determine if a file is attached to a device (console?) */
 extern HB_EXPORT HB_BOOL    hb_fsLock        ( HB_FHANDLE hFileHandle, HB_ULONG ulStart, HB_ULONG ulLength, HB_USHORT uiMode ); /* request a lock on a portion of a file */
 extern HB_EXPORT HB_BOOL    hb_fsLockLarge   ( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
-                                               HB_FOFFSET nLength, HB_USHORT uiMode ); /* request a lock on a portion of a file using 64bit API */
+                                               HB_FOFFSET nLength, HB_USHORT uiMode ); /* request a lock on a portion of a file using 64-bit API */
 extern HB_EXPORT int        hb_fsLockTest    ( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
                                                HB_FOFFSET nLength, HB_USHORT uiMode );
 extern HB_EXPORT HB_BOOL    hb_fsMkDir       ( const char * pszDirName ); /* create a directory */
 extern HB_EXPORT HB_FHANDLE hb_fsOpen        ( const char * pszFileName, HB_USHORT uiFlags ); /* open a file */
 extern HB_EXPORT HB_FHANDLE hb_fsOpenEx      ( const char * pszFileName, HB_USHORT uiFlags, HB_FATTR nAttr ); /* open or create a file with given attributes */
-extern HB_EXPORT HB_USHORT  hb_fsRead        ( HB_FHANDLE hFileHandle, void * pBuff, HB_USHORT uiCount ); /* read contents of a file into a buffer (<=64K) */
-extern HB_EXPORT HB_SIZE    hb_fsReadLarge   ( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount ); /* read contents of a file into a buffer (>64K) */
-extern HB_EXPORT HB_SIZE    hb_fsReadAt      ( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FOFFSET nOffset ); /* read from given offset contents of a file into a buffer (>64K) */
+extern HB_EXPORT HB_USHORT  hb_fsRead        ( HB_FHANDLE hFileHandle, void * pBuff, HB_USHORT uiCount ); /* read contents of a file into a buffer (<=64 KiB) */
+extern HB_EXPORT HB_SIZE    hb_fsReadLarge   ( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount ); /* read contents of a file into a buffer (>64 KiB) */
+extern HB_EXPORT HB_SIZE    hb_fsReadAt      ( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FOFFSET nOffset ); /* read from given offset contents of a file into a buffer (> 64 KiB) */
 extern HB_EXPORT HB_BOOL    hb_fsRmDir       ( const char * pszDirName ); /* remove a directory */
 extern HB_EXPORT HB_BOOL    hb_fsRename      ( const char * pszOldName, const char * pszNewName ); /* rename a file */
 extern HB_EXPORT HB_ULONG   hb_fsSeek        ( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiMode ); /* reposition an open file */
-extern HB_EXPORT HB_FOFFSET hb_fsSeekLarge   ( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT uiFlags ); /* reposition an open file using 64bit API */
+extern HB_EXPORT HB_FOFFSET hb_fsSeekLarge   ( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT uiFlags ); /* reposition an open file using 64-bit API */
 extern HB_EXPORT HB_FOFFSET hb_fsTell        ( HB_FHANDLE hFileHandle ); /* retrieve the current position of a file */
 extern HB_EXPORT HB_FOFFSET hb_fsGetSize     ( HB_FHANDLE hFileHandle ); /* retrieve the size of a file, it may change current seek position */
 extern HB_EXPORT int        hb_fsSetDevMode  ( HB_FHANDLE hFileHandle, int iDevMode ); /* change the device mode of a file (text/binary) */
@@ -195,26 +195,51 @@ extern HB_EXPORT HB_BOOL    hb_fsLink        ( const char * pszExisting, const c
 extern HB_EXPORT HB_BOOL    hb_fsLinkSym     ( const char * pszTarget, const char * pszNewFile ); /* create symbolic (soft) link */
 extern HB_EXPORT char *     hb_fsLinkRead    ( const char * pszFileName ); /* returns the link pointed to */
 
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+/* for POSIX systems only, hides low-level select()/poll() access,
+   intentionally covered by HB_OS_UNIX / __DJGPP__ macros to generate
+   compile time error in code which tries to use it on other platforms */
+
+typedef struct
+{
+   HB_FHANDLE  fd;
+   HB_SHORT    events;
+   HB_SHORT    revents;
+} HB_POLLFD, * PHB_POLLFD;
+
+#define HB_POLLIN    0x0001 /* There is data to read */
+#define HB_POLLPRI   0x0002 /* There is urgent data to read */
+#define HB_POLLOUT   0x0004 /* Writing now will not block */
+#define HB_POLLERR   0x0008 /* Error condition */
+#define HB_POLLHUP   0x0010 /* Hung up */
+#define HB_POLLNVAL  0x0020 /* Invalid polling request */
+
+extern HB_EXPORT int        hb_fsPoll        ( PHB_POLLFD pPollSet, int iCount, HB_MAXINT nTimeOut );
+extern HB_EXPORT int        hb_fsCanRead     ( HB_FHANDLE hFileHandle, HB_MAXINT nTimeOut );
+extern HB_EXPORT int        hb_fsCanWrite    ( HB_FHANDLE hFileHandle, HB_MAXINT nTimeOut );
+#endif /* HB_OS_UNIX */
+
+
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_USE_SHARELOCKS_OFF )
-   #define HB_USE_SHARELOCKS
-   #define HB_SHARELOCK_POS          0x7fffffffUL
-   #define HB_SHARELOCK_SIZE         0x1UL
-   #if defined( HB_USE_BSDLOCKS_OFF )
-      #undef HB_USE_BSDLOCKS
-   #elif defined( HB_OS_LINUX ) && \
-         ! defined( __WATCOMC__ ) && ! defined( HB_USE_BSDLOCKS )
-       /* default usage of BSD locks in *BSD systems for emulating
-        * MS-DOS/Windows DENY_* flags has been disabled because tests
-        * on FreeBSD 6.2 and macOS shows that this implementation
-        * can create self deadlock when used simultaneously with
-        * POSIX locks - thanks to Phil and Lorenzo for locating the
-        * problem and tests [druzus]
-        */
-      #define HB_USE_BSDLOCKS
-   #endif
+#  define HB_USE_SHARELOCKS
+#  define HB_SHARELOCK_POS          0x7fffffffUL
+#  define HB_SHARELOCK_SIZE         0x1UL
+#  if defined( HB_USE_BSDLOCKS_OFF )
+#     undef HB_USE_BSDLOCKS
+#  elif defined( HB_OS_LINUX ) && \
+        ! defined( __WATCOMC__ ) && ! defined( HB_USE_BSDLOCKS )
+      /* default usage of BSD locks in *BSD systems for emulating
+       * MS-DOS/Windows DENY_* flags has been disabled because tests
+       * on FreeBSD 6.2 and macOS shows that this implementation
+       * can create self deadlock when used simultaneously with
+       * POSIX locks - thanks to Phil and Lorenzo for locating the
+       * problem and tests [druzus]
+       */
+#     define HB_USE_BSDLOCKS
+#  endif
 #endif
 
 #define HB_MAX_DRIVE_LENGTH   10
@@ -328,7 +353,7 @@ extern HB_EXPORT HB_BOOL  hb_fsOS2QueryPathInfo( const char * pszPathName,
 
 #if defined( _HB_FILE_IMPLEMENTATION_ ) || defined( _HB_FILE_INTERNAL_ )
 
-   #define HB_FILE_TYPE_MAX    128
+#  define HB_FILE_TYPE_MAX    128
 
    struct _HB_FILE;
    typedef struct _HB_FILE * PHB_FILE;
@@ -389,6 +414,7 @@ extern HB_EXPORT HB_BOOL      hb_fileExists     ( const char * pszFileName, char
 extern HB_EXPORT HB_BOOL      hb_fileDelete     ( const char * pszFileName );
 extern HB_EXPORT HB_BOOL      hb_fileRename     ( const char * pszFileName, const char * pszNewName );
 extern HB_EXPORT HB_BOOL      hb_fileCopy       ( const char * pszSrcFile, const char * pszDstFile );
+extern HB_EXPORT HB_BOOL      hb_fileMove       ( const char * pszSrcFile, const char * pszDstFile );
 
 extern HB_EXPORT HB_BOOL      hb_fileDirExists  ( const char * pszDirName );
 extern HB_EXPORT HB_BOOL      hb_fileDirMake    ( const char * pszDirName );

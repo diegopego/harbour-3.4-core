@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,6 +49,7 @@
 /* this has to be declared before hbznet.h is included */
 #define _HB_ZNET_INTERNAL_
 
+#include "hbapi.h"
 #include "hbznet.h"
 #include "hbbfish.h"
 #include "hbzlib.ch"
@@ -77,9 +78,9 @@ HB_ZNETSTREAM;
 #define HB_ZNET_READAHEAD     0x40
 
 #if MAX_MEM_LEVEL >= 8
-   #define HB_ZNET_MEM_LEVEL   8
+#  define HB_ZNET_MEM_LEVEL   8
 #else
-   #define HB_ZNET_MEM_LEVEL   MAX_MEM_LEVEL
+#  define HB_ZNET_MEM_LEVEL   MAX_MEM_LEVEL
 #endif
 
 /* return status of last compression/decompression operation */
@@ -671,7 +672,7 @@ PHB_SOCKEX hb_sockexNewZNet( HB_SOCKET sd, const void * keydata, int keylen,
 }
 
 /* hb_socketNewZNet( <pSocket>, [<cPass>], ;
-                     [<nCompressionLevel>], [<nStrategy>] ) -> <pSocket>
+                     [<nCompressionLevel>], [<nStrategy>] ) --> <pSocket>
  */
 HB_FUNC( HB_SOCKETNEWZNET )
 {

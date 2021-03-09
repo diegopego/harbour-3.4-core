@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -79,19 +79,19 @@
 #include "hbstack.h"
 
 #if defined( _HB_STACK_MACROS_ ) && defined( _HB_STACK_LOCAL_MACROS_ )
-   #if defined( HB_MT_VM )
-      #if defined( HB_USE_TLS )
-         #if defined( __BORLANDC__ )
+#  if defined( HB_MT_VM )
+#     if defined( HB_USE_TLS )
+#        if defined( __BORLANDC__ )
             static PHB_STACK HB_TLS_ATTR hb_stack_ptr = NULL;
-         #else
+#        else
             static HB_TLS_ATTR PHB_STACK hb_stack_ptr = NULL;
-         #endif
-      #elif ! defined( hb_stack_ptr_get )
+#        endif
+#     elif ! defined( hb_stack_ptr_get )
          static HB_TLS_KEY hb_stack_key;
-      #endif
-   #else
+#     endif
+#  else
       static HB_STACK hb_stack;
-   #endif
+#  endif
 #endif
 
 

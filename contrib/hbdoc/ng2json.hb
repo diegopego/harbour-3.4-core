@@ -2,7 +2,7 @@
 /*
  * Norton Guide (.ng) to .json converter
  *
- * Copyright 2016 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2016 Viktor Szakats (vsz.me/hb)
  *
  * .ng parsing logic based on:
  *   Expert Guide - A Text Mode Norton Guide Reader
@@ -20,9 +20,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their website at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -45,6 +45,8 @@ procedure main( name )
   else
     conv_one( name )
   endif
+
+  return
 
 static procedure conv_one( name )
 

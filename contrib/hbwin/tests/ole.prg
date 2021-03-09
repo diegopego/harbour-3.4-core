@@ -2,7 +2,7 @@
  * OLE demo/test code
  *
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it
- * Copyright 2008-2016 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2017 Viktor Szakats (vsz.me/hb)
  *    Exm_CDO(), Exm_OOOpen(), Exm_CreateShortcut()
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  */
@@ -192,7 +192,7 @@ STATIC PROCEDURE Exm_MSOutlook2()
 
       FOR i := 1 TO 10
          oMail:Recipients:Add( "Contact" + hb_ntos( i ) + ;
-            "<contact" + hb_ntos( i ) + "@example.com>" )
+            "<contact" + hb_ntos( i ) + "@example.org>" )
       NEXT
 
       oLista := oOL:CreateItem( 7 /* olDistributionListItem */ )
@@ -340,17 +340,13 @@ STATIC PROCEDURE Exm_OOOpen()
 
       oOO_Desktop := oOO_ServiceManager:createInstance( "com.sun.star.frame.Desktop" )
       oOO_PropVal01 := oOO_ServiceManager:Bridge_GetStruct( "com.sun.star.beans.PropertyValue" )
-      oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( hb_DirBase(), "sample.odt" ) ), "_blank", 0, { oOO_PropVal01 } )
+      oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( hb_DirBase(), "test.odt" ) ), "_blank", 0, { oOO_PropVal01 } )
 
       ? "About to close OpenOffice"
       WAIT
 
       oOO_Doc:Close( .T. )
-      oOO_Doc := NIL
-
       oOO_Desktop:Terminate()
-      oOO_Desktop := NIL
-      oOO_PropVal01 := NIL
    ELSE
       ? "Error: OpenOffice not available.", win_oleErrorText()
    ENDIF
@@ -380,12 +376,12 @@ STATIC PROCEDURE Exm_CDO()  /* STARTTLS not supported by CDO */
 
    IF ( oCDOMsg := win_oleCreateObject( "CDO.Message" ) ) != NIL
 
-      cFrom := "from@example.com"
+      cFrom := "from@example.org"
 
       oCDOConf := win_oleCreateObject( "CDO.Configuration" )
 
       oCDOConf:Fields( "http:" + "//schemas.microsoft.com/cdo/configuration/sendusing" ):Value := 2  // cdoSendUsingPort: Send the message using SMTP over TCP/IP networking
-      oCDOConf:Fields( "http:" + "//schemas.microsoft.com/cdo/configuration/smtpserver" ):Value := "smtp.example.com"
+      oCDOConf:Fields( "http:" + "//schemas.microsoft.com/cdo/configuration/smtpserver" ):Value := "smtp.example.org"
       oCDOConf:Fields( "http:" + "//schemas.microsoft.com/cdo/configuration/smtpserverport" ):Value := 465
       oCDOConf:Fields( "http:" + "//schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout" ):Value := 120
       oCDOConf:Fields( "http:" + "//schemas.microsoft.com/cdo/configuration/smtpauthenticate" ):Value := 1  // cdoBasic: Basic authentication
@@ -396,7 +392,7 @@ STATIC PROCEDURE Exm_CDO()  /* STARTTLS not supported by CDO */
 
       oCDOMsg:Configuration := oCDOConf
       oCDOMsg:BodyPart:Charset := "utf-8"
-      oCDOMsg:To := "to@example.com"
+      oCDOMsg:To := "to@example.org"
       oCDOMsg:From := cFrom
       oCDOMsg:Subject := "Test message"
       oCDOMsg:TextBody := "Test message body"
@@ -506,7 +502,7 @@ STATIC PROCEDURE Exm_DownloadHTTPS()
    LOCAL oHTTP
 
    IF ( oHTTP := win_oleCreateObject( "WinHttp.WinHttpRequest.5.1" ) ) != NIL
-      oHTTP:Open( "GET", "https://example.com/index.html", .F. )
+      oHTTP:Open( "GET", "https://example.org/index.html", .F. )
       oHTTP:Send()
       IF oHTTP:Status() == 200
          ? "Downloaded", hb_ntos( hb_BLen( oHTTP:responseBody ) ), "byte(s)"

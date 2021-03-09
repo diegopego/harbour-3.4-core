@@ -1,7 +1,7 @@
 /*
  * Harbour Windows Printing support functions
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009 Viktor Szakats (vsz.me/hb)
  * Copyright 2002 Luiz Rafael Culik <culikr@uol.com.br>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -169,7 +169,7 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
    if( ! bResult && hb_iswin9x() )
    {
       /* This option should never be required but is included because of this article
-            https://support.microsoft.com/kb/246772/en-us
+            https://support.microsoft.com/kb/246772
 
          This option will not enumerate any network printers.
 
@@ -259,7 +259,7 @@ HB_FUNC( WIN_PRINTERSTATUS )
       LPCTSTR lpPrinterName = HB_ITEMGETSTR( pPrinterName, &hPrinterName, NULL );
       HANDLE hPrinter;
 
-      if( OpenPrinter( ( LPTSTR ) lpPrinterName, &hPrinter, NULL ) )
+      if( OpenPrinter( ( LPTSTR ) HB_UNCONST( lpPrinterName ), &hPrinter, NULL ) )
       {
          DWORD dwNeeded = 0;
 
@@ -371,12 +371,12 @@ HB_FUNC( WIN_PRINTFILERAW )
       void * hDeviceName;
       LPCTSTR lpDeviceName = HB_PARSTR( 1, &hDeviceName, NULL );
 
-      if( OpenPrinter( ( LPTSTR ) lpDeviceName, &hPrinter, NULL ) != 0 )
+      if( OpenPrinter( ( LPTSTR ) HB_UNCONST( lpDeviceName ), &hPrinter, NULL ) != 0 )
       {
          void * hDocName;
          DOC_INFO_1 DocInfo;
 
-         DocInfo.pDocName = ( LPTSTR ) HB_PARSTR( HB_ISCHAR( 3 ) ? 3 : 2, &hDocName, NULL );
+         DocInfo.pDocName = ( LPTSTR ) HB_UNCONST( HB_PARSTR( HB_ISCHAR( 3 ) ? 3 : 2, &hDocName, NULL ) );
          DocInfo.pOutputFile = NULL;
          DocInfo.pDatatype = ( LPTSTR ) TEXT( "RAW" );
 
@@ -467,12 +467,12 @@ HB_FUNC( WIN_PRINTDATARAW )
       void * hDeviceName;
       LPCTSTR lpDeviceName = HB_PARSTR( 1, &hDeviceName, NULL );
 
-      if( OpenPrinter( ( LPTSTR ) lpDeviceName, &hPrinter, NULL ) != 0 )
+      if( OpenPrinter( ( LPTSTR ) HB_UNCONST( lpDeviceName ), &hPrinter, NULL ) != 0 )
       {
          void * hDocName;
          DOC_INFO_1 DocInfo;
 
-         DocInfo.pDocName = ( LPTSTR ) HB_PARSTR( 3, &hDocName, NULL );
+         DocInfo.pDocName = ( LPTSTR ) HB_UNCONST( HB_PARSTR( 3, &hDocName, NULL ) );
          DocInfo.pOutputFile = NULL;
          DocInfo.pDatatype = ( LPTSTR ) TEXT( "RAW" );
          if( DocInfo.pDocName == NULL )
@@ -482,14 +482,14 @@ HB_FUNC( WIN_PRINTDATARAW )
          {
             if( StartPagePrinter( hPrinter ) != 0 )
             {
-               HB_BYTE * pbData = ( HB_BYTE * ) hb_parc( 2 );
+               const HB_BYTE * pbData = ( const HB_BYTE * ) hb_parc( 2 );
                HB_SIZE nLen = hb_parclen( 2 );
 
                nResult = 0;
                while( ( HB_SIZE ) nResult < nLen )
                {
                   DWORD dwWritten = 0;
-                  if( ! WritePrinter( hPrinter, &pbData[ nResult ],
+                  if( ! WritePrinter( hPrinter, ( LPVOID ) HB_UNCONST( &pbData[ nResult ] ),
                                       ( DWORD ) ( nLen - nResult ),
                                       &dwWritten ) || dwWritten == 0 )
                      break;

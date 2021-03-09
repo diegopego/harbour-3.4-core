@@ -506,7 +506,7 @@ procedure test( nMT, cExclude, lScale )
 
 #ifdef __HARBOUR__
    #include "hbmemory.ch"
-   if Memory( HB_MEM_BLOCKS ) != 0
+   if Memory( HB_MEM_STATISTICS ) != 0
       ? "Warning !!! Memory statistics enabled."
       ?
    endif
@@ -976,14 +976,14 @@ method Notifier:init
    ::aQueue := {}
    ::oSignal := Signal():new()
 
-   return self
+   return Self
 
 method Notifier:notify( xValue )
 
    AAdd( ::aQueue, xValue )
    ::oSignal:signal()
 
-   return self
+   return Self
 
 method Notifier:subscribe()
 

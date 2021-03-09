@@ -20,7 +20,7 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_wvw_Tone()
  *
- * (C) 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
+ * (C) 2003-2004 Giancarlo Niccolai <gc@niccolai.ws>
  *         Standard xplatform GT Info system,
  *         Graphical object system and event system.
  *         hb_gtInfo() And GTO_* implementation.
@@ -44,9 +44,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -77,6 +77,7 @@
 #include "hbgtwvw.h"
 
 #include "hbinit.h"
+#include "hbapifs.h"
 #include "hbmath.h"
 #include "hbvm.h"
 
@@ -84,7 +85,7 @@
 
 #define HB_GT_NAME  WVW
 
-static PWVW_GLO s_wvw          = NULL; /* TOFIX: MT compatibility */
+static PWVW_GLO s_wvw          = NULL; /* FIXME: MT compatibility */
 static HB_BOOL  s_fInit        = HB_FALSE;
 static HB_BOOL  s_fIsReady     = HB_FALSE;
 static HB_BOOL  s_fSizeIsReady = HB_FALSE;
@@ -170,8 +171,6 @@ static void    hb_gt_wvw_FUNCPrologue( int iNumCoord, int * iRow1, int * iCol1, 
 static void    hb_gt_wvw_FUNCEpilogue( void );
 
 /* functions created in order to allow us operating MainCoord Mode: */
-static void    hb_gt_wvw_mouse_vInit( void );
-static void    hb_gt_wvw_mouse_vExit( void );
 static void    hb_gt_wvw_mouse_vSetPos( PWVW_WIN wvw_win, int iRow, int iCol );
 static int     hb_gt_wvw_vDispCount( PWVW_WIN wvw_win );
 static void    hb_gt_wvw_vDispBegin( PWVW_WIN wvw_win );
@@ -803,8 +802,8 @@ static void hb_gt_wvw_usBox( PHB_GT pGT, PWVW_WIN wvw_win, int iTop, int iLeft, 
             szBoxW[ i ] = ' ';
       }
 #else
-      BYTE szBoxW[ 10 ];                                             /* TOFIX */
-      BYTE bPadCh = ( BYTE ) HB_GTSELF_GETCLEARCHAR( hb_gt_Base() ); /* TOFIX */
+      BYTE szBoxW[ 10 ];                                             /* FIXME */
+      BYTE bPadCh = ( BYTE ) HB_GTSELF_GETCLEARCHAR( hb_gt_Base() ); /* FIXME */
 
       i = 0;
 
@@ -814,6 +813,8 @@ static void hb_gt_wvw_usBox( PHB_GT pGT, PWVW_WIN wvw_win, int iTop, int iLeft, 
 
       while( i < 8 )
          szBoxW[ i++ ] = bPadCh;
+
+      HB_SYMBOL_UNUSED( pGt );
 #endif
 
       szBoxW[ i ] = '\0';
@@ -984,18 +985,18 @@ static void hb_gt_wvw_VertLine( PHB_GT pGT, int iCol, int iTop, int iBottom, HB_
    hb_gt_wvw_FUNCEpilogue();
 }
 
-static void hb_gt_wvw_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
+static void hb_gt_wvw_OutStd( PHB_GT pGT, const char * pbyStr, HB_SIZE nLen )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   hb_fsWriteLarge( s_wvw->iStdOut, pbyStr, ulLen );
+   hb_fsWriteLarge( s_wvw->iStdOut, pbyStr, nLen );
 }
 
-static void hb_gt_wvw_OutErr( PHB_GT pGT, const char * pbyStr, HB_SIZE ulLen )
+static void hb_gt_wvw_OutErr( PHB_GT pGT, const char * pbyStr, HB_SIZE nLen )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   hb_fsWriteLarge( s_wvw->iStdErr, pbyStr, ulLen );
+   hb_fsWriteLarge( s_wvw->iStdErr, pbyStr, nLen );
 }
 
 static HB_BOOL hb_gt_wvw_GetCharFromInputQueue( int * c )
@@ -1044,15 +1045,12 @@ static void hb_gt_wvw_mouse_Init( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   hb_gt_wvw_mouse_vInit();
    hb_gt_wvw_CreateToolTipWindow( s_wvw->pWin[ 0 ] );
 }
 
 static void hb_gt_wvw_mouse_Exit( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
-
-   hb_gt_wvw_mouse_vExit();
 }
 
 static HB_BOOL hb_gt_wvw_mouse_IsPresent( PHB_GT pGT )
@@ -1098,7 +1096,7 @@ static void hb_gt_wvw_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
 
 static void hb_gt_wvw_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_mouse_GetPos(%p,%p,%p)", pGT, piRow, piCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_mouse_GetPos(%p,%p,%p)", ( void * ) pGT, piRow, piCol ) );
 
    *piRow = hb_gt_wvw_mouse_Row( pGT );
    *piCol = hb_gt_wvw_mouse_Col( pGT );
@@ -1106,7 +1104,7 @@ static void hb_gt_wvw_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 
 static HB_BOOL hb_gt_wvw_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_mouse_ButtonState(%p,%i)", pGT, iButton ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_mouse_ButtonState(%p,%i)", ( void * ) pGT, iButton ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1139,7 +1137,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    PWVW_WIN wvw_win = s_wvw->pWin[ s_wvw->iCurWindow ];
    int      iVal;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Info(%p,%d,%p)", pGT, iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvw_Info(%p,%d,%p)", ( void * ) pGT, iType, pInfo ) );
 
    switch( iType )
    {
@@ -1202,7 +1200,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wvw_win->fontWidth );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
-            wvw_win->fontWidth = iVal;  /* store font status for next operation on fontsize */
+            wvw_win->fontWidth = iVal;  /* store font status for next operation on font size */
          break;
 
       case HB_GTI_FONTNAME:
@@ -1242,7 +1240,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, iVal );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-            /* store font status for next operation on fontsize */
+            /* store font status for next operation on font size */
             switch( hb_itemGetNI( pInfo->pNewVal ) )
             {
                case HB_GTI_FONTW_THIN:
@@ -1301,7 +1299,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
           * SEEALSO         hb_gt_wvwCalcPixelHeight()
           */
 
-         /* NOTE 2004-07-19 screenheight includes linespacing, if any */
+         /* NOTE 2004-07-19 screen height includes linespacing, if any */
 
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_wvw_LineHeight( wvw_win ) * wvw_win->ROWS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
@@ -1358,7 +1356,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
           * SEEALSO         hb_gt_wvwCalcPixelHeight() - iSBHeight - iTBHeight
           */
 
-         /* NOTE 2004-07-19 screenheight includes linespacing, if any */
+         /* NOTE 2004-07-19 screen height includes linespacing, if any */
 
          RECT rDesk;
          HWND hDesk = GetDesktopWindow();
@@ -1411,7 +1409,7 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       }
 
-      /* TODO: these two doesn't seem right. see gtwin about what they're supposed to do */
+      /* TODO: these two doesn't seem right. see GTWIN about what they're supposed to do */
       case HB_GTI_VIEWMAXWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wvw_win->COLS );
          break;
@@ -1507,6 +1505,11 @@ static HB_BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          }
          break;
+
+      case HB_GTI_WINHANDLE:
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, s_wvw->pWin[ 0 ]->hWnd );
+         break;
+
       default:
       {
          if( pGT )
@@ -1818,7 +1821,6 @@ BOOL CALLBACK hb_gt_wvw_DlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LP
             if( hb_vmRequestReenter() )
             {
                hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
-
                hb_vmPushNil();
                hbwapi_vmPush_HANDLE( hDlg );
                hb_vmPushNumInt( message );
@@ -1913,7 +1915,7 @@ static void hb_gt_wvwCreateObjects( int nWin )
 
    /* 2004-09-21 IMPORTANT:
       All these PENs and BRUSHes creations are temporarily disabled
-      because WINDOW #1's CAN'T BE DELETED LATER!
+      because WINDOW #1's CANNOT BE DELETED LATER!
       See also hb_gt_wvwCloseWindow() and gt_Exit()
       TODO: pls choose:
       (1) store PENs and BRUSHes as application-wide
@@ -1940,7 +1942,7 @@ static void hb_gt_wvwCreateObjects( int nWin )
 
       lb.lbStyle = BS_HATCHED;
       lb.lbColor = RGB( 210, 210, 210 );
-      lb.lbHatch = HS_DIAGCROSS;  /* HS_BDIAGONAL; */
+      lb.lbHatch = HS_DIAGCROSS;  /* HS_BDIAGONAL */
       s_wvw->a.diagonalBrush = CreateBrushIndirect( &lb );
 
       lb.lbStyle = BS_SOLID;
@@ -2547,7 +2549,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                _s.colStart = HB_MAX( 0, rcRect.left - 1 );
                _s.colStop  = HB_MIN( _s.COLS, rcRect.right + 1 );
 
-               WVW can't do that way, because we use TIMER method to repaint
+               WVW cannot do that way, because we use TIMER method to repaint
                WVW's pending repaint rect is stored in rPaintPending
              */
 
@@ -2571,7 +2573,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                len        = 0;
                oldColor   = wvw_win->screenBuffer[ index ].c.bColor;
 
-               /* colorute may change mid line...
+               /* color may change mid line...
                   so buffer up text with same color, and output it
                   then do next section with same color, etc */
 
@@ -2965,8 +2967,8 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
          {
             if( bCtrl && iScanCode == 28 )        /* K_CTRL_RETURN */
                hb_gt_wvw_AddCharToInputQueue( K_CTRL_RETURN );
-            else if( bCtrl && c >= 1 && c <= 26 ) /* K_CTRL_A - Z */
-               hb_gt_wvw_AddCharToInputQueue( s_K_Ctrl[ c - 1 ]  );
+            else if( bCtrl && c >= 1 && c <= 26 ) /* K_CTRL_A - K_CTRL_Z */
+               hb_gt_wvw_AddCharToInputQueue( s_K_Ctrl[ c - 1 ] );
             else
             {
                switch( c )
@@ -3250,7 +3252,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             }
             return 0;
          }
-      /* TOFIX: break or return? */
+         break;
 
       case WM_MOVE:
 
@@ -3268,7 +3270,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             }
             return 0;
          }
-      /* TOFIX: break or return? */
+         break;
 
       case WM_CTLCOLORSTATIC:
       case WM_CTLCOLOREDIT:
@@ -3287,9 +3289,9 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             if( res != -1 )
                return res;
          }
-         /* TOFIX: break or return? */
+         break;
       }
-      case WM_SYSCOMMAND: /* handle system menu items */  /*SP-ADDED*/
+      case WM_SYSCOMMAND:  /* handle system menu items */
          if( s_wvw->iNumWindows != nWin + 1 )
             hb_gt_wvwInputNotAllowed( nWin, message, wParam, lParam );
          else
@@ -3306,7 +3308,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                   hb_gt_wvwHandleMenuSelection( ( int ) LOWORD( wParam ) );
             }
          }
-      /* TOFIX: break or return? */
+         break;
 
       case WM_DRAWITEM:
 
@@ -3341,7 +3343,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 
             return 0;
          }
-         /* TOFIX: break or return? */
+         break;
    }
    return DefWindowProc( hWnd, message, wParam, lParam );
 }
@@ -3825,7 +3827,7 @@ int hb_gt_wvw_JustTranslateKey( int key, int shiftkey, int altkey, int controlke
 }
 
 /* font stuff */
-/* use the standard fixed oem font, unless the caller has requested set size fonts */
+/* use the standard fixed OEM font, unless the caller has requested set size fonts */
 
 HFONT hb_gt_wvw_GetFont( LPCTSTR pszFace, int iHeight, int iWidth, int iWeight, int iQuality, int iCodePage )
 {
@@ -4288,26 +4290,24 @@ static void hb_gt_wvwMouseEvent( PWVW_WIN wvw_win, HWND hWnd, UINT message, WPAR
          break;
 
       case WM_MOUSEMOVE:
-         keyState = ( SHORT ) wParam;
-
-         if( keyState == MK_LBUTTON )
-            keyCode = K_MMLEFTDOWN;
-         else if( keyState == MK_RBUTTON )
-            keyCode = K_MMRIGHTDOWN;
-         else if( keyState == MK_MBUTTON )
-            keyCode = K_MMMIDDLEDOWN;
-         else
-            keyCode = K_MOUSEMOVE;
+         switch( ( SHORT ) wParam )
+         {
+            case MK_LBUTTON:
+               keyCode = K_MMLEFTDOWN;
+               break;
+            case MK_RBUTTON:
+               keyCode = K_MMRIGHTDOWN;
+               break;
+            case MK_MBUTTON:
+               keyCode = K_MMMIDDLEDOWN;
+               break;
+            default:
+               keyCode = K_MOUSEMOVE;
+         }
          break;
 
       case WM_MOUSEWHEEL:
-         keyState = HIWORD( wParam );
-
-         if( keyState > 0 )
-            keyCode = K_MWFORWARD;
-         else
-            keyCode = K_MWBACKWARD;
-
+         keyCode = ( SHORT ) HIWORD( wParam ) > 0 ? K_MWFORWARD : K_MWBACKWARD;
          break;
 
       case WM_NCMOUSEMOVE:
@@ -4369,9 +4369,7 @@ static void hb_gt_wvwWindowEpilogue( void )
 int hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int iRow1, int iCol1, int iRow2, int iCol2, DWORD dwStyle, HWND hWndParent )
 {
    HWND hWnd;
-
    WNDCLASS wndclass;
-   int      iCmdShow;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvwOpenWindow()" ) );
 
@@ -4418,7 +4416,7 @@ int hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int iRow1, int iCol1, int iRow2, in
                         szWinName,         /* window name */
                         dwStyle,
                                            /* notes: do NOT use WS_CHILD style for subwindows
-                                                     child windows can NOT get input focus
+                                                     child windows CANNOT get input focus
                                               TODO: handle WM_MOVE to simulate behaviour similar to WS_CHILD's
                                                     at least to keep subwindow "nearby" the MAIN window */
                         0,                 /* x */
@@ -4443,16 +4441,11 @@ int hb_gt_wvw_OpenWindow( LPCTSTR szWinName, int iRow1, int iCol1, int iRow2, in
       SetTimer( hWnd, WVW_ID_SYSTEM_TIMER, ( UINT ) s_wvw->iPaintRefresh, NULL );
 
    /* If you wish to show window the way you want, put somewhere in your application
-    * ANNOUNCE HB_NOSTARTUPWINDOW [TOFIX: delete this hack]
+    * ANNOUNCE HB_NOSTARTUPWINDOW [FIXME: delete this hack]
     * If so compiled, then you need to issue wvw_ShowWindow( nWinNum, SW_RESTORE )
     * at the point you desire in your code.
     */
-   if( s_wvw->fNOSTARTUPSUBWINDOW )
-      iCmdShow = SW_HIDE;
-   else
-      iCmdShow = SW_SHOWNORMAL;
-
-   ShowWindow( hWnd, iCmdShow );
+   ShowWindow( hWnd, s_wvw->fNOSTARTUPSUBWINDOW ? SW_HIDE : SW_SHOWNORMAL );
    UpdateWindow( hWnd );
 
    hb_gt_wvw_SetWindowTitle( s_wvw->pWin[ s_wvw->iNumWindows - 1 ], szWinName );
@@ -4662,7 +4655,7 @@ static void hb_gt_wvwInputNotAllowed( int nWin, UINT message, WPARAM wParam, LPA
    Main Window's coordinate. It is similar to old Cl*pper program which
    uses coordinate relative to the physical screen area.
 
-   This mode can be set and reset during runtime,eg.
+   This mode can be set and reset during runtime, eg.
    oldCoordMode := wvw_SetMainCoord( .T. )
 
    Illustration:
@@ -4705,11 +4698,11 @@ static void hb_gt_wvwInputNotAllowed( int nWin, UINT message, WPARAM wParam, LPA
    - HB_GT_FUNC( gt_xPutch() )          c
    - etc.
 
-   Higher level functions uses coord as passed by user, eg.:
+   Higher-level functions uses coord as passed by user, eg.:
    - wvw_nOpenWindow()
    - etc.
 
-   Lower level functions (both static and exported ones) use coord relative
+   Lower-level functions (both static and exported ones) use coord relative
    to the referred window, eg.:
    - hb_gt_wvwTextOut()
    - etc
@@ -4858,16 +4851,6 @@ int hb_gt_wvw_SetCurWindow( int nWin )
          all row and col are relative to its own window! */
 /* Budyanto Dj. <budyanto@centrin.net.id> */
 
-/* NOTE: works for topmost window only */
-static void hb_gt_wvw_mouse_vInit( void )
-{
-   hb_gt_wvw_mouse_vSetPos( s_wvw->pWin[ s_wvw->iNumWindows - 1 ], 0, 0 );
-}
-
-static void hb_gt_wvw_mouse_vExit( void )
-{
-}
-
 static void hb_gt_wvw_mouse_vSetPos( PWVW_WIN wvw_win, int iRow, int iCol )
 {
    POINT xy;
@@ -4980,7 +4963,7 @@ static HB_BOOL hb_gt_wvw_PutChar( PHB_GT pGT, int iRow, int iCol, int iColor, HB
 
    HB_SYMBOL_UNUSED( pGT );
 
-   /* TOFIX: missing hb_gt_wvw_SetInvalidRect() call. Though it should
+   /* FIXME: missing hb_gt_wvw_SetInvalidRect() call. Though it should
              be resolved differently to avoid a heavy performance hit. */
    return hb_gt_wvw_vPutChar( wvw_win, iRow, iCol, iColor, bAttr, usChar );
 }
@@ -5198,7 +5181,7 @@ static void hb_gt_wvw_vSetPos( PWVW_WIN wvw_win, int iRow, int iCol )
 /* Other static functions */
 /* Budyanto Dj. <budyanto@centrin.net.id> */
 
-/* called during init static, or after userpaint
+/* called during init static, or after user paint
    This function must be called only when fPaintPending == HB_FALSE */
 static void hb_wvw_InitPendingRect( PWVW_WIN wvw_win )
 {
@@ -5218,7 +5201,7 @@ static void hb_wvw_UpdatePendingRect( PWVW_WIN wvw_win, int iRow1, int iCol1, in
    wvw_win->rPaintPending.bottom = HB_MAX( wvw_win->rPaintPending.bottom, iRow2 );
 }
 
-/* returns lineheight, ie. including linespacing if any */
+/* returns line height, ie. including linespacing if any */
 int hb_gt_wvw_LineHeight( PWVW_WIN wvw_win )
 {
    return wvw_win->PTEXTSIZE.y + wvw_win->iLineSpacing;
@@ -5391,38 +5374,38 @@ IPicture * hb_gt_wvw_LoadPicture( const char * szImage )
 {
    IPicture * pPicture = NULL;
 
-   LPTSTR lpFree;
-   HANDLE hFile = CreateFile( HB_FSNAMECONV( szImage, &lpFree ), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
-
-   if( lpFree )
-      hb_xfree( lpFree );
-
-   if( hFile != INVALID_HANDLE_VALUE )
+   if( szImage )
    {
-      DWORD nFileSize = GetFileSize( hFile, NULL );
+      PHB_FILE pFile = hb_fileExtOpen( szImage, NULL,
+                                       FO_READ | FO_SHARED | FO_PRIVATE |
+                                       FXO_DEFAULTS | FXO_SHARELOCK,
+                                       NULL, NULL );
 
-      if( nFileSize != INVALID_FILE_SIZE )
+      if( pFile )
       {
-         HGLOBAL hGlobal = GlobalAlloc( GPTR, nFileSize );
+         HB_SIZE nFileSize = ( HB_SIZE ) hb_fileSize( pFile );
 
-         if( hGlobal )
+         if( nFileSize < ( 32 * 1024 * 1024 ) )
          {
-            DWORD nReadByte;
+            HGLOBAL hGlobal = GlobalAlloc( GPTR, ( DWORD ) nFileSize );
 
-            if( ReadFile( hFile, hGlobal, nFileSize, &nReadByte, NULL ) )
+            if( hGlobal )
             {
-               IStream * pStream;
-
-               if( CreateStreamOnHGlobal( hGlobal, FALSE, &pStream ) == S_OK && pStream )
+               if( hb_fileRead( pFile, hGlobal, nFileSize, -1 ) == nFileSize )
                {
-                  OleLoadPicture( pStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
-                  HB_VTBL( pStream )->Release( HB_THIS( pStream ) );
+                  IStream * pStream;
+
+                  if( CreateStreamOnHGlobal( hGlobal, FALSE, &pStream ) == S_OK && pStream )
+                  {
+                     OleLoadPicture( pStream, ( LONG ) nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
+                     HB_VTBL( pStream )->Release( HB_THIS( pStream ) );
+                  }
                }
+               GlobalFree( hGlobal );
             }
-            GlobalFree( hGlobal );
          }
+         hb_fileClose( pFile );
       }
-      CloseHandle( hFile );
    }
 
    return pPicture;
@@ -5436,7 +5419,7 @@ COLORREF hb_gt_wvw_GetColorData( int iIndex )
 /* NOTE: are these workable in MULTI_GT ? */
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gtFnInit( %p)", pFuncTable ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gtFnInit( %p)", ( void * ) pFuncTable ) );
 
    pFuncTable->Init             = hb_gt_wvw_Init;
    pFuncTable->Exit             = hb_gt_wvw_Exit;
@@ -5555,10 +5538,10 @@ TCHAR * hb_gt_wvw_GetAppName( void )
    return s_wvw ? s_wvw->szAppName : NULL;
 }
 
-/* about WVW_SIZE callback function:
+/* about WVW_SIZE() callback function:
 
    parameters:
-   function WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
+   WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
 
    notes:
  * this function is called by GTWVW AFTER the size is changed
@@ -5570,7 +5553,7 @@ TCHAR * hb_gt_wvw_GetAppName( void )
  */
 
 /* PENDING decision:
-   2004-09-08 TODO: GTWVT deliberately adds new parm aOffset before nRoundHeight
+   2004-09-08 TODO: GTWVT deliberately adds new parameter aOffset before nRoundHeight
                     I hate it when doing such thing
  */
 
@@ -5724,7 +5707,7 @@ void hb_gt_wvw_AddBitmapHandle( const char * szFileName, HBITMAP hBitmap, int iW
 /* hb_gt_wvw_FindUserBitmapHandle() and hb_gt_wvw_AddUserBitmapHandle()
    are for bitmaps NOT associated with
    Windows controls such as toolbar, pushbutton, checkbox, etc
-   IOW, it is for user drawn images (wvw_drawimage)
+   IOW, it is for user drawn images (wvw_DrawImage())
  */
 HBITMAP hb_gt_wvw_FindUserBitmapHandle( const char * szFileName, int * piWidth, int * piHeight )
 {
@@ -6596,7 +6579,7 @@ HB_FUNC( WVW_ADDROWS )
          SetWindowPos( wvw_win->hStatusBar, NULL, wi.left, wi.bottom - wvw_win->iSBHeight, width, wvw_win->iSBHeight, SWP_NOZORDER );
 
       #if 0
-      /* --- THESE are not required, because we simply enlarged/shrinked the window downward
+      /* --- THESE are not required, because we simply enlarged/shrunk the window downward
              NOTICE however that some control may not be fully visible */
 
       if( wvw_win->hToolBar != NULL )

@@ -1,5 +1,5 @@
 /*
- * SQLite3 library low level (client api) interface code
+ * SQLite3 library low-level (client API) interface code
  *
  * Copyright 2007 P.Chornyj <myorg63@mail.ru>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -173,5 +173,8 @@
 #define SQLITE_LIMIT_LIKE_PATTERN_LENGTH   8
 #define SQLITE_LIMIT_VARIABLE_NUMBER       9
 #define SQLITE_LIMIT_TRIGGER_DEPTH         10
+
+/* sqlite3_prepare() option (requires sqlite 3.20.0) */
+#define SQLITE_PREPARE_PERSISTENT          0x01
 
 #endif

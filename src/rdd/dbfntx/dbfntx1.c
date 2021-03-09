@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -476,6 +476,7 @@ static LPKEYINFO hb_ntxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, HB_ULONG ulRe
             hb_itemGetTS( pItem, pKey->key );
             break;
          }
+         /* fallthrough */
       case 'D':
          if( pTag->KeyLength < 8 )
          {
@@ -1501,7 +1502,7 @@ static void hb_ntxTagFree( LPTAGINFO pTag )
 }
 
 /*
- * delete tag from compund index
+ * delete tag from compound index
  */
 static void hb_ntxTagDelete( LPTAGINFO pTag )
 {
@@ -1527,7 +1528,7 @@ static void hb_ntxTagDelete( LPTAGINFO pTag )
 }
 
 /*
- * add tag to compund index
+ * add tag to compound index
  */
 static HB_ERRCODE hb_ntxTagAdd( LPNTXINDEX pIndex, LPTAGINFO pTag )
 {
@@ -1730,7 +1731,7 @@ static HB_ERRCODE hb_ntxTagHeaderSave( LPTAGINFO pTag )
       ( pTag->Partial ? NTX_FLAG_PARTIAL | NTX_FLAG_FORITEM : 0 ) |
       ( pIndex->pArea->dbfarea.bLockType == DB_DBFLOCK_CLIPPER2 ? NTX_FLAG_EXTLOCK : 0 ) |
       ( pTag->Partial  ? NTX_FLAG_PARTIAL | NTX_FLAG_FORITEM : 0 ) |
-      /* non CLipper flags */
+      /* non Clipper flags */
       ( pTag->Custom   ? NTX_FLAG_CUSTOM : 0 ) |
       ( pTag->ChgOnly  ? NTX_FLAG_CHGONLY : 0 ) |
       ( pTag->Template ? NTX_FLAG_TEMPLATE : 0 ) |
@@ -1940,7 +1941,9 @@ static HB_ERRCODE hb_ntxIndexHeaderRead( LPNTXINDEX pIndex )
 #else
       LPCTXHEADER lpCTX = ( LPCTXHEADER ) pIndex->HeaderBuff;
       HB_ULONG ulVersion, ulNext;
-      /* HB_USHORT usTags = HB_GET_LE_UINT16( lpCTX->ntags ); */
+      #if 0
+      HB_USHORT usTags = HB_GET_LE_UINT16( lpCTX->ntags );
+      #endif
 
       ulVersion = HB_GET_LE_UINT32( lpCTX->version );
       ulNext = HB_GET_LE_UINT32( lpCTX->freepage );
@@ -2832,7 +2835,7 @@ static void hb_ntxBalancePages( LPTAGINFO pTag, LPPAGEINFO pBasePage, HB_USHORT 
 
    /*
     * such situation should not exist even max keys, though it does not cost
-    * much and I want to be able to call hb_ntxBalancePages in any case for
+    * much and I want to be able to call hb_ntxBalancePages() in any case for
     * some advanced balancing
     */
    if( iMove == 0 )
@@ -2907,7 +2910,7 @@ static void hb_ntxBalancePages( LPTAGINFO pTag, LPPAGEINFO pBasePage, HB_USHORT 
 }
 
 /*
- * add key to the index at the curret page path
+ * add key to the index at the current page path
  */
 static HB_BOOL hb_ntxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
 {
@@ -3079,7 +3082,7 @@ static HB_BOOL hb_ntxTagKeyAdd( LPTAGINFO pTag, LPKEYINFO pKey )
 }
 
 /*
- * del key at the curret page path from the index
+ * del key at the current page path from the index
  */
 static HB_BOOL hb_ntxTagKeyDel( LPTAGINFO pTag, LPKEYINFO pKey )
 {
@@ -3243,7 +3246,7 @@ static void hb_ntxTagSkipFilter( LPTAGINFO pTag, HB_BOOL fForward )
 }
 
 /*
- * go to the first visiable record in Tag
+ * go to the first visible record in Tag
  */
 static void hb_ntxTagGoTop( LPTAGINFO pTag )
 {
@@ -3266,7 +3269,7 @@ static void hb_ntxTagGoTop( LPTAGINFO pTag )
 }
 
 /*
- * go to the last visiable record in Tag
+ * go to the last visible record in Tag
  */
 static void hb_ntxTagGoBottom( LPTAGINFO pTag )
 {
@@ -3571,7 +3574,7 @@ static void hb_ntxCreateFName( NTXAREAP pArea, const char * szBagName, HB_BOOL *
          szTagName[ 0 ] = '\0';
    }
 
-   if( ( hb_setGetDefExtension() && ! pFileName->szExtension ) || ! fName )
+   if( ! fName || ( ! pFileName->szExtension && hb_setGetDefExtension() ) )
    {
       DBORDERINFO pExtInfo;
       memset( &pExtInfo, 0, sizeof( pExtInfo ) );
@@ -4177,7 +4180,7 @@ static HB_BOOL hb_ntxOrdSkipEval( LPTAGINFO pTag, HB_BOOL fForward, PHB_ITEM pEv
    NTXAREAP pArea = pTag->pIndex->pArea;
    HB_BOOL fFound = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrdSkipEval(%p, %d, %p)", pTag, fForward, pEval ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrdSkipEval(%p, %d, %p)", ( void * ) pTag, fForward, ( void * ) pEval ) );
 
    if( ( hb_itemType( pEval ) & HB_IT_BLOCK ) == 0 )
    {
@@ -4258,7 +4261,7 @@ static HB_BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, HB_BOOL fForward, PHB_ITEM pWi
    HB_BOOL fFound = HB_FALSE;
    int iFixed = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrdSkipWild(%p, %d, %p)", pTag, fForward, pWildItm ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrdSkipWild(%p, %d, %p)", ( void * ) pTag, fForward, ( void * ) pWildItm ) );
 
    szPattern = hb_itemGetCPtr( pWildItm );
 
@@ -4398,7 +4401,7 @@ static HB_BOOL hb_ntxOrdSkipRegEx( LPTAGINFO pTag, HB_BOOL fForward, PHB_ITEM pR
    HB_BOOL fFound = HB_FALSE;
    PHB_REGEX pRegEx;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrdSkipRegEx(%p, %d, %p)", pTag, fForward, pRegExItm ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrdSkipRegEx(%p, %d, %p)", ( void * ) pTag, fForward, ( void * ) pRegExItm ) );
 
    if( pTag->KeyType != 'C' || ( pRegEx = hb_regexGet( pRegExItm, 0 ) ) == NULL )
    {
@@ -5177,7 +5180,9 @@ static void hb_ntxSortOut( LPNTXSORTINFO pSort )
       pSort->pSwapPage[ 0 ].ulCurKey = 0;
       pSort->pSwapPage[ 0 ].pKeyPool = pSort->pStartKey;
    }
-   /* printf("pSort->ulPages=%ld, pSort->ulPgKeys=%ld", pSort->ulPages, pSort->ulPgKeys);fflush(stdout); */
+   #if 0
+   printf( "pSort->ulPages=%ld, pSort->ulPgKeys=%ld", pSort->ulPages, pSort->ulPgKeys ); fflush( stdout );
+   #endif
 
    hb_ntxSortOrderPages( pSort );
 
@@ -5522,6 +5527,7 @@ static HB_ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
                      hb_ntxSortKeyAdd( pSort, pArea->dbfarea.ulRecNo, szBuffer, 17 );
                      break;
                   }
+                  /* fallthrough */
                case HB_IT_DATE:
                   hb_itemGetDS( pItem, szBuffer );
                   hb_ntxSortKeyAdd( pSort, pArea->dbfarea.ulRecNo, szBuffer, 8 );
@@ -5638,7 +5644,7 @@ static HB_ERRCODE hb_ntxGoBottom( NTXAREAP pArea )
 {
    HB_ERRCODE retval;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxGoBottom(%p)", pArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxGoBottom(%p)", ( void * ) pArea ) );
 
    if( SELF_GOCOLD( &pArea->dbfarea.area ) == HB_FAILURE )
       return HB_FAILURE;
@@ -5678,7 +5684,7 @@ static HB_ERRCODE hb_ntxGoTop( NTXAREAP pArea )
 {
    HB_ERRCODE retval;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxGoTop(%p)", pArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxGoTop(%p)", ( void * ) pArea ) );
 
    if( SELF_GOCOLD( &pArea->dbfarea.area ) == HB_FAILURE )
       return HB_FAILURE;
@@ -5713,7 +5719,7 @@ static HB_ERRCODE hb_ntxGoTop( NTXAREAP pArea )
 
 static HB_ERRCODE hb_ntxSeek( NTXAREAP pArea, HB_BOOL fSoftSeek, PHB_ITEM pItem, HB_BOOL fFindLast )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxSeek(%p, %d, %p, %d)", pArea, fSoftSeek, pItem, fFindLast ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxSeek(%p, %d, %p, %d)", ( void * ) pArea, fSoftSeek, ( void * ) pItem, fFindLast ) );
 
    if( SELF_GOCOLD( &pArea->dbfarea.area ) == HB_FAILURE )
       return HB_FAILURE;
@@ -5807,7 +5813,7 @@ static HB_ERRCODE hb_ntxSkipRaw( NTXAREAP pArea, HB_LONG lToSkip )
    HB_ERRCODE retval;
    HB_BOOL fOut = HB_FALSE, fForward;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxSkipRaw(%p, %ld)", pArea, lToSkip ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxSkipRaw(%p, %ld)", ( void * ) pArea, lToSkip ) );
 
    if( SELF_GOCOLD( &pArea->dbfarea.area ) == HB_FAILURE )
       return HB_FAILURE;
@@ -5887,7 +5893,7 @@ static HB_ERRCODE hb_ntxFlush( NTXAREAP pArea )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxFlush(%p)", pArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxFlush(%p)", ( void * ) pArea ) );
 
    errCode = SELF_GOCOLD( &pArea->dbfarea.area );
    if( errCode == HB_SUCCESS )
@@ -5924,7 +5930,7 @@ static HB_ERRCODE hb_ntxGoCold( NTXAREAP pArea )
    HB_BOOL fRecordChanged = pArea->dbfarea.fRecordChanged;
    HB_BOOL fAppend = pArea->dbfarea.fAppend;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxGoCold(%p)", pArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxGoCold(%p)", ( void * ) pArea ) );
 
    if( SUPER_GOCOLD( &pArea->dbfarea.area ) == HB_SUCCESS )
    {
@@ -6056,7 +6062,7 @@ static HB_ERRCODE hb_ntxGoHot( NTXAREAP pArea )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxGoHot(%p)", pArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxGoHot(%p)", ( void * ) pArea ) );
 
    errCode = SUPER_GOHOT( &pArea->dbfarea.area );
    if( errCode == HB_SUCCESS )
@@ -6107,7 +6113,7 @@ static HB_ERRCODE hb_ntxClose( NTXAREAP pArea )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxClose(%p)", pArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxClose(%p)", ( void * ) pArea ) );
 
    if( SELF_GOCOLD( &pArea->dbfarea.area ) == HB_FAILURE )
       return HB_FAILURE;
@@ -6149,7 +6155,7 @@ static HB_ERRCODE hb_ntxClose( NTXAREAP pArea )
  */
 static HB_ERRCODE hb_ntxStructSize( NTXAREAP pArea, HB_USHORT * uiSize )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxStructSize(%p, %p)", pArea, uiSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxStructSize(%p, %p)", ( void * ) pArea, ( void * ) uiSize ) );
    HB_SYMBOL_UNUSED( pArea );
 
    *uiSize = sizeof( NTXAREA );
@@ -6163,7 +6169,7 @@ static HB_ERRCODE hb_ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOpen(%p, %p)", pArea, pOpenInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOpen(%p, %p)", ( void * ) pArea, ( void * ) pOpenInfo ) );
 
    errCode = SUPER_OPEN( &pArea->dbfarea.area, pOpenInfo );
 
@@ -6174,6 +6180,12 @@ static HB_ERRCODE hb_ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo )
       char szFileName[ HB_PATH_MAX ];
 
       hb_ntxCreateFName( pArea, NULL, NULL, szFileName, NULL );
+      /* CL5.2 DBFCDX and Six3 CDX/NSX RDDs looking for
+         production indexes respect SET PATH but Harbour in
+         core DBF* index RDDs is CL5.3/COMIX compatible and
+         looks for production indexes only in the directory
+         where DBF file is located and only SIXCDX Harbour
+         RDD is CL5.2/Six3 compatible [druzus] */
       if( hb_fileExists( szFileName, NULL ) ||
           DBFAREA_DATA( &pArea->dbfarea )->fStrictStruct )
       {
@@ -6208,7 +6220,7 @@ static HB_ERRCODE hb_ntxPack( NTXAREAP pArea )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxPack(%p)", pArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxPack(%p)", ( void * ) pArea ) );
 
    errCode = SUPER_PACK( &pArea->dbfarea.area );
    if( errCode == HB_SUCCESS )
@@ -6226,7 +6238,7 @@ static HB_ERRCODE hb_ntxZap( NTXAREAP pArea )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxZap(%p)", pArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxZap(%p)", ( void * ) pArea ) );
 
    errCode = SUPER_ZAP( &pArea->dbfarea.area );
    if( errCode == HB_SUCCESS )
@@ -6264,7 +6276,7 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
            fExclusive = HB_FALSE;
    HB_BYTE bType;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderCreate(%p, %p)", pArea, pOrderInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderCreate(%p, %p)", ( void * ) pArea, ( void * ) pOrderInfo ) );
 
    errCode = SELF_GOCOLD( &pArea->dbfarea.area );
    if( errCode != HB_SUCCESS )
@@ -6642,7 +6654,7 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    while( *pIndexPtr && *pIndexPtr != pIndex )
       pIndexPtr = &( *pIndexPtr )->pNext;
 
-   /* It should not happen, reintrance? */
+   /* It should not happen, reentrance? */
    if( ! *pIndexPtr )
       return HB_FAILURE;
 
@@ -6679,7 +6691,7 @@ static HB_ERRCODE hb_ntxOrderDestroy( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderDestroy(%p, %p)", pArea, pOrderInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderDestroy(%p, %p)", ( void * ) pArea, ( void * ) pOrderInfo ) );
 
    errCode = SELF_GOCOLD( &pArea->dbfarea.area );
    if( errCode != HB_SUCCESS )
@@ -6749,7 +6761,7 @@ static HB_ERRCODE hb_ntxOrderInfo( NTXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
 {
    LPTAGINFO pTag;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderInfo(%p, %hu, %p)", ( void * ) pArea, uiIndex, ( void * ) pInfo ) );
 
    switch( uiIndex )
    {
@@ -7430,7 +7442,7 @@ static HB_ERRCODE hb_ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    HB_ERRCODE errCode;
    HB_BOOL fProd;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderListAdd(%p, %p)", pArea, pOrderInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderListAdd(%p, %p)", ( void * ) pArea, ( void * ) pOrderInfo ) );
 
    errCode = SELF_GOCOLD( &pArea->dbfarea.area );
    if( errCode != HB_SUCCESS )
@@ -7522,7 +7534,7 @@ static HB_ERRCODE hb_ntxOrderListClear( NTXAREAP pArea )
 {
    LPNTXINDEX * pIndexPtr, pIndex;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderListClear(%p)", pArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderListClear(%p)", ( void * ) pArea ) );
 
    if( SELF_GOCOLD( &pArea->dbfarea.area ) == HB_FAILURE )
       return HB_FAILURE;
@@ -7554,7 +7566,7 @@ static HB_ERRCODE hb_ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInf
    LPNTXINDEX pIndex;
    HB_BOOL fProd;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderListDelete(%p, %p)", pArea, pOrderInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderListDelete(%p, %p)", ( void * ) pArea, ( void * ) pOrderInfo ) );
 
    if( SELF_GOCOLD( &pArea->dbfarea.area ) == HB_FAILURE )
       return HB_FAILURE;
@@ -7584,7 +7596,7 @@ static HB_ERRCODE hb_ntxOrderListDelete( NTXAREAP pArea, LPDBORDERINFO pOrderInf
 
 static HB_ERRCODE hb_ntxOrderListFocus( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderListFocus(%p, %p)", pArea, pOrderInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderListFocus(%p, %p)", ( void * ) pArea, ( void * ) pOrderInfo ) );
 
    pOrderInfo->itmResult = hb_itemPutC( pOrderInfo->itmResult,
                              pArea->lpCurTag ? pArea->lpCurTag->TagName : NULL );
@@ -7617,7 +7629,7 @@ static HB_ERRCODE hb_ntxOrderListRebuild( NTXAREAP pArea )
    LPNTXINDEX pIndex;
    HB_ERRCODE errCode;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderListRebuild(%p)", pArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderListRebuild(%p)", ( void * ) pArea ) );
 
    errCode = SELF_GOCOLD( &pArea->dbfarea.area );
    if( errCode != HB_SUCCESS )
@@ -7662,7 +7674,7 @@ static HB_ERRCODE hb_ntxOrderListRebuild( NTXAREAP pArea )
 
 static HB_ERRCODE hb_ntxCountScope( NTXAREAP pArea, void * pPtr, HB_LONG * plRecNo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxCountScope(%p, %p, %p)", pArea, pPtr, plRecNo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxCountScope(%p, %p, %p)", ( void * ) pArea, pPtr, ( void * ) plRecNo ) );
 
    if( pPtr == NULL )
    {
@@ -7702,7 +7714,7 @@ static HB_ERRCODE hb_ntxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
 {
    LPDBFDATA pData;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ntxRddInfo(%p, %hu, %lu, %p)", ( void * ) pRDD, uiIndex, ulConnect, ( void * ) pItem ) );
 
    pData = DBFNODE_DATA( pRDD );
 

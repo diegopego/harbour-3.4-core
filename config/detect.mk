@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------
-# Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+# Copyright 2009 Viktor Szakats (vsz.me/hb)
 # See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
@@ -14,16 +14,17 @@ export DETECT_MK_ := yes
 _DET_OPT_VERB := very
 
 # Reset everything to default
-export HB_HAS_ZLIB       :=
-export HB_HAS_ZLIB_LOCAL :=
-export HB_HAS_PCRE       :=
-export HB_HAS_PCRE_LOCAL :=
-export HB_HAS_OPENSSL    :=
-export HB_HAS_GPM        :=
-export HB_HAS_SLANG      :=
-export HB_HAS_CURSES     :=
-export HB_HAS_X11        :=
-export HB_HAS_WATT       :=
+export HB_HAS_ZLIB        :=
+export HB_HAS_ZLIB_LOCAL  :=
+export HB_HAS_PCRE2       :=
+export HB_HAS_PCRE2_LOCAL :=
+export HB_HAS_PCRE        :=
+export HB_HAS_PCRE_LOCAL  :=
+export HB_HAS_GPM         :=
+export HB_HAS_SLANG       :=
+export HB_HAS_CURSES      :=
+export HB_HAS_X11         :=
+export HB_HAS_WATT        :=
 
 # Exclude Harbour-wide features prohibiting commercial use
 
@@ -38,18 +39,33 @@ endif
 
 # Detect zlib
 
+# zlib1g-dev{deb}
+# zlib-devel{rpm}
+# zlib{homebrew}
+# zlib{pacman}
+# mingw-w64-i686-zlib{msys2&mingw}
+# mingw-w64-x86_64-zlib{msys2&mingw64}
+
 _DET_DSP_NAME := zlib
 _DET_VAR_INC_ := HB_INC_ZLIB
 _DET_VAR_HAS_ := HB_HAS_ZLIB
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /usr/local/include /boot/develop/headers/3rdparty
+_DET_INC_DEFP := /usr/local/opt/zlib/include /usr/include /usr/local/include
+_DET_INC_DEFP += /boot/develop/headers/3rdparty
 _DET_INC_LOCL := src/3rd/zlib
 _DET_INC_HEAD := /zlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk
 
 # Detect pcre2
+
+# libpcre2-dev{deb}
+# pcre2-devel{rpm}
+# pcre2{homebrew|pkgng}
+# pcre2{pacman}
+# mingw-w64-i686-pcre2{msys2&mingw}
+# mingw-w64-x86_64-pcre2{msys2&mingw64}
 
 _DET_DSP_NAME := pcre2
 _DET_VAR_INC_ := HB_INC_PCRE2
@@ -66,6 +82,13 @@ ifeq ($(HB_HAS_PCRE2),)
 
    # Detect pcre
 
+   # libpcre3-dev{deb}
+   # pcre-devel{rpm}
+   # pcre{homebrew|pkgng}
+   # pcre{pacman}
+   # mingw-w64-i686-pcre{msys2&mingw}
+   # mingw-w64-x86_64-pcre{msys2&mingw64}
+
    _DET_DSP_NAME := pcre
    _DET_VAR_INC_ := HB_INC_PCRE
    _DET_VAR_HAS_ := HB_HAS_PCRE
@@ -80,6 +103,11 @@ endif
 
 # Detect GPM mouse
 
+# libgpm-dev{deb}
+# libgpmg1-dev{deb}
+# gpm-devel{rpm}
+# gpm{pacman}
+
 _DET_DSP_NAME := gpm
 _DET_VAR_INC_ := HB_INC_GPM
 _DET_VAR_HAS_ := HB_HAS_GPM
@@ -92,30 +120,45 @@ include $(TOP)$(ROOT)config/detfun.mk
 
 # Detect s-lang
 
+# libslang1-dev{deb}
+# libslang2-dev{deb}
+# slang-devel{rpm}
+# s-lang{homebrew}
+# libslang2{pkgng}
+# slang{pacman}
+
 _DET_DSP_NAME := s-lang
 _DET_VAR_INC_ := HB_INC_SLANG
 _DET_VAR_HAS_ := HB_HAS_SLANG
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP :=
-_DET_INC_HEAD := /slang.h
-
-_DET_INC_DEFP += /usr/include /usr/include/slang
+_DET_INC_DEFP := /usr/include /usr/include/slang
 _DET_INC_DEFP += /usr/local/include /usr/local/include/slang
 _DET_INC_DEFP += /sw/include /sw/include/slang
 _DET_INC_DEFP += /opt/local/include /opt/local/include/slang
 _DET_INC_DEFP += /usr/pkg/include/slang2 /usr/pkg/include
+_DET_INC_HEAD := /slang.h
 
 include $(TOP)$(ROOT)config/detfun.mk
 
 # Detect curses
+
+# libncurses5-dev{deb}
+# ncurses-devel{rpm}
+# ncurses{homebrew|pkgng}
+# ncurses{pacman}
+# mingw-w64-i686-ncurses{msys2&mingw}
+# mingw-w64-x86_64-ncurses{msys2&mingw64}
 
 _DET_DSP_NAME := curses
 _DET_VAR_INC_ := HB_INC_CURSES
 _DET_VAR_HAS_ := HB_HAS_CURSES
 _DET_FLT_PLAT := !os2
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/local/opt/ncurses/include /usr/include /usr/include/ncurses /usr/local/include /sw/include /opt/local/include /boot/develop/headers/3rdparty
+_DET_INC_DEFP := /usr/local/opt/ncurses/include
+_DET_INC_DEFP += /usr/include /usr/include/ncurses /usr/local/include
+_DET_INC_DEFP += /sw/include /opt/local/include
+_DET_INC_DEFP += /boot/develop/headers/3rdparty
 ifeq ($(HB_PLATFORM),win)
 _DET_INC_HEAD := /ncursesw/curses.h
 else
@@ -130,12 +173,21 @@ include $(TOP)$(ROOT)config/detfun.mk
 
 # Detect X11
 
+# libx11-dev{deb}
+# libX11-devel{rpm}
+# xorg-x11-devel{rpm}
+# XFree86-devel{rpm}
+# libX11{pkgng}
+# libx11{pacman}
+
 _DET_DSP_NAME := x11
 _DET_VAR_INC_ := HB_INC_X11
 _DET_VAR_HAS_ := HB_HAS_X11
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /usr/local/include /usr/X11R6/include /usr/pkg/include /usr/pkg/X11R6/include /opt/X11/include
+_DET_INC_DEFP := /usr/include /usr/local/include
+_DET_INC_DEFP += /usr/X11R6/include /opt/X11/include
+_DET_INC_DEFP += /usr/pkg/include /usr/pkg/X11R6/include
 _DET_INC_HEAD := /X11/Xlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk

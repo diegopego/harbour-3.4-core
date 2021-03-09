@@ -4,8 +4,6 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
-HB_DYN_COPT := -DHB_DYNLIB
-
 CC := icl.exe
 CC_IN :=
 CC_OUT := -Fo
@@ -46,7 +44,8 @@ LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 LDFLAGS += -nologo $(LIBPATHS)
 
 AR := xilib.exe
-AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -nologo -out:$(LIB_DIR)/$@ $(^F)
+AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) \
+   -nologo -out:$(LIB_DIR)/$@ $(^F)
 
 DY := $(LD)
 DFLAGS += -nologo -dll -subsystem:console $(LIBPATHS)
@@ -61,7 +60,9 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dynlib_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)" -implib:"$(IMP_FILE)" @__dyn__.tmp $(DLIBS)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) \
+      $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)" \
+      -implib:"$(IMP_FILE)" @__dyn__.tmp -def:$(DEF_FILE) $(DLIBS)
 endef
 
 DY_RULE = $(create_dynlib)

@@ -1,7 +1,7 @@
 /*
  * DiskSpace() function
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,8 +55,7 @@
 #if defined( HB_OS_UNIX )
 #  include <unistd.h>
 #  include <sys/types.h>
-#  if defined( __WATCOMC__ ) || defined( __CEGCC__ ) || \
-      defined( HB_OS_VXWORKS ) || defined( HB_OS_SYMBIAN )
+#  if defined( __WATCOMC__ ) || defined( __CEGCC__ ) || defined( HB_OS_VXWORKS )
 #     include <sys/stat.h>
 #  elif defined( HB_OS_ANDROID )
 #     include <sys/statfs.h>
@@ -108,9 +107,7 @@ HB_FUNC( DISKSPACE )
    }
 #elif defined( HB_OS_WIN )
    {
-#if defined( _MSC_VER ) || defined( __LCC__ ) || \
-    ( defined( __GNUC__ ) && ! defined( __RSXNT__ ) )
-
+#if defined( _MSC_VER ) || defined( __GNUC__ )
 #  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).LowPart + \
                                     ( double ) (v).HighPart * \
                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
@@ -223,7 +220,7 @@ HB_FUNC( DISKSPACE )
          szName = hb_fsNameConv( szName, &pszFree );
 
       {
-#if defined( __WATCOMC__ ) || defined( __CEGCC__ ) || defined( HB_OS_SYMBIAN )
+#if defined( __WATCOMC__ ) || defined( __CEGCC__ )
          int iTODO;
 
          bError = HB_FALSE;

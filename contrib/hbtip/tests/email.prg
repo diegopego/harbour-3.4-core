@@ -1,4 +1,4 @@
-/* Copyright 2009 Viktor Szakats (vszakats.net/harbour) */
+/* Copyright 2009 Viktor Szakats (vsz.me/hb) */
 
 #require "hbssl"
 #require "hbtip"
@@ -21,7 +21,7 @@ PROCEDURE Main( cFrom, cPassword, cTo, cHost )
 
    hb_default( @cFrom    , "<from@example.net>" )
    hb_default( @cPassword, "password" )
-   hb_default( @cTo      , "to@example.com" )
+   hb_default( @cTo      , "to@example.org" )
    hb_default( @cHost    , "localhost" )
 
    cHost := Lower( cHost )
@@ -37,7 +37,7 @@ PROCEDURE Main( cFrom, cPassword, cTo, cHost )
    CASE cHost == "fastmail" .OR. "@fastmail.com" $ cFrom .OR. "@fastmail.fm" $ cFrom
       cHost := "smtp.fastmail.com"
    CASE cHost == "gmx.net" .OR. "@gmx.net" $ cFrom .OR. "@gmx.ch" $ cFrom .OR. "@gmx.de" $ cFrom
-      cHost := "mail.gmx.net"; lSTARTTLS := .T.
+      cHost := "mail.gmx.net"
    CASE cHost == "google" .OR. "@gmail.com" $ cFrom .OR. "@googlemail.com" $ cFrom
       cHost := "smtp.gmail.com"
    CASE cHost == "mail.ru" .OR. "@mail.ru" $ cFrom
@@ -71,21 +71,21 @@ PROCEDURE Main( cFrom, cPassword, cTo, cHost )
       nPort, ;
       cFrom, ;
       cTo, ;
-      NIL /* CC */, ;
+      /* CC */, ;
       {} /* BCC */, ;
       "test: body", ;
       "test: subject", ;
-      NIL /* attachment */, ;
+      { __FILE__ } /* attachment */, ;
       cFrom, ;
       cPassword, ;
       "", ;
-      NIL /* nPriority */, ;
-      NIL /* lRead */, ;
+      /* nPriority */, ;
+      /* lRead */, ;
       .T. /* lTrace */, ;
       .F., ;
-      NIL /* lNoAuth */, ;
-      NIL /* nTimeOut */, ;
-      NIL /* cReplyTo */, ;
+      /* lNoAuth */, ;
+      /* nTimeOut */, ;
+      /* cReplyTo */, ;
       nPort == 465 )
 
    RETURN

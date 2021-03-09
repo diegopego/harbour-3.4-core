@@ -1,7 +1,7 @@
 /*
  * Harbour NETIO server management client engine
  *
- * Copyright 2009-2017 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2017 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their website at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -325,7 +325,9 @@ STATIC FUNCTION XToStrX( xValue )
 STATIC PROCEDURE cmdAbout( netiocli )
 
    hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + HBRawVersionMgmnt() )
-   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2017, Viktor Szakats" )
+   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-" + ;
+      hb_ntos( Year( hb_Version( HB_VERSION_BUILD_DATE ) ) ) + ", " + ;
+      "Viktor Szakats" )
    hbnetiocon_dispevent( netiocli, hb_Version( HB_VERSION_URL_BASE ) )
 
    RETURN

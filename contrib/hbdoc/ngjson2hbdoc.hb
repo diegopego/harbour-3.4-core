@@ -2,7 +2,7 @@
 /*
  * Norton Guide JSON to HBDOC/NFDOC (.txt) format converter
  *
- * Copyright 2016 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2016 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their website at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -429,7 +429,7 @@ static procedure addentry( aEntry, e, fn, cat, cAlias )
         e[ 'TEMPLATE' ] := 'Statement'
       elseif ( upper( e[ 'NAME' ] ) == e[ 'NAME' ] .and. ;
            ( ! '(' $ e[ 'NAME' ] .or. e[ 'NAME' ] == '( )' ) ) .or. ;
-         hb_lefteq( e[ 'NAME' ], '= ' )  // f.e. "= (assign)"
+         hb_lefteq( e[ 'NAME' ], '= ' )  // e.g. "= (assign)"
         e[ 'TEMPLATE' ] := 'Command'
       elseif 'METHODSLINK' $ e
         e[ 'TEMPLATE' ] := 'Class'
@@ -501,7 +501,8 @@ static function cln( s )  /* strip formatting markers */
     hb_bchar( 0x1d ) => '?', ;
     hb_bchar( 0x1e ) => '?', ;
     hb_bchar( 0x1f ) => '?', ;
-    hb_bchar( 0x7f ) => '?' }
+    hb_bchar( 0x7f ) => '?', ;
+    hb_bchar( 0xa0 ) => ' ' }
 
   local tmp
 
@@ -554,7 +555,8 @@ static function conv( s )  /* convert formatting markers to HBDOC ones */
     hb_bchar( 0x1d ) => '?', ;
     hb_bchar( 0x1e ) => '?', ;
     hb_bchar( 0x1f ) => '?', ;
-    hb_bchar( 0x7f ) => '?' }
+    hb_bchar( 0x7f ) => '?', ;
+    hb_bchar( 0xa0 ) => ' ' }
 
   local tmp, flag := .f.
 
@@ -593,7 +595,7 @@ static function entrysort( e )
     "PLATFORMS"     , ;
     "FILES"         , ;
     "TAGS"          , ;
-    "SEEALSO"        }
+    "SEEALSO"       }
 
   local n := { => }, tmp
 

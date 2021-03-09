@@ -1,6 +1,6 @@
-# EditorConfig is awesome: http://EditorConfig.org/
+# EditorConfig is awesome: https://EditorConfig.org/
 
-# top-most EditorConfig file
+# topmost EditorConfig file
 root = true
 
 [*]
@@ -16,9 +16,12 @@ end_of_line = lf
 [*.bat]
 end_of_line = crlf
 
-[{*.css,*.html,*.js,*.json,*.rb,*.scss,*.svg,*.vbs,*.yml,*.xml}]
+[{*.css,*.html,*.js,*.json,*.rb,*.sh,*.vbs,*.yml,*.xml}]
 indent_size = 2
 
-[{**/3rd/**,*.diff}]
-trim_trailing_whitespace = no
+[{*.svg}]
+indent_size = 1
+
+[{**/3rd/**,*.diff,*.patch}]
+trim_trailing_whitespace = false
 charset =

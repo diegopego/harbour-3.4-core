@@ -1,14 +1,14 @@
 /*
- * sha1.c
+ * WARNING: Outdated, insecure algorithm.
  *
- * Originally witten by Steve Reid <steve@edmweb.com>
+ * Originally written by Steve Reid <steve@edmweb.com>
  *
  * Modified by Aaron D. Gifford <agifford@infowest.com>
  *
  * NO COPYRIGHT - THIS IS 100% IN THE PUBLIC DOMAIN
  *
  * The original unmodified version is available at:
- *    http://www.nic.funet.fi/pub/crypt/hash/sha/sha1.c
+ *    https://www.nic.funet.fi/pub/crypt/hash/sha/sha1.c
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,14 +26,6 @@
 #include <string.h>
 
 #include "sha1.h"
-
-#if defined( __XCC__ )
-/* ugly workaround for bugs in XCC preprocessor */
-static sha1_quadbyte rol( sha1_quadbyte value, int bits )
-{
-   return (value << bits) | (value >> (32 - bits));
-}
-#endif
 
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
 
@@ -102,7 +94,9 @@ static void SHA1_Transform(sha1_quadbyte state[5], sha1_byte buffer[64]) {
     state[3] += d;
     state[4] += e;
     /* Wipe variables */
-    /* a = b = c = d = e = 0; */
+    #if 0
+    a = b = c = d = e = 0;
+    #endif
 }
 
 
@@ -124,7 +118,7 @@ void hb_SHA1_Update(HB_SHA_CTX *context, const void *datav, HB_SIZE len) {
 
     j = (context->count[0] >> 3) & 63;
     if ((context->count[0] += (sha1_quadbyte) len << 3) < ((sha1_quadbyte) len << 3)) context->count[1]++;
-    context->count[1] += (len >> 29);
+    context->count[1] += ((sha1_quadbyte) len >> 29);
     if ((j + len) > 63) {
         memcpy(&context->buffer[j], data, (i = 64-j));
         SHA1_Transform(context->state, context->buffer);
@@ -160,7 +154,9 @@ void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], HB_SHA_CTX *context) {
          ((context->state[i>>2] >> ((3-(i & 3)) * 8) ) & 255);
     }
     /* Wipe variables */
-    /* i = 0; */
+    #if 0
+    i = 0;
+    #endif
     memset(context->buffer, 0, SHA1_BLOCK_LENGTH);
     memset(context->state, 0, SHA1_DIGEST_LENGTH);
     memset(context->count, 0, 8);

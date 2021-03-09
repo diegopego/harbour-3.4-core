@@ -1,7 +1,7 @@
 /*
  * Tracing functions
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009 Viktor Szakats (vsz.me/hb)
  * Copyright 1999 Gonzalo Diethelm <gonzalo.diethelm@iname.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,17 +60,16 @@
 #elif defined( HB_OS_UNIX ) && \
    ! defined( __WATCOMC__ ) && \
    ! defined( HB_OS_VXWORKS ) && \
-   ! defined( HB_OS_SYMBIAN ) && \
    ! defined( HB_OS_QNX_BB10 )
    #include <syslog.h>
 #endif
 
 #ifndef va_copy
-   #ifdef __va_copy
-      #define va_copy( dst, src )  __va_copy( dst, src )
-   #else
-      #define va_copy( dst, src )  ( ( dst ) = ( src ) )
-   #endif
+#  ifdef __va_copy
+#     define va_copy( dst, src )  __va_copy( dst, src )
+#  else
+#     define va_copy( dst, src )  ( ( dst ) = ( src ) )
+#  endif
 #endif
 
 static int s_enabled = 1;
@@ -264,7 +263,6 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
       ( defined( HB_OS_UNIX ) && \
       ! defined( __WATCOMC__ ) && \
       ! defined( HB_OS_VXWORKS ) && \
-      ! defined( HB_OS_SYMBIAN ) && \
       ! defined( HB_OS_QNX_BB10 ) )
 
       char message[ 1024 ];
@@ -281,7 +279,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
 
       va_end( vargs );
 
-   #if defined( HB_OS_WIN )
+#  if defined( HB_OS_WIN )
       {
          union
          {
@@ -304,7 +302,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
          #endif
          OutputDebugString( buf.lp );
       }
-   #else
+#  else
       {
          int slevel;
 
@@ -325,7 +323,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
          else
             syslog( slevel, "%s:%d: %s %s", file, line, pszLevel, message );
       }
-   #endif
+#  endif
 #endif
    }
 

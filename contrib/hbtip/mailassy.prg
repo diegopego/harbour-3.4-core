@@ -2,7 +2,7 @@
  * tip_MailAssemble() (This version started from Luiz's original work on SendMail())
  *
  * Copyright 2007 Luiz Rafael Culik Guimaraes and Patrick Mast
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (SSL support)
+ * Copyright 2009-2017 Viktor Szakats (vsz.me/hb) (SSL support)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -67,9 +67,9 @@ FUNCTION tip_MailAssemble( ;
 
    LOCAL oMail
    LOCAL oAttach
-   LOCAL aThisFile
+   LOCAL xFile
    LOCAL cMimeType
-   LOCAL cFile
+   LOCAL cFileName
    LOCAL cData
    LOCAL cContentType
    LOCAL nAttr
@@ -132,38 +132,41 @@ FUNCTION tip_MailAssemble( ;
       oAttach:SetBody( cBody )
       oMail:Attach( oAttach )
 
-      FOR EACH aThisFile IN aFiles
+      FOR EACH xFile IN aFiles
 
          cMimeType := NIL
          nAttr := 0
 
          DO CASE
-         CASE HB_ISSTRING( aThisFile )
-            cFile := aThisFile
-            cData := hb_MemoRead( cFile )
-            hb_vfAttrGet( cFile, @nAttr )
-         CASE HB_ISARRAY( aThisFile ) .AND. Len( aThisFile ) >= 2
-            cFile := aThisFile[ 1 ]
-            IF HB_ISSTRING( aThisFile[ 2 ] )
-               cData := aThisFile[ 2 ]
-               hb_default( @cFile, "unnamed" )
-            ELSEIF HB_ISSTRING( cFile )
-               cData := hb_MemoRead( cFile )
-               hb_vfAttrGet( cFile, @nAttr )
+         CASE HB_ISSTRING( xFile )
+            cFileName := xFile
+            cData := hb_MemoRead( cFileName )
+            hb_vfAttrGet( cFileName, @nAttr )
+         CASE HB_ISARRAY( xFile ) .AND. Len( xFile ) >= 2
+            cFileName := xFile[ 1 ]
+            IF HB_ISSTRING( xFile[ 2 ] )
+               cData := xFile[ 2 ]
+               hb_default( @cFileName, "unnamed" )
+            ELSEIF HB_ISSTRING( cFileName )
+               cData := hb_MemoRead( cFileName )
+               hb_vfAttrGet( cFileName, @nAttr )
             ELSE
                LOOP  /* No filename and no content. */
             ENDIF
-            IF Len( aThisFile ) >= 3 .AND. HB_ISSTRING( aThisFile[ 3 ] )
-               cMimeType := aThisFile[ 3 ]
+            IF Len( xFile ) >= 3 .AND. HB_ISSTRING( xFile[ 3 ] )
+               cMimeType := xFile[ 3 ]
+            ENDIF
+            IF Len( xFile ) >= 4 .AND. HB_ISNUMERIC( xFile[ 4 ] )
+               nAttr := xFile[ 4 ]
             ENDIF
          OTHERWISE
             LOOP
          ENDCASE
 
          IF cMimeType == NIL
-            cMimeType := tip_FileNameMimeType( cFile, "application/octet-stream" )
+            cMimeType := hb_mimeFName( cFileName, "application/octet-stream" )
          ENDIF
-         cFile := s_TransCP( cFile, cCharsetCP )
+         cFileName := s_TransCP( cFileName, cCharsetCP )
 
          oAttach := TIPMail():New()
          oAttach:SetCharset( cCharset )
@@ -176,13 +179,13 @@ FUNCTION tip_MailAssemble( ;
             ENDIF
          ENDIF
          // Some email clients use Content-Type to check for filename
-         cMimeType += "; name=" + '"' + hb_FNameNameExt( cFile ) + '"'
+         cMimeType += "; name=" + '"' + hb_FNameNameExt( cFileName ) + '"'
          IF ( nAttr := __tip_FAttrToUmask( nAttr ) ) != 0
             cMimeType += "; x-unix-mode=" + '"' + hb_NumToHex( nAttr, 4 ) + '"'
          ENDIF
          oAttach:hHeaders[ "Content-Type" ] := cMimeType
          // Usually, original filename is set here
-         oAttach:hHeaders[ "Content-Disposition" ] := "attachment; filename=" + '"' + hb_FNameNameExt( cFile ) + '"'
+         oAttach:hHeaders[ "Content-Disposition" ] := "attachment; filename=" + '"' + hb_FNameNameExt( cFileName ) + '"'
          oAttach:SetBody( cData )
          oMail:Attach( oAttach )
       NEXT
@@ -200,7 +203,7 @@ FUNCTION tip_MailAssemble( ;
    oMail:SetHeader( cSubject, cFrom, xTo, xCC )
    oMail:hHeaders[ "Date" ] := tip_TimeStamp()
    IF ! Empty( cReplyTo )
-      oMail:hHeaders[ "Reply-to" ] := cReplyTo
+      oMail:hHeaders[ "Reply-To" ] := cReplyTo
    ENDIF
    IF lRead
       oMail:hHeaders[ "Disposition-Notification-To" ] := tip_GetRawEmail( cFrom )

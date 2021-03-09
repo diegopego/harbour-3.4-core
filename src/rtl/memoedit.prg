@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -63,7 +63,7 @@ CREATE CLASS HBMemoEditor INHERIT HBEditor
    METHOD MemoInit( xUserFunction )          // This method is called after ::New() returns to perform ME_INIT actions
    METHOD Edit()                             // Calls ::super:Edit( nKey ) but is needed to handle configurable keys
    METHOD KeyboardHook( nKey )               // Gets called every time there is a key not handled directly by HBEditor
-   METHOD IdleHook()                         // Gets called every time there are no more keys to hanlde
+   METHOD IdleHook()                         // Gets called every time there are no more keys to handle
 
    METHOD HandleUserKey( nKey, nUdfReturn )  // Handles keys returned to MemoEdit() by user function
    METHOD xDo( nStatus )                     // Calls xUserFunction saving and restoring cursor position and shape
@@ -152,7 +152,7 @@ METHOD Edit() CLASS HBMemoEditor
          ENDIF
       ENDDO
    ELSE
-      // If I can't edit text buffer or there is not a user function enter standard HBEditor
+      // If I cannot edit text buffer or there is not a user function enter standard HBEditor
       // ::Edit() method which is able to handle everything
       ::super:Edit()
    ENDIF

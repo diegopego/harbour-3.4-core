@@ -1,7 +1,7 @@
 /*
  * Command-line and environment argument management
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -124,7 +124,7 @@ void hb_winmainArgVBuild( void )
       }
       else
       {
-         lpDst = ( LPTSTR ) lpCmdLine;
+         lpDst = ( LPTSTR ) HB_UNCONST( lpCmdLine );
          nSize = nModuleName;
       }
 
@@ -293,7 +293,7 @@ HB_BOOL hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdS
 
 void hb_cmdargInit( int argc, char * argv[] )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargInit(%d, %p)", argc, argv ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargInit(%d, %p)", argc, ( void * ) argv ) );
 
 #if defined( HB_OS_WIN )
    if( s_lpArgV )
@@ -345,7 +345,7 @@ void hb_cmdargUpdate( void )
 #if ! defined( HB_OS_WIN )
    if( s_argc > 0 )
    {
-   #if defined( HB_OS_OS2 )
+#  if defined( HB_OS_OS2 )
       {
          PPIB ppib = NULL;
          APIRET ulrc;
@@ -360,7 +360,7 @@ void hb_cmdargUpdate( void )
                s_argv[ 0 ] = s_szAppName;
          }
       }
-   #else
+#  else
       /* NOTE: try to create absolute path from s_argv[ 0 ] if necessary */
       {
          PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
@@ -385,7 +385,7 @@ void hb_cmdargUpdate( void )
                      /* even if the file is located using PATH then it does
                       * not mean we will have absolute path here. It's not
                       * good idea but PATH envvar can also contain relative
-                      * directories, f.e. "." or "bin" so we should add
+                      * directories, e.g. "." or "bin" so we should add
                       * current directory if necessary in code below.
                       */
                      hb_xfree( pFName );
@@ -404,11 +404,11 @@ void hb_cmdargUpdate( void )
          }
          if( pFName->szPath )
          {
-      #if defined( HB_OS_HAS_DRIVE_LETTER )
+#     if defined( HB_OS_HAS_DRIVE_LETTER )
             if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR && ! pFName->szDrive )
-      #else
+#     else
             if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR )
-      #endif
+#     endif
             {
                if( pFName->szPath[ 0 ] == '.' &&
                    pFName->szPath[ 1 ] == HB_OS_PATH_DELIM_CHR )
@@ -430,7 +430,7 @@ void hb_cmdargUpdate( void )
          }
          hb_xfree( pFName );
       }
-   #endif
+#  endif
    }
 #endif
 }
@@ -461,7 +461,7 @@ int hb_cmdargPushArgs( void )
 
 HB_BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargIsInternal(%s, %p)", szArg, piLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargIsInternal(%s, %p)", szArg, ( void * ) piLen ) );
 
    /* NOTE: Not checking for '--' here, as it would filter out
             valid command-line options used by applications. [vszakats] */
@@ -855,7 +855,7 @@ void hb_cmdargProcess( void )
    }
 
    if( hb_cmdargCheck( "BUILD" ) )
-      hb_verBuildInfo();
+      hb_verBuildInfoCB( hb_conOutErr );
 
    iHandles = hb_cmdargNum( "F" );
    if( iHandles > 20 )

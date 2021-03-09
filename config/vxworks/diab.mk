@@ -14,26 +14,16 @@ HB_DYN_COPT := -DHB_DYNLIB -Xpic
 
 ifeq ($(HB_CPU),x86)
    _DIAB_CPU := X86LH
-else
-ifeq ($(HB_CPU),arm)
+else ifeq ($(HB_CPU),arm)
    _DIAB_CPU := ARMV7LS
-else
-ifeq ($(HB_CPU),mips)
+else ifeq ($(HB_CPU),mips)
    _DIAB_CPU :=
-else
-ifeq ($(HB_CPU),ppc)
+else ifeq ($(HB_CPU),ppc)
    _DIAB_CPU :=
-else
-ifeq ($(HB_CPU),sh)
+else ifeq ($(HB_CPU),sh)
    _DIAB_CPU :=
-else
-ifeq ($(HB_CPU),m68k)
+else ifeq ($(HB_CPU),m68k)
    _DIAB_CPU :=
-endif
-endif
-endif
-endif
-endif
 endif
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
@@ -78,7 +68,9 @@ endif
 LDFLAGS += $(LDLIBPATHS)
 
 AR := $(HB_CCPREFIX)dar
-AR_RULE = ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && $(FALSE) )
+AR_RULE = ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) \
+   $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) \
+   || ( $(RM) $(LIB_DIR)/$@ && $(FALSE) )
 
 DY := $(CC)
 DFLAGS += -Xpic -Wl, -Xshared -Wl, -Xdynamic $(DLIBPATHS)
@@ -93,7 +85,8 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dynlib_object))
-   $(DY) $(DFLAGS) -soname="$(DYN_NAME_CPT)" $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ -@__dyn__.tmp $(DLIBS) $(DYSTRIP)
+   $(DY) $(DFLAGS) -soname="$(DYN_NAME_CPT)" $(HB_USER_DFLAGS) \
+      $(DY_OUT)$(DYN_DIR)/$@ -@__dyn__.tmp $(DLIBS) $(DYSTRIP)
 endef
 
 DY_RULE = $(create_dynlib)

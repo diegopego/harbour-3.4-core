@@ -14,9 +14,9 @@
       Image is read from file only once, and then cached.
       Test: After image is displayed, delete the image file.
             Image should be still displayed with no problem,
-            since gtwvw already store it in memory.
+            since GTWVW already store it in memory.
    2. Transparency
-      If this option is used, topleft pixel is used as the transparent mask
+      If this option is used, top left pixel is used as the transparent mask
       of the image. */
 
 #require "gtwvw"
@@ -220,7 +220,7 @@ METHOD PROCEDURE Draw() CLASS wPaintObj
 
 // undraw the object
 // normally this is called with ::lVisible == .F.,
-// otherwise the object will be redrawn by WVW_PAINT
+// otherwise the object will be redrawn by WVW_PAINT()
 METHOD PROCEDURE Undraw() CLASS wPaintObj
 
    LOCAL cScreen
@@ -341,7 +341,7 @@ STATIC PROCEDURE wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
 
    RETURN
 
-FUNCTION WVW_Paint( nWinNum )  /* must be a public function */
+FUNCTION WVW_PAINT( nWinNum )  /* must be a public function */
 
    IF Len( s_aPObjList ) >= nWinNum + 1
       // simple redraw, ignoring wpaint obj dependency with each other:

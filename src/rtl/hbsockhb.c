@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -94,6 +94,7 @@
 /* this has to be declared before hbsocket.h is included */
 #define _HB_SOCKEX_IMPLEMENTATION_
 
+#include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbvm.h"
@@ -115,7 +116,7 @@ static int s_sockexClose( PHB_SOCKEX pSock, HB_BOOL fClose )
    return iResult;
 }
 
-/* read data from extended socket, check internal readahead
+/* read data from extended socket, check internal read-ahead
    buffer first */
 static long s_sockexRead( PHB_SOCKEX pSock, void * data, long len, HB_MAXINT timeout )
 {
@@ -170,7 +171,7 @@ static long s_sockexFlush( PHB_SOCKEX pSock, HB_MAXINT timeout, HB_BOOL fSync )
    If fBuffer parameter is set to true then only data already read
    from socket and stored in memory buffer should be checked without
    any timeout. Such call is executed just before inside
-   hb_sockexSelect() just before call to low level socket select()
+   hb_sockexSelect() just before call to low-level socket select()
    function. */
 static int s_sockexCanRead( PHB_SOCKEX pSock, HB_BOOL fBuffer, HB_MAXINT timeout )
 {
@@ -537,7 +538,7 @@ static const HB_SOCKET_FILTER ** s_socket_getfilters( const char * pszFilter,
                                 hb_xmemdup( pFilters, sizeof( *pFilters ) * iMax );
                   iMax += 16;
                   pFilters = ( const HB_SOCKET_FILTER ** )
-                             hb_xrealloc( pFilters, sizeof( *pFilters ) * iMax );
+                             hb_xrealloc( HB_UNCONST( pFilters ), sizeof( *pFilters ) * iMax );
                }
                pFilters[ iCount++ ] = s_socketFilters[ i ];
             }
@@ -553,7 +554,7 @@ static const HB_SOCKET_FILTER ** s_socket_getfilters( const char * pszFilter,
    if( iCount == 0 )
    {
       if( iMax > *piCount )
-         hb_xfree( pFilters );
+         hb_xfree( HB_UNCONST( pFilters ) );
       pFilters = NULL;
    }
    *piCount = iCount;
@@ -590,7 +591,7 @@ PHB_SOCKEX hb_sockexNew( HB_SOCKET sd, const char * pszFilter, PHB_ITEM pParams 
          pSock = pSockNew;
       }
       if( pFilters != pBuffer )
-         hb_xfree( pFilters );
+         hb_xfree( HB_UNCONST( pFilters ) );
    }
    return pSock;
 }
@@ -615,7 +616,7 @@ PHB_SOCKEX hb_sockexNext( PHB_SOCKEX pSock, const char * pszFilter, PHB_ITEM pPa
             pSock = NULL;
       }
       if( pFilters != pBuffer )
-         hb_xfree( pFilters );
+         hb_xfree( HB_UNCONST( pFilters ) );
    }
    return pSock;
 }

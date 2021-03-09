@@ -169,14 +169,14 @@ static void hb_irmMapMarkCallback( HB_ULONG ulRecNo, unsigned char * pKey, unsig
 }
 
 /*
- *  Expresion operators:
+ *  Expression operators:
  *    "&", expr1, expr2, ...
  *    "|", expr1, expr2, ...
  *  Filter operators:
- *    "=", tag, bag, value                    ORKEYVAL() = value
- *    "<=", tag, bag, value                   ORKEYVAL() <= value
- *    ">=", tag, bag, value                   ORKEYVAL() >= value
- *    "<=<=", tag, bag, value1, value2        value1 <= ORKEYVAL() <= value2
+ *    "=", tag, bag, value                    ordKeyVal() = value
+ *    "<=", tag, bag, value                   ordKeyVal() <= value
+ *    ">=", tag, bag, value                   ordKeyVal() >= value
+ *    "<=<=", tag, bag, value1, value2        value1 <= ordKeyVal() <= value2
  */
 PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
 {
@@ -257,7 +257,9 @@ PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
                hb_arraySet( dboi.itmNewVal, DBRMI_HIVAL, hb_arrayGetItemPtr( pItem, 5 ) );
             }
             SELF_ORDINFO( pArea, DBOI_SCOPEEVAL, &dboi );
-            /* bitcount ulSize = hb_itemGetNL( dboi.itmResult ); */
+            #if 0
+            bitcount ulSize = hb_itemGetNL( dboi.itmResult );
+            #endif
             hb_itemRelease( dboi.itmNewVal );
             hb_itemRelease( dboi.itmResult );
             return pMap;

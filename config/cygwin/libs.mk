@@ -17,21 +17,19 @@ ifneq ($(HB_LINKING_RTL),)
       ifeq ($(HB_HAS_PCRE2_LOCAL),)
          SYSLIBS += pcre2-8
       endif
-   else
-   ifneq ($(HB_HAS_PCRE),)
+   else ifneq ($(HB_HAS_PCRE),)
       ifeq ($(HB_HAS_PCRE_LOCAL),)
          SYSLIBS += pcre
       endif
    endif
-   endif
    ifeq ($(HB_HAS_ZLIB_LOCAL),)
       SYSLIBS += z
    endif
-   SYSLIBS += rt dl
+   SYSLIBS += dl
    # Don't seem to be needed here, but added it for reference to move/copy it to *nix platforms where this is required
    ifneq ($(HB_LINKING_VMMT),)
       SYSLIBS += pthread
    endif
 endif
 
-SYSLIBS += m
+SYSLIBS += m rt

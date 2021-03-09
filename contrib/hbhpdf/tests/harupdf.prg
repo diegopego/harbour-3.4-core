@@ -3,18 +3,18 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -32,7 +32,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -166,7 +166,10 @@ FUNCTION DesignHaruPDF( cFileToSave )
    // Comment out the following line if you need ASCII chart by Codepages
    Page_CodePages( pdf )
 
-   IF HPDF_SaveToFile( pdf, cFileToSave ) != HPDF_OK
+   IF HPDF_SaveToStream( pdf ) == HPDF_OK
+      ? "Size:", hb_ntos( HPDF_GetStreamSize( pdf ) )
+      ? "Saved:", hb_MemoWrit( cFileToSave, HPDF_ReadFromStream( pdf ) )
+   ELSE
       ? "0x" + hb_NumToHex( HPDF_GetError( pdf ), 4 ), hb_HPDF_GetErrorString( HPDF_GetError( pdf ) ), HPDF_GetErrorDetail( pdf )
    ENDIF
 
@@ -208,7 +211,7 @@ STATIC PROCEDURE Page_Lines( pdf )
 
    HPDF_Page_SetFontAndSize( page, font, 10 )
 
-   /* Draw verious widths of lines. */
+   /* Draw various widths of lines. */
    HPDF_Page_SetLineWidth( page, 0 )
    draw_line( page, 60, 770, "line width: 0" )
 
@@ -837,7 +840,7 @@ STATIC PROCEDURE Page_TextScaling( pdf )
 
    /* Rotating text */
    angle1 := 30                   /* A rotation of 30 degrees. */
-   rad1 := angle1 / 180 * Pi()    /* Calcurate the radian value. */
+   rad1 := angle1 / 180 * Pi()    /* Calculate the radian value. */
 
    show_description( page, 320, ypos - 60, "Rotating text" )
    HPDF_Page_BeginText( page )
@@ -998,7 +1001,9 @@ STATIC PROCEDURE Page_CodePages( pdf )
       dst := HPDF_Page_CreateDestination( page )
       HPDF_Destination_SetXYZ( dst, 0, HPDF_Page_GetHeight( page ), 1 )
 
-      /* HPDF_Destination_SetFitB( dst ) */
+#if 0
+      HPDF_Destination_SetFitB( dst )
+#endif
       HPDF_Outline_SetDestination( outline, dst )
 
       HPDF_Page_SetFontAndSize( page, font, 15 )
@@ -1326,16 +1331,16 @@ STATIC PROCEDURE Page_Images( pdf )
 
    x += 150
 
-   /* Scalling image(X direction) */
+   /* Scaling image(X direction) */
    HPDF_Page_DrawImage( page, image, x, y, iw * 1.5, ih )
 
-   show_description_1( page, x, y, "Scalling image(X direction)" )
+   show_description_1( page, x, y, "Scaling image(X direction)" )
 
    x += 150
 
-   /* Scalling image(Y direction). */
+   /* Scaling image(Y direction). */
    HPDF_Page_DrawImage( page, image, x, y, iw, ih * 1.5 )
-   show_description_1( page, x, y, "Scalling image(Y direction)" )
+   show_description_1( page, x, y, "Scaling image(Y direction)" )
 
    x := 100
    y -= 120
@@ -1357,7 +1362,7 @@ STATIC PROCEDURE Page_Images( pdf )
 
    /* Rotating image */
    angle := 30     /* rotation of 30 degrees. */
-   rad := angle / 180 * Pi() /* Calcurate the radian value. */
+   rad := angle / 180 * Pi() /* Calculate the radian value. */
 
    HPDF_Page_GSave( page )
    HPDF_Page_Concat( page, iw * Cos( rad ), ;

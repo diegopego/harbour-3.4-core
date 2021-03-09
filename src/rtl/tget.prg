@@ -1,7 +1,7 @@
 /*
  * Get Class
  *
- * Copyright 2007-2008 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2007-2008 Viktor Szakats (vsz.me/hb)
  * Copyright 1999 Ignacio Ortiz de Zuniga <ignacio@fivetech.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,7 +54,7 @@
 #include "inkey.ch"
 #include "button.ch"
 
-/* TOFIX: ::Minus [vszakats] */
+/* FIXME: ::Minus [vszakats] */
 
 #define GET_CLR_UNSELECTED      0
 #define GET_CLR_ENHANCED        1
@@ -980,7 +980,7 @@ METHOD setPos( nPos ) CLASS Get
 
          CASE nPos > 0
 
-            /* NOTE: CA-Cl*pper has a bug where negative nPos value will be translated to 16bit unsigned int,
+            /* NOTE: CA-Cl*pper has a bug where negative nPos value will be translated to 16-bit unsigned int,
                      so the behaviour will be different in this case. [vszakats] */
 
             FOR tmp := nPos TO ::nMaxLen
@@ -1214,7 +1214,7 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
    IF lEdit .AND. ::cType == "N" .AND. ! Empty( cPicMask )
       FOR nFor := 1 TO ::nMaxLen
          cChar := hb_USubStr( cPicMask, nFor, 1 )
-         IF cChar $ ",." .AND. hb_USubStr( cBuffer, nFor, 1 ) $ ",." // " " TOFIX
+         IF cChar $ ",." .AND. hb_USubStr( cBuffer, nFor, 1 ) $ ",." // " " FIXME
             IF "E" $ cPicFunc
                cChar := iif( cChar == ",", ".", "," )
             ENDIF
@@ -1291,7 +1291,7 @@ METHOD unTransform() CLASS Get
             ENDIF
             cBuffer := Space( ::FirstEditable() - 1 ) + hb_USubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 )
 
-            /* Readd leading decimal point, if any */
+            /* Re-add leading decimal point, if any */
             IF ::decPos <= ::FirstEditable() - 1
                cBuffer := hb_ULeft( cBuffer, ::decPos - 1 ) + "." + hb_USubStr( cBuffer, ::decPos + 1 )
             ENDIF
@@ -1698,10 +1698,11 @@ METHOD IsEditable( nPos ) CLASS Get
       RETURN .T.
    ENDIF
 
-   /* This odd behaviour helps to be more compatible with CA-Cl*pper in some rare situations.
+   /* This odd behaviour helps to be more compatible with CA-Cl*pper in some
+      rare situations.
       xVar := 98 ; o := _GET_( xVar, "xVar" ) ; o:SetFocus() ; o:picture := "99999" ; o:UnTransform() -> result
-      We're still not 100% compatible in slighly different situations because the CA-Cl*pper
-      behaviour is pretty much undefined here. [vszakats] */
+      We're still not 100% compatible in slightly different situations because
+      the CA-Cl*pper behaviour is pretty much undefined here. [vszakats] */
    IF nPos > hb_ULen( ::cPicMask ) .AND. nPos <= ::nMaxLen
       RETURN .T.
    ENDIF
@@ -1757,8 +1758,13 @@ METHOD Input( cChar ) CLASS Get
          EXIT
 
       CASE "L"
-
-         IF ! Upper( cChar ) $ "YNTF"
+         #ifdef HB_CLP_STRICT
+            #define _YN_NAT  ""
+         #else
+            #define _YN_NAT  hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + ;
+                             hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 2 )
+         #endif
+         IF ! Upper( cChar ) $ "YNTF" + _YN_NAT
             RETURN ""
          ENDIF
          EXIT
@@ -1869,7 +1875,7 @@ METHOD setMinus( lMinus ) CLASS Get
 
    RETURN .F.
 
-/* NOTE: CA-Cl*pper has a bug where negative nRow value will be translated to 16bit unsigned int,
+/* NOTE: CA-Cl*pper has a bug where negative nRow value will be translated to 16-bit unsigned int,
          so the behaviour will be different in this case. [vszakats] */
 
 METHOD getRow() CLASS Get
@@ -1878,7 +1884,7 @@ METHOD getRow() CLASS Get
 METHOD setRow( nRow ) CLASS Get
    RETURN ::nRow := iif( HB_ISNUMERIC( nRow ), Int( nRow ), 0 )
 
-/* NOTE: CA-Cl*pper has a bug where negative nCol value will be translated to 16bit unsigned int,
+/* NOTE: CA-Cl*pper has a bug where negative nCol value will be translated to 16-bit unsigned int,
          so the behaviour will be different in this case. [vszakats] */
 
 METHOD getCol() CLASS Get

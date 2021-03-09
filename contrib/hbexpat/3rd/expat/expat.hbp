@@ -1,46 +1,53 @@
--stop{hbdyn}
+-stop{hbdyn&!(HB_BUILD_3RD_DYN='yes')} -env:__HB_3RD_DYN=yes{hbdyn}
 
 -hblib
 -inc
 
--o${hb_targetname}
+-o${hb_name}
 
 -warn=low
+-cpp=no
 -pic
 
+loadlibrary.c
 xmlparse.c
 xmlrole.c
 xmltok.c
 
--cflag=-DHARBOUR_CONF
-{win}-cflag=-DWIN32
+-cflag=-DNDEBUG{!debug}
+-cflag=-DHAVE_EXPAT_CONFIG_H
+# needed to have <expat_config.h> found:
+-I.
+
+# Use Harbour core arc4random implementation only when building static lib.
+# This way the dynamic lib won't depend on Harbour dynlib.
+-cflag=-DHB_FORCE_ARC4RANDOM{!hbdyn}
+
 {hblib}-cflag=-DXML_STATIC
 {bcc}-cflag=-w-8057
 {bcc}-cflag=-w-8008
 {bcc}-cflag=-w-8066
 
-# ORIGIN https://expat.sourceforge.io/
-# URL    https://fossies.org/linux/www/expat-2.2.0.tar.bz2
-# DIFF   expat.diff
+# ORIGIN https://libexpat.github.io/
+# URL    https://downloads.sourceforge.net/project/expat/expat/2.2.5/expat-2.2.5.tar.bz2
 #
-# MAP    COPYING              LICENSE.txt
+# MAP    COPYING
 # MAP    lib/xmlparse.c       xmlparse.c
 # MAP    lib/xmlrole.c        xmlrole.c
 # MAP    lib/xmltok.c         xmltok.c
-# MAP    lib/xmltok_impl.c    xmltok_i.c
-# MAP    lib/xmltok_ns.c      xmltok_n.c
-# MAP    lib/amigaconfig.h    amigacon.h
+# MAP    lib/xmltok_impl.c    xmltok_impl.c
+# MAP    lib/xmltok_ns.c      xmltok_ns.c
 # MAP    lib/ascii.h          ascii.h
 # MAP    lib/asciitab.h       asciitab.h
 # MAP    lib/expat.h          expat.h
-# MAP    lib/expat_external.h expat_ex.h
-# MAP    lib/iasciitab.h      iasciita.h
+# MAP    lib/expat_external.h expat_external.h
+# MAP    lib/iasciitab.h      iasciitab.h
 # MAP    lib/internal.h       internal.h
-# MAP    lib/latin1tab.h      latin1ta.h
-# MAP    lib/macconfig.h      macconfi.h
+# MAP    lib/latin1tab.h      latin1tab.h
+# MAP    lib/loadlibrary.c    loadlibrary.c
 # MAP    lib/nametab.h        nametab.h
+# MAP    lib/siphash.h        siphash.h
 # MAP    lib/utf8tab.h        utf8tab.h
-# MAP    lib/winconfig.h      winconfi.h
 # MAP    lib/xmlrole.h        xmlrole.h
 # MAP    lib/xmltok.h         xmltok.h
-# MAP    lib/xmltok_impl.h    xmltok_i.h
+# MAP    lib/xmltok_impl.h    xmltok_impl.h

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,13 +53,13 @@
  * which interacts with alignment are used. [druzus]
  */
 #if ! defined( HB_NO_DEFAULT_API_MACROS ) && ! defined( _HB_API_MACROS_ )
-   #define _HB_API_MACROS_
+#  define _HB_API_MACROS_
 #endif
 
 #if ! defined( HB_NO_DEFAULT_STACK_MACROS ) && ! defined( _HB_STACK_MACROS_ )
-   #define _HB_STACK_MACROS_
+#  define _HB_STACK_MACROS_
 #endif
 
 #if ! defined( _HB_API_INTERNAL_ )
-   #define _HB_API_INTERNAL_
+#  define _HB_API_INTERNAL_
 #endif

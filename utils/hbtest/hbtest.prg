@@ -1,7 +1,7 @@
 /*
  * Regression tests for the runtime library (main)
  *
- * Copyright 1999-2017 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2017 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,7 +52,7 @@
 /* NOTE: It's worth to make tests with and without the /z switch */
 /* NOTE: Guard all Harbour extensions with __HARBOUR__ #ifdefs */
 /* NOTE: Use ":className()" instead of ":className" to make your code work
-         with Xbase++. Xbase++ seem to take differenciate between the
+         with Xbase++. Xbase++ seem to take differentiate between the
          object method and object variable form. In CA-Cl*pper and Harbour
          both syntax is accepted. Same goes for ":Eval()" */
 
@@ -62,7 +62,7 @@
 /* TODO: Tests with MEMO type ? */
 /* TODO: Tests with Log( 0 ) type of invalid values */
 
-#xtranslate HBTEST <x> IS <result> => TEST_CALL( #<x>, {|| <x> }, <result> )
+#translate HBTEST <x> IS <result,...> => TEST_CALL( #<x>, {|| <x> }, <result> )
 
 #ifndef __HARBOUR__
    #ifndef __XPP__
@@ -140,10 +140,6 @@ STATIC sbBlockC
 STATIC saArray
 STATIC saAllTypes
 
-#ifndef __HARBOUR__
-   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
-#endif
-
 #define TEST_RESULT_COL1_WIDTH  1
 #define TEST_RESULT_COL2_WIDTH  20
 #define TEST_RESULT_COL3_WIDTH  40
@@ -155,6 +151,7 @@ STATIC s_nFail
 STATIC s_nFhnd
 STATIC s_nCount
 STATIC s_lShowAll
+STATIC s_lShowAltResult
 STATIC s_lShortcut
 STATIC s_aSkipList
 STATIC s_nStartTime
@@ -163,16 +160,24 @@ STATIC s_lDBFAvail := .F.
 STATIC s_lNoEnv
 
 #ifdef __HARBOUR__
-   REQUEST HB_LANG_EN
+   #include "hbver.ch"
 
    ANNOUNCE HB_GTSYS
    REQUEST HB_GT_CGI_DEFAULT
+
+   #define COPYRIGHT_YEAR  hb_ntos( Year( hb_Version( HB_VERSION_BUILD_DATE ) ) )
+#else
+   #define COPYRIGHT_YEAR  "present"
+
+   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
 PROCEDURE Main( cPar1, cPar2, cPar3 )
 
-   OutStd( "Harbour Compatibility and Regression Test Suite" + hb_eol() + ;
-           "Copyright (c) 1999-2017, Viktor Szakats" + hb_eol() )
+   OutStd( ;
+      "Harbour Compatibility and Regression Test Suite" + hb_eol() + ;
+      "Copyright (c) 1999-" + COPYRIGHT_YEAR + ", " + ;
+      "Viktor Szakats" + hb_eol() )
 
    IF cPar1 == NIL
       cPar1 := ""
@@ -194,8 +199,8 @@ PROCEDURE Main( cPar1, cPar2, cPar3 )
               hb_eol() + ;
               "Options:  -h, -?        Display this help." + hb_eol() + ;
               "          -all          Display all tests, not only the failures." + hb_eol() + ;
+              "          -strict       Test against strict Cl*pper results (default in non-Harbour builds)." + hb_eol() +;
               "          -skip:<list>  Skip the listed test numbers." + hb_eol() )
-
       RETURN
    ENDIF
 
@@ -284,6 +289,11 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    /* Options */
 
    s_lShowAll := "-all" $ Lower( cParam )
+#ifdef __HARBOUR__
+   s_lShowAltResult := ! "-strict" $ Lower( cParam )
+#else
+   s_lShowAltResult := .F.
+#endif
    s_aSkipList := ListToNArray( CMDLGetValue( Lower( cParam ), "-skip:", "" ) )
    s_lNoEnv := "-noenv" $ Lower( cParam )
 
@@ -400,7 +410,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
 FUNCTION TEST_DBFAvail()
    RETURN s_lDBFAvail
 
-PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
+PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected, xResultAlt )
 
    LOCAL xResult
    LOCAL oError
@@ -440,16 +450,10 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
 
       ErrorBlock( bOldError )
 
-      IF lRTE
-         lFailed := ! XToStr( xResult ) == XToStr( xResultExpected )
-      ELSEIF ValType( xResult ) == ValType( xResultExpected )
-         lFailed := ! xResult == xResultExpected
-      ELSEIF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
-         lFailed := ! XToStr( xResult ) == xResultExpected
-      ELSE
-         lFailed := .T.
+      lFailed := ResultCompare( lRTE, xResult, xResultExpected )
+      IF lFailed .AND. s_lShowAltResult .AND. PCount() >= 4
+         lFailed := ResultCompare( lRTE, xResult, xResultAlt )
       ENDIF
-
    ENDIF
 
    IF s_lShowAll .OR. lFailed .OR. lSkipped .OR. lPPError
@@ -508,7 +512,8 @@ STATIC PROCEDURE TEST_END()
 
    IF s_nFail != 0
       #ifdef __CLIPPER__
-         OutMsg( s_nFhnd, "WARNING: Failures detected using CA-Cl*pper." + hb_eol() + ;
+         OutMsg( s_nFhnd, ;
+            "WARNING: Failures detected using CA-Cl*pper." + hb_eol() + ;
             "Please fix those expected results which are not bugs in CA-Cl*pper itself." + hb_eol() )
       #else
          OutMsg( s_nFhnd, "WARNING: Failures detected" + hb_eol() )
@@ -524,6 +529,18 @@ STATIC PROCEDURE TEST_END()
    ErrorLevel( iif( s_nFail != 0, 1, 0 ) )
 
    RETURN
+
+FUNCTION ResultCompare( lRTE, xResult, xResultExpected )
+
+   IF lRTE
+      RETURN ! XToStr( xResult ) == XToStr( xResultExpected )
+   ELSEIF ValType( xResult ) == ValType( xResultExpected )
+      RETURN ! xResult == xResultExpected
+   ELSEIF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
+      RETURN ! XToStr( xResult ) == xResultExpected
+   ENDIF
+
+   RETURN .T.
 
 FUNCTION XToStr( xValue )
 

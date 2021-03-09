@@ -1,7 +1,7 @@
 /*
  * Ghostscript high-level API
  *
- * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2011 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,17 +48,16 @@
 
 #include "hbapi.h"
 #if defined( HB_GS_UTF8_SUPPORT )
-   #include "hbapistr.h"
+#  include "hbapistr.h"
 #endif
 
 #if defined( HB_OS_WIN )
-   #if ! defined( _Windows )
-      #define _Windows
-   #endif
-   #include <windows.h>
-   #define GSDLLEXPORT  __declspec( dllimport )
-   /* Some binary build may need the line below to be commented */
-   #define GSDLLAPI
+#  if ! defined( _Windows )
+#     define _Windows
+#  endif
+#  include <windows.h>
+#  define GSDLLEXPORT  __declspec( dllimport )
+#  define GSDLLAPI  /* Some binary builds may need this to be commented */
 #endif
 
 #include "ierrors.h"
@@ -66,7 +65,7 @@
 
 /* Workaround to build with pre-9.18 versions */
 #if defined( e_Quit )
-   #define gs_error_Quit  e_Quit
+#  define gs_error_Quit  e_Quit
 #endif
 
 HB_FUNC( HB_GS )

@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -153,7 +153,7 @@ METHOD FieldLen( nNum ) CLASS TMySQLRow
    RETURN iif( nNum >= 1 .AND. nNum <= Len( ::aFieldStruct ), ::aFieldStruct[ nNum ][ MYSQL_FS_LENGTH ], 0 )
 
 /* lFormat: when .T. method returns number of formatted decimal places from mysql table otherwise _SET_DECIMALS.
-   lFormat is usefull for copying table structure from mysql to dbf
+   lFormat is useful for copying table structure from mysql to dbf
  */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
@@ -531,7 +531,7 @@ METHOD FieldLen( nNum ) CLASS TMySQLQuery
    RETURN 0
 
 /* lFormat: when .T. method returns number of formatted decimal places from mysql table otherwise _SET_DECIMALS.
-   lFormat is usefull for copying table structure from mysql to dbf */
+   lFormat is useful for copying table structure from mysql to dbf */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
@@ -728,7 +728,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
          IF mysql_query( ::nSocket, cUpdateQuery ) == 0
 
-            // All values are commited
+            // All values are committed
             AFill( oRow:aDirty, .F. )
             AFill( oRow:aOldValue, NIL )
 
@@ -909,7 +909,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
          IF mysql_query( ::nSocket, cInsertQuery ) == 0
             ::lError := .F.
 
-            // All values are commited
+            // All values are committed
             AFill( oRow:aDirty, .F. )
             AFill( oRow:aOldValue, NIL )
 
@@ -1355,7 +1355,7 @@ METHOD ListTables() CLASS TMySQLServer
 METHOD TableExists( cTable ) CLASS TMySQLServer
    RETURN hb_AScanI( mysql_list_dbs( ::nSocket ), cTable,,, .T. ) > 0
 
-/* TOFIX: Conversion creates a .dbf with fields of wrong dimension (often) */
+/* FIXME: Conversion creates a .dbf with fields of wrong dimension (often) */
 METHOD TableStruct( cTable ) CLASS TMySQLServer
 
    LOCAL aStruct := {}

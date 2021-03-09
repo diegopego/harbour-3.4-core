@@ -1,11 +1,11 @@
 /*
  * Turbo Boyer-Moore (Crochemore) string search
  *    Based on this code:
- *       http://www-igm.univ-mlv.fr/~lecroq/string/node15.html
+ *       https://web.archive.org/web/www-igm.univ-mlv.fr/~lecroq/string/node15.html
  *    Authors:
  *       Christian Charras, Thierry Lecroq
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -111,12 +111,10 @@ static void preBmGs( const char * needle, HB_ISIZ m, HB_ISIZ bmGs[] )
 
 HB_ISIZ hb_strAtTBM( const char * needle, HB_ISIZ m, const char * haystack, HB_ISIZ n )
 {
-   HB_ISIZ r = 0;
-   HB_ISIZ bcShift, j, shift, u, v, turboShift;
+   HB_ISIZ r = 0, j, shift, u;
    HB_ISIZ bmBc[ ASIZE ];
-   HB_ISIZ * bmGs;
 
-   bmGs = ( HB_ISIZ * ) hb_xgrab( m * sizeof( HB_ISIZ ) );
+   HB_ISIZ * bmGs = ( HB_ISIZ * ) hb_xgrab( m * sizeof( HB_ISIZ ) );
 
    /* Preprocessing */
    preBmGs( needle, m, bmGs );
@@ -146,9 +144,9 @@ HB_ISIZ hb_strAtTBM( const char * needle, HB_ISIZ m, const char * haystack, HB_I
       }
       else
       {
-         v = m - 1 - i;
-         turboShift = u - v;
-         bcShift = bmBc[ ( HB_UCHAR ) haystack[ i + j ] ] - m + 1 + i;
+         HB_ISIZ v = m - 1 - i;
+         HB_ISIZ turboShift = u - v;
+         HB_ISIZ bcShift = bmBc[ ( HB_UCHAR ) haystack[ i + j ] ] - m + 1 + i;
          shift = HB_MAX( turboShift, bcShift );
          shift = HB_MAX( shift, bmGs[ i ] );
          if( shift == bmGs[ i ] )

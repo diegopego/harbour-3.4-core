@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,13 +50,21 @@
    #define __STDINT_H
 #endif
 
-#include "hbapi.h"
+#include "hbrddsql.h"
+
 #include "hbapiitm.h"
 #include "hbvm.h"
 
-#include "hbrddsql.h"
+#if defined( HB_GCC_HAS_DIAG ) && defined( __clang__ )
+   #pragma GCC diagnostic push
+   #pragma GCC diagnostic ignored "-Wstrict-prototypes"  /* darwin, bsd */
+#endif
 
 #include "ibase.h"
+
+#if defined( HB_GCC_HAS_DIAG ) && defined( __clang__ )
+   #pragma GCC diagnostic pop
+#endif
 
 typedef struct
 {
@@ -170,7 +178,7 @@ static HB_ERRCODE fbConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
    if( isc_attach_database( status, ( short ) hb_arrayGetCLen( pItem, 5 ), hb_arrayGetCPtr( pItem, 5 ),
                             &hDb, ( short ) i, parambuf ) )
-      /* TODO: error code in status[ 1 ]; */
+      /* TODO: error code in status[ 1 ] */
       return HB_FAILURE;
    pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
    ( ( SDDCONN * ) pConnection->pSDDConn )->hDb = hDb;
@@ -292,7 +300,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
       int iType;
 
       /* FIXME: if pVar->sqlname is ended with 0 byte then this hb_strndup()
-       *        and hb_xfree() bewlow is redundant and
+       *        and hb_xfree() below is redundant and
        *          dbFieldInfo.atomName = pVar->sqlname;
        *        is enough.
        */
@@ -518,7 +526,7 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                   break;
 
                case SQL_FLOAT:
-                  pItem = hb_itemPutNDLen( pItem, *( float * ) pVar->sqldata, 20 - pField->uiDec, pField->uiDec );
+                  pItem = hb_itemPutNDLen( pItem, ( double ) *( float * ) pVar->sqldata, 20 - pField->uiDec, pField->uiDec );
                   break;
 
                case SQL_DOUBLE:

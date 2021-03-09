@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -350,7 +350,7 @@ HB_FUNC( TRANSFORM )
              * but CA-Cl*pper uses static buffer for result and when current
              * one is smaller then 5 bytes then first two bytes are exchanged
              * with 4-5 bytes from previous result which was length enough,
-             * f.e.:
+             * e.g.:
              *          ? Transform( "0123456789", "" )
              *          ? Transform( "AB", "@E" )
              *          ? Transform( "ab", "@E" )
@@ -451,7 +451,7 @@ HB_FUNC( TRANSFORM )
          if( ( uiPicFlags & ( PF_DEBIT | PF_PARNEG | PF_PARNEGWOS ) ) && dValue < 0 )
          {
             /* Always convert absolute val */
-            if( HB_IS_NUMINT( pValue ) ) /* workaround for 64bit integer conversion */
+            if( HB_IS_NUMINT( pValue ) ) /* workaround for 64-bit integer conversion */
                pNumber = hb_itemPutNInt( NULL, -hb_itemGetNInt( pValue ) );
             else
                pNumber = hb_itemPutND( NULL, -dValue );
@@ -652,7 +652,7 @@ HB_FUNC( TRANSFORM )
          if( uiPicFlags & PF_BRITISH )
          {
             /* When @E is used CA-Cl*pper do not update date format
-             * pattern but wrongly moves 4-th and 5-th bytes of
+             * pattern but wrongly moves 4th and 5th bytes of
              * formatted date to the beginning (see below). It causes
              * that date formats formats different then MM?DD?YY[YY]
              * are wrongly translated. The code below is not CA-Cl*pper
@@ -756,7 +756,7 @@ HB_FUNC( TRANSFORM )
          if( szDateFormat && ( uiPicFlags & PF_BRITISH ) )
          {
             /* When @E is used CA-Cl*pper do not update date format
-             * pattern but wrongly moves 4-th and 5-th bytes of
+             * pattern but wrongly moves 4th and 5th bytes of
              * formatted date to the beginning (see below). It causes
              * that date formats formats different then MM?DD?YY[YY]
              * are wrongly translated. The code below is not CA-Cl*pper

@@ -25,9 +25,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -178,7 +178,7 @@ HB_FUNC( WVG_SETMENUITEM )
    if( hb_parl( 5 ) )
    {
       lpmii.fMask = MIIM_STRING;
-      lpmii.dwTypeData = ( LPTSTR ) HB_PARSTR( 4, &hText, NULL );
+      lpmii.dwTypeData = ( LPTSTR ) HB_UNCONST( HB_PARSTR( 4, &hText, NULL ) );
    }
    else
       lpmii.fMask = MIIM_SUBMENU;
@@ -270,10 +270,7 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
 
          SetWindowLong( hWnd, GWL_EXSTYLE, GetWindowLong( hWnd, GWL_EXSTYLE ) | WS_EX_LAYERED );
 
-         if( pfnLayered( hWnd, cr, ( BYTE ) hb_parni( 3 ), /*LWA_COLORKEY |*/ LWA_ALPHA ) == 0 )
-         {
-            /* Just to supress warning */
-         }
+         ( void ) pfnLayered( hWnd, cr, ( BYTE ) hb_parni( 3 ), /* LWA_COLORKEY | */ LWA_ALPHA );
       }
       FreeLibrary( h );
    }
@@ -463,15 +460,13 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
 
 HB_FUNC( WVG_SENDEDITCONTROLMESSAGE )
 {
-   HWND hED = hbwapi_par_raw_HWND( 1 );
-
    switch( hbwapi_par_INT( 2 ) )
    {
       case EM_GETSEL:
       {
          DWORD min = 0;
          DWORD max = 0;
-         SendMessage( hED, EM_GETSEL, ( WPARAM ) &min, ( LPARAM ) &max );
+         SendMessage( hbwapi_par_raw_HWND( 1 ), EM_GETSEL, ( WPARAM ) &min, ( LPARAM ) &max );
          break;
       }
    }

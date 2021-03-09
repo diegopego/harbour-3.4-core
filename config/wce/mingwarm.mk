@@ -28,7 +28,7 @@ ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -O2
    ifneq ($(HB_BUILD_DEBUG),yes)
       # It's the default in 4.6 and up
-      ifneq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405),)
+      ifneq ($(filter $(__HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405),)
          CFLAGS += -fomit-frame-pointer
       endif
    endif
@@ -55,6 +55,8 @@ endif
 LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 
+SYSLIBS := $(subst winmm,mmtimer,$(SYSLIBS))
+
 LIBPATHS := $(foreach dir,$(LIB_DIR),-L$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
@@ -70,7 +72,9 @@ endef
 define create_library
    $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
    $(foreach file,$^,$(library_object))
-   ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
+   ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) \
+      $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) \
+      || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
 endef
 
 AR_RULE = $(create_library)
@@ -88,7 +92,9 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dynlib_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS) -Wl,--out-implib,$(IMP_FILE),--output-def,$(DYN_DIR)/$(basename $@).def $(DYSTRIP)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) \
+      $(DY_OUT)$(DYN_DIR)/$@ __dyn__.tmp $(DLIBS) \
+      -Wl,--out-implib,$(IMP_FILE),--output-def,$(DYN_DIR)/$(basename $@).def $(DYSTRIP)
 endef
 
 DY_RULE = $(create_dynlib)

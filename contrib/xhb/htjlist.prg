@@ -19,9 +19,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -164,7 +164,7 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
       " color='" + hb_defaultValue( fntColor, ::fontColor ) + "' " + ;
       ' > ","</font>");' + hb_eol() )
 
-   RETURN self
+   RETURN Self
 
 /* Add a menu item */
 METHOD AddItem( name, url, bgColor ) CLASS TJSList
@@ -176,7 +176,7 @@ METHOD AddItem( name, url, bgColor ) CLASS TJSList
    ::nItems++
    AAdd( ::aScript, ::cCurrentNode + '.addItem( "' + cUrl + '"' + iif( HB_ISSTRING( bgColor ), ',"' + bgColor + '"', "" ) + ');' + hb_eol() )
 
-   RETURN self
+   RETURN Self
 
 /* Add a menu item */
 METHOD AddLink( name, url, img, bgColor ) CLASS TJSList
@@ -189,7 +189,7 @@ METHOD AddLink( name, url, img, bgColor ) CLASS TJSList
    ::nItems++
    AAdd( ::aScript, ::cCurrentNode + '.addItem( "' + cUrl + '"' + iif( HB_ISSTRING( bgColor ), ',"' + bgColor + '"', "" ) + ');' + hb_eol() )
 
-   RETURN self
+   RETURN Self
 
 METHOD EndNode( name, caption ) CLASS TJSList
 
@@ -197,7 +197,7 @@ METHOD EndNode( name, caption ) CLASS TJSList
 
    AAdd( ::aScript, ::cMainNode + ".addList( " + name + ", '<b>" + caption + "</b>' );" + hb_eol() )
 
-   RETURN self
+   RETURN Self
 
 METHOD Build( xPos, yPos ) CLASS TJSList
 

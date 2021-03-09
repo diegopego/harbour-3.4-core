@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -99,7 +99,6 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
          HB_BOOL bAlt   = GetKeyState( VK_MENU ) & 0x8000;
          HB_BOOL bCtrl  = GetKeyState( VK_CONTROL ) & 0x8000;
          HB_BOOL bShift = GetKeyState( VK_SHIFT ) & 0x8000;
-         int     c      = ( int ) wParam;
          HB_BOOL fDropped;
 
          if( ! hb_gt_wvw_BufferedKey( ( int ) wParam ) )
@@ -109,7 +108,7 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
 
          if( nKbdType == WVW_CB_KBD_STANDARD )
          {
-            switch( c )
+            switch( wParam )
             {
                case VK_F4:
                   if( bAlt )
@@ -162,7 +161,7 @@ static LRESULT CALLBACK hb_gt_wvw_CBProc( HWND hWnd, UINT message, WPARAM wParam
          }     /* WVW_CB_KBD_STANDARD */
          else  /* assume WVW_CB_KBD_CLIPPER */
          {
-            switch( c )
+            switch( wParam )
             {
                case VK_F4:
                   if( bAlt )
@@ -263,8 +262,8 @@ static int hb_gt_wvw_GetFontDialogUnits( HWND hWnd, HFONT hFont )
  *         nType  : event type (CBN_SELCHANGE/CBN_SETFOCUS/CBN_KILLFOCUS supported)
  *         nIndex : index of the selected list item (0 based)
  * nListLines: number of lines for list items, default = 3
- *            (will be automatically truncated if it's > Len(aText))
- * nReserved: reserved for future (this parm is now ignored)
+ *            (will be automatically truncated if it's > Len( aText ))
+ * nReserved: reserved for future (this parameter is now ignored)
  *
  * nKbdType: WVW_CB_KBD_STANDARD (0): similar to standard windows convention
  *            ENTER/ESC: will kill focus from combobox
@@ -367,7 +366,7 @@ HB_FUNC( WVW_CBCREATE )
 
       if( hWnd )
       {
-         int LongComboWidth = 0, NewLongComboWidth;
+         HB_SIZE nMaxWidth = 0;
 
          SendMessage( hWnd, WM_SETREDRAW, ( WPARAM ) TRUE, 0 );
 
@@ -392,9 +391,9 @@ HB_FUNC( WVW_CBCREATE )
                }
                else
                {
-                  int numofchars = ( int ) SendMessage( hWnd, CB_GETLBTEXTLEN, i - 1, 0 );
-                  if( numofchars > LongComboWidth )
-                     LongComboWidth = numofchars;
+                  HB_SIZE nLen = ( HB_SIZE ) SendMessage( hWnd, CB_GETLBTEXTLEN, i - 1, 0 );
+                  if( nLen != ( HB_SIZE ) CB_ERR && nLen > nMaxWidth )
+                     nMaxWidth = nLen;
                }
 
                hb_strfree( hText );
@@ -404,12 +403,13 @@ HB_FUNC( WVW_CBCREATE )
          SendMessage( hWnd, CB_SETCURSEL, 0, 0 );
          SendMessage( hWnd, CB_SETEXTENDEDUI, ( WPARAM ) TRUE, 0 );
 
+         if( nMaxWidth > 2 )
          {
             HFONT hFont = hb_gt_wvw_GetFont( wvw_win->fontFace, 10, wvw_win->fontWidth, wvw_win->fontWeight, wvw_win->fontQuality, wvw_win->CodePage );
-            NewLongComboWidth = ( LongComboWidth - 2 ) * hb_gt_wvw_GetFontDialogUnits( wvw_win->hWnd, hFont );
+            nMaxWidth = ( nMaxWidth - 2 ) * hb_gt_wvw_GetFontDialogUnits( wvw_win->hWnd, hFont );
             DeleteObject( hFont );
          }
-         SendMessage( hWnd, CB_SETDROPPEDWIDTH, ( WPARAM ) NewLongComboWidth + 100 /* LongComboWidth + 100 */, 0 );
+         SendMessage( hWnd, CB_SETDROPPEDWIDTH, ( WPARAM ) nMaxWidth + 100, 0 );
 
          hb_gt_wvw_AddControlHandle( wvw_win, WVW_CONTROL_COMBOBOX, hWnd, nCtrlId, hb_param( 6, HB_IT_EVALITEM ),
                                      rXB, rOffXB, hb_parnidef( 9, WVW_CB_KBD_STANDARD ) );
@@ -491,8 +491,8 @@ HB_FUNC( WVW_CBISFOCUSED )
 /* wvw_cbEnable( [nWinNum], nComboId, [lEnable] )
  * enable/disable button nComboId on window nWinNum
  *(lEnable defaults to .T., ie. enabling the combobox)
- * return previous state of the combobox (TRUE:enabled FALSE:disabled)
- *(if nComboId is invalid, this function returns FALSE too)
+ * return previous state of the combobox (.T.: enabled .F.: disabled)
+ *(if nComboId is invalid, this function returns .F. too)
  */
 HB_FUNC( WVW_CBENABLE )
 {
@@ -683,18 +683,18 @@ HB_FUNC( WVW_CBGETCURTEXT )
 
    if( wvw_ctl )
    {
-      int iCurSel  = ( int ) SendMessage( wvw_ctl->hWnd, CB_GETCURSEL, 0, 0 );
-      int iTextLen = ( int ) SendMessage( wvw_ctl->hWnd, CB_GETLBTEXTLEN, ( WPARAM ) iCurSel, 0 );
-      if( iTextLen == CB_ERR )
+      int iCurSel = ( int ) SendMessage( wvw_ctl->hWnd, CB_GETCURSEL, 0, 0 );
+      HB_SIZE nTextLen = ( HB_SIZE ) SendMessage( wvw_ctl->hWnd, CB_GETLBTEXTLEN, ( WPARAM ) iCurSel, 0 );
+      if( nTextLen == ( HB_SIZE ) CB_ERR )
          hb_retc_null();
       else
       {
-         LPTSTR lptstr = ( LPTSTR ) hb_xgrab( ( iTextLen + 1 ) * sizeof( TCHAR ) );
+         LPTSTR lptstr = ( LPTSTR ) hb_xgrab( ( nTextLen + 1 ) * sizeof( TCHAR ) );
 
          if( SendMessage( wvw_ctl->hWnd, CB_GETLBTEXT, ( WPARAM ) iCurSel, ( LPARAM ) lptstr ) == CB_ERR )
             hb_retc_null();
          else
-            HB_RETSTRLEN( lptstr, iTextLen );
+            HB_RETSTRLEN( lptstr, nTextLen );
 
          hb_xfree( lptstr );
       }

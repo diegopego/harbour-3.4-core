@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,15 +55,15 @@
 #define WVT_MAX_COLS                512
 #define WVT_MAX_WINDOWS             256
 #if defined( HB_OS_WIN_CE )
-   #define WVT_DEFAULT_ROWS         15
-   #define WVT_DEFAULT_COLS         50
-   #define WVT_DEFAULT_FONT_HEIGHT  12
-   #define WVT_DEFAULT_FONT_WIDTH   8
+#  define WVT_DEFAULT_ROWS          15
+#  define WVT_DEFAULT_COLS          50
+#  define WVT_DEFAULT_FONT_HEIGHT   12
+#  define WVT_DEFAULT_FONT_WIDTH    8
 #else
-   #define WVT_DEFAULT_ROWS         25
-   #define WVT_DEFAULT_COLS         80
-   #define WVT_DEFAULT_FONT_HEIGHT  16
-   #define WVT_DEFAULT_FONT_WIDTH   8
+#  define WVT_DEFAULT_ROWS          25
+#  define WVT_DEFAULT_COLS          80
+#  define WVT_DEFAULT_FONT_HEIGHT   16
+#  define WVT_DEFAULT_FONT_WIDTH    8
 #endif
 #define WVT_DEFAULT_FONT_NAME       "Courier New"
 
@@ -149,7 +149,7 @@ typedef struct
 
    PHB_GT_PARAMS  pPP;                      /* Presentation Parameters */
 
-   HB_BOOL   bTracking;                     /* To track if mouse has eneter or left the window area */
+   HB_BOOL   bTracking;                     /* To track if mouse has entered or left the window area */
    HB_BOOL   bResizing;                     /* To know when it is in resizing mode */
    int       width;
    int       height;

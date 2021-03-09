@@ -2,7 +2,9 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com> (setHeader(), attachFile(), detachFile(), getFileName(), isMultiPart(), getMultiParts())
+ * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com>
+ *   (setHeader(), attachFile(), detachFile(), getFileName(), isMultiPart(),
+ *   getMultiParts())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -305,7 +307,7 @@ METHOD ToString() CLASS TIPMail
       IF Empty( ::aAttachments )
          cRet += ::cBody + iif( ::lBodyEncoded, "", e"\r\n" )
       ELSE
-         // if there are attachements, the body of the message has to be treated as an attachment. [GD]
+         // if there are attachments, the body of the message has to be treated as an attachment. [GD]
          cRet += ;
             "--" + cBoundary + e"\r\n" + ;
             "Content-Disposition: inline" + e"\r\n" + ;
@@ -445,9 +447,9 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
       ELSE
          // nPos := nLinePos + 2
          /* 2004-05-04 - <maurilio.longo@libero.it>
-            Instead of testing every single line of mail until we find next boundary, if there is a boundary we
-            jump to it immediatly, this saves thousands of EOL test and makes splitting of a string fast
-          */
+            Instead of testing every single line of mail until we find next
+            boundary, if there is a boundary we jump to it immediately, this
+            saves thousands of EOL test and makes splitting of a string fast */
          nPos := ;
             iif( Empty( cSubBoundary ), ;
             iif( Empty( cBoundary ), ;
@@ -465,12 +467,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
    RETURN nPos
 
 METHOD MakeBoundary() CLASS TIPMail
-   RETURN ;
-      "=_0" + ;
-      StrZero( hb_randNum( 9999999999 ), 10, 0 ) + ;
-      StrZero( hb_randNum( 9999999999 ), 10, 0 ) + ;
-      "_TIP_" + ;
-      hb_TToS( hb_DateTime() )
+   RETURN Replicate( "-", 24 ) + hb_asciiLower( hb_StrToHex( hb_randStr( 8 ) ) )
 
 METHOD setHeader( cSubject, cFrom, xTo, xCC ) CLASS TIPMail
 
@@ -563,7 +560,7 @@ METHOD attachFile( cFileName ) CLASS TIPMail
 
    oAttach:setFieldPart( "Content-Disposition", "attachment" )
    oAttach:setFieldOption( "Content-Disposition", "filename", cBaseName )
-   oAttach:setFieldPart( "Content-Type", tip_FileMimeType( cFileName, "application/unknown" ) )
+   oAttach:setFieldPart( "Content-Type", hb_mimeFName( cFileName ) )
    oAttach:setFieldOption( "Content-Type", "name", cBaseName )
    IF hb_vfAttrGet( cFileName, @nAttr ) .AND. nAttr != 0
       oAttach:setFieldOption( "Content-Type", "x-unix-mode", hb_NumToHex( __tip_FAttrToUmask( nAttr ), 4 ) )
@@ -622,7 +619,7 @@ STATIC FUNCTION WordEncodeQ( cData, cCharset )
 
    IF ! Empty( cCharset )
 
-      /* TOFIX: Add support to handle long string. */
+      /* FIXME: Add support to handle long string. */
 
       cString := ""
       FOR EACH c IN cData  /* FOR EACH on byte stream */

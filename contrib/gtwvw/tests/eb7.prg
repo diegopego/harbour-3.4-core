@@ -9,7 +9,7 @@
 
    (The editbox itself always accept input independent of WVW_INPUTFOCUS())
 
-   Some parts of this sample are modifications from MINIGUI's sourcecode
+   Some parts of this sample are modifications from MINIGUI's source code
    to handle "masks" during editbox input session:
      ProcessCharMask()
      CharMaskTekstOK()
@@ -208,7 +208,7 @@ STATIC FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, m
       mbText := {|| DToC( mxValue ) }
       EXIT
    OTHERWISE
-      // unsupported valtype
+      // unsupported type
       RETURN .F.
    ENDSWITCH
 
@@ -297,7 +297,7 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
       {|| ToCloseWindow( nwinnum, @lClosepermitted ) } )
    wvw_pbEnable( nwinnum, nclosebutton, .F. )
 
-   // register a keyhandler for WVW_INPFOCUS
+   // register a key handler for WVW_INPFOCUS
    inp_handler( nwinnum, {| n, ch | InpKeyHandler( n, ch, aEBGets, nOKbutton, nCancelbutton ) } )
 
    wvw_ebSetFocus( nwinnum, aEBGets[ 1 ][ __GET_NEBID ] )
@@ -313,7 +313,7 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
          lchangefocus := .T.
          DO CASE
          CASE nKeyStd == K_TAB .OR. nKeyStd == K_DOWN .OR. nKeyStd == K_ENTER
-            IF nFocus < ( nNumGets + 2 )  // incl buttons
+            IF nFocus < ( nNumGets + 2 )  // include buttons
                nFocus++
             ELSE
                nFocus := 1
@@ -878,9 +878,9 @@ STATIC FUNCTION IsBadDate( cBuffer )
 
    RETURN .F.
 
-/* --- WVW_INPUTFOCUS --- */
+/* --- WVW_INPUTFOCUS() --- */
 
-// this is a simple sample of WVW_INPUTFOCUS
+// this is a simple sample of WVW_INPUTFOCUS()
 // only handles WIN_WM_CHAR, thus not all input characters are accepted
 FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a public function */
 

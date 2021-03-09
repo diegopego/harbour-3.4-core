@@ -4,7 +4,7 @@
  * This Harbour script is part of the GNU Make-based build system.
  * WARNING: Running it separately is not supported.
  *
- * Copyright 2009-2017 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2017 Viktor Szakats (vsz.me/hb)
  * Copyright 2003 Przemyslaw Czerpak (druzus/at/priv.onet.pl) (embedded autoinstall bash script)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,9 +18,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their website at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -110,6 +110,7 @@ PROCEDURE Main( ... )
                mk_hb_vfCopyFile( "LICENSE.txt", tmp + hb_ps(), .T.,, .T. )
                mk_hb_vfCopyFile( ".github/CONTRIBUTING.md", tmp + hb_ps(), .T.,, .T. )
                mk_hb_vfCopyFile( "README.md", tmp + hb_ps(), .T.,, .T. )
+               mk_hb_vfCopyFile( "CODE_OF_CONDUCT.md", tmp + hb_ps(), .T.,, .T. )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
@@ -184,8 +185,12 @@ PROCEDURE Main( ... )
          cDynVersionComp := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POSC" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXC" )
          cDynVersionless := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" )                               + GetEnvC( "HB_DYNLIB_EXT" )
 
-         mk_hb_vfLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionComp )
-         mk_hb_vfLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
+         IF ! cDynVersionFull == cDynVersionComp
+            mk_hb_vfLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionComp )
+         ENDIF
+         IF ! cDynVersionFull == cDynVersionless
+            mk_hb_vfLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
+         ENDIF
 
          DO CASE
          CASE hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
@@ -193,19 +198,22 @@ PROCEDURE Main( ... )
               hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
               hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
 
-            mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionless )
-            mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionComp )
+            IF ! cDynVersionFull == cDynVersionless
+               mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionless )
+            ENDIF
+            IF ! cDynVersionFull == cDynVersionComp
+               mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionComp )
+            ENDIF
             mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionFull )
 
          CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
-            /* TOFIX: Rewrite this in .prg:
-               ld="/usr/lib"
-               if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
-                  then
-                     mkdir -p ${HB_INST_PKGPREF}$ld
-                     ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$ll
-                     ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$l
-                  fi
+            /* FIXME: Rewrite this in .prg:
+               ld='/usr/lib'
+               if [ -n "${HB_INST_PKGPREF}" ] || [ -w "${ld}" ]; then
+                 mkdir -p "${HB_INST_PKGPREF}${ld}"
+                 ln -sf "../local/harbour/lib/${l}" "${HB_INST_PKGPREF}${ld}/${ll}"
+                 ln -sf "../local/harbour/lib/${l}" "${HB_INST_PKGPREF}${ld}/${l}"
+               fi
             */
          ENDCASE
       ENDIF
@@ -259,7 +267,6 @@ PROCEDURE Main( ... )
 
             mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7za" ) + ;
                " a -bd -r -mx" + ;
-               " -xr!*.tds -xr!*.exp" + ;  /* for win/bcc */
                " " + FNameEscape( tmp ) + ;
                " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" )
 
@@ -274,7 +281,7 @@ PROCEDURE Main( ... )
             ELSEIF Empty( query_stdout( "tar --version" ) )
                cBin_Tar := ""
             ELSEIF "bsdtar" $ query_stdout( "tar --version" )
-               /* tar is mapped to bsdtar starting macOS 10.6 */
+               /* tar is mapped to bsdtar starting Mac OS X 10.6 */
                lGNU_Tar := .F.
             ENDIF
 
@@ -460,17 +467,17 @@ STATIC FUNCTION sfx_tgz_sh()
 #pragma __cstream | RETURN %s
 #!/bin/sh
 if [ "$1" = '--extract' ]; then
-   tail -c %1$d "$0" > "%2$s"
-   exit
+  tail -c %1$d "$0" > '%2$s'
+  exit
 fi
 if [ "$(id -u)" != 0 ]; then
-   echo 'This package has to be installed from root account.'
-   exit 1
+  echo 'This package has to be installed from root account.'
+  exit 1
 fi
 echo 'Do you want to install Harbour (y/n)'
 read ASK
 if [ "${ASK}" != 'y' ] && [ "${ASK}" != 'Y' ]; then
-   exit 1
+  exit 1
 fi
 ( tail -c %1$d "$0" | gzip -cd | ( cd /; tar xvpf - ) )%3$s
 exit $?
@@ -630,15 +637,13 @@ STATIC FUNCTION unix_name()
    DO CASE
    CASE GetEnvC( "HB_PLATFORM" ) == "dos" ; RETURN "djgpp"
    CASE GetEnvC( "HB_PLATFORM" ) == "win" ; RETURN GetEnvC( "HB_COMPILER" )
-   CASE ! Empty( tmp := query_rpm( "mandriva-release-One", "mdv" ) ) ; RETURN tmp
-   CASE ! Empty( tmp := query_rpm( "mandriva-release"    , "mdv" ) ) ; RETURN tmp
-   CASE ! Empty( tmp := query_rpm( "redhat-release"      , "rh"  ) ) ; RETURN tmp
-   CASE ! Empty( tmp := query_rpm( "fedora-release"      , "fc"  ) ) ; RETURN tmp
-   CASE ! Empty( tmp := query_rpm( "suse-release"        , "sus" ) ) ; RETURN tmp
-   CASE ! Empty( tmp := query_rpm( "openSUSE-release"    , "sus" ) ) ; RETURN tmp
-   /* TODO: Rewrite this in Harbour */
-   CASE hb_vfExists( "/etc/pld-release" )
-      RETURN "" /* cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/' */
+   CASE ! Empty( tmp := query_rpm( "fedora-release"   , "fc"  ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "epel-release"     , "el"  ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "centos-release"   , "el"  ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "suse-release"     , "sus" ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "openSUSE-release" , "sus" ) ) ; RETURN tmp
+   CASE ! Empty( tmp := query_rpm( "redhat-release"   , "rh"  ) ) ; RETURN tmp
+   CASE ! Empty(        query_rpm( "system-release"   , ""    ) ) ; RETURN "amzn1"
    ENDCASE
 
    RETURN StrTran( Lower( query_stdout( "uname -s" ) ), " ", "_" )
@@ -660,7 +665,7 @@ STATIC FUNCTION mk_extern_core()
    IF GetEnvC( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
       ! Empty( GetEnvC( "HB_DYNLIB_BASE" ) )
 
-      /* TOFIX: Use list of libs instead of dynamic lib */
+      /* FIXME: Use list of libs instead of dynamic lib */
       IF ( aExtern := __hb_extern_get_list( hb_DirSepToOS( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" ) ) ) != NIL
 
          OutStd( "! Generating core extern headers..." + hb_eol() )
@@ -687,7 +692,7 @@ STATIC FUNCTION GetEnvC( cEnvVar )
 
    RETURN s_hEnvCache[ cEnvVar ] := GetEnv( cEnvVar )
 
-STATIC PROCEDURE mk_hbr( cDestDir )
+STATIC FUNCTION mk_hbr( cDestDir )
 
    LOCAL hAll := { => }
 
@@ -695,7 +700,9 @@ STATIC PROCEDURE mk_hbr( cDestDir )
    LOCAL aFile
    LOCAL cFileName
 
-   FOR EACH aFile IN hb_vfDirectory( cDir + hb_osFileMask(), "D" )
+   LOCAL cOutput, cEOL
+
+   FOR EACH aFile IN ASort( hb_vfDirectory( cDir + hb_osFileMask(), "D" ),,, {| tmp1, tmp2 | tmp1[ F_NAME ] < tmp2[ F_NAME ] } )
       IF aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".."
       ELSEIF "D" $ aFile[ F_ATTR ]
          IF hb_vfExists( cFileName := cDir + aFile[ F_NAME ] + hb_ps() + aFile[ F_NAME ] + ".hbx" )
@@ -704,9 +711,15 @@ STATIC PROCEDURE mk_hbr( cDestDir )
       ENDIF
    NEXT
 
-   mk_hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", hb_Serialize( hAll, HB_SERIALIZE_COMPRESS ) )
+#if 0
+   cOutput := hb_Serialize( hAll, HB_SERIALIZE_COMPRESS )
+#else
+   cEOL := Set( _SET_EOL, Chr( 10 ) )
+   cOutput := hb_jsonEncode( hAll, .T. )
+   Set( _SET_EOL, cEOL )
+#endif
 
-   RETURN
+   RETURN mk_hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", cOutput )
 
 STATIC FUNCTION LoadHBX( cFileName, hAll )
 
@@ -761,7 +774,9 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
 
    /* NOTE: non-gcc extractor configs don't support dynamic libs as input. */
    DO CASE
-   CASE "|" + GetEnv( "HB_COMPILER" ) + "|" $ "|gcc|mingw|mingw64|djgpp|"
+   CASE "|" + GetEnv( "HB_COMPILER" ) + "|" $ "|clang|clang64|" .AND. GetEnv( "HB_PLATFORM" ) == "win"
+      cCommand := "llvm-nm -g --defined-only -C {I}"
+   CASE "|" + GetEnv( "HB_COMPILER" ) + "|" $ "|gcc|mingw|mingw64|clang|djgpp|"
       cCommand := "nm -g" + iif( GetEnv( "HB_PLATFORM" ) == "darwin", "", " --defined-only -C" ) + " {I}"
    CASE "|" + GetEnv( "HB_COMPILER" ) + "|" $ "|msvc|msvc64|pocc|pocc64|"
       IF "|" + GetEnv( "HB_COMPILER" ) + "|" $ "|msvc|msvc64|"
@@ -855,7 +870,7 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cFile, /* @ */ aInclude, /* @ *
       ENDIF
       IF ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
-            hDynamic[ Upper( tmp[ 2 ] ) ] := tmp[ 2 ]
+            hDynamic[ hb_asciiUpper( tmp[ 2 ] ) ] := tmp[ 2 ]
          NEXT
       ENDIF
    ENDIF
@@ -947,10 +962,10 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
       NEXT
    ENDIF
    FOR EACH tmp IN aExtern
-      IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp, .T. ) .AND. ;
-         ! hb_WildMatch( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp, .T. ) .AND. ;
+      IF ! hb_WildMatchI( "HB_GT_*_DEFAULT", tmp, .T. ) .AND. ;
+         ! hb_WildMatchI( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp, .T. ) .AND. ;
          AScan( aExclude, {| flt | hb_WildMatchI( flt, tmp, .T. ) } ) == 0
-         cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + cEOL
+         cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, hb_asciiLower( tmp ) ) + cEOL
       ENDIF
    NEXT
 

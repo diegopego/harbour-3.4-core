@@ -3,7 +3,7 @@
  *
  * Copyright 2000-2001 Dan Levitt <dan@boba-fett.net>
  * Copyright 2004-2005 Maurilio Longo <maurilio.longo@libero.it>
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,21 +54,18 @@
 
 #include "hbcom.ch"
 
-
-#define TPFP_NAME          1               /* Structure of ports array */
+#define TPFP_NAME          1  /* Structure of ports array */
 #define TPFP_HANDLE        2
 #define TPFP_BAUD          3
 #define TPFP_DBITS         4
 #define TPFP_PARITY        5
 #define TPFP_SBITS         6
-#define TPFP_OC            7               /* Open/Close Flag */
+#define TPFP_OC            7  /* Open/Close Flag */
 #define TPFP_INBUF         8
-#define TPFP_INBUF_SIZE    9               /* Size of input buffer */
+#define TPFP_INBUF_SIZE    9  /* Size of input buffer */
 
-
-THREAD STATIC t_aPorts               // Array with port info
-THREAD STATIC t_nErrorCode := 0      // Error code from last operation, 0 if no error
-
+THREAD STATIC t_aPorts           // Array with port info
+THREAD STATIC t_nErrorCode := 0  // Error code from last operation, 0 if no error
 
 FUNCTION tp_baud( nPort, nNewBaud )
 
@@ -372,15 +369,18 @@ PROCEDURE tp_clrkbd()
    RETURN
 
 FUNCTION tp_crc16( cString )
-   RETURN hb_ByteSwapW( hb_CRCCT( cString ) )   /* swap lo and hi bytes */
+   RETURN hb_ByteSwapW( hb_CRCCT( cString ) )  /* swap lo and hi bytes */
 
 FUNCTION tp_crc32( cString )
    RETURN hb_CRC32( cString )
 
-FUNCTION tp_waitfor( ... ) /* nPort, nTimeout, acList|cString..., lIgnorecase */
+FUNCTION tp_waitfor( ... )  /* nPort, nTimeout, acList|cString..., lIgnorecase */
 
    LOCAL aParam := hb_AParams()
-   LOCAL nPort // , nTimeout, lIgnorecase
+   LOCAL nPort
+#if 0
+   LOCAL nTimeout, lIgnorecase
+#endif
 
    nPort := aParam[ 1 ]
 
@@ -441,8 +441,8 @@ FUNCTION tp_waitfor( ... ) /* nPort, nTimeout, acList|cString..., lIgnorecase */
 
    RETURN 0
 
-/* We cannot set, well, _I_ think we cannot, CTS without setting RTS flowcontrol, so this
-   function and tp_ctrlrts() do the same thing, that is set/reset CRTSCTS flowcontol */
+/* We cannot set, well, _I_ think we cannot, CTS without setting RTS flow control, so this
+   function and tp_ctrlrts() do the same thing, that is set/reset CRTSCTS flow contol */
 FUNCTION tp_ctrlcts( nPort, nNewCtrl )
 
    LOCAL nCurValue
@@ -620,7 +620,7 @@ INIT PROCEDURE _tpinit()
    IF t_aPorts == NIL
       t_aPorts := Array( TP_MAXPORTS )
       FOR EACH x IN t_aPorts
-         // / port name, file handle, baud, data bits, parity, stop bits, Open?, input buffer, input buff.size
+         // port name, file handle, baud, data bits, parity, stop bits, Open?, input buffer, input buff.size
          x := { "", -1, 1200, 8, "N", 1, .F., "", 0 }
       NEXT
    ENDIF
@@ -662,10 +662,10 @@ FUNCTION tp_outchrs()
 FUNCTION tp_keybd()
    RETURN 0
 
-// / tp_debug is not a real TP function.  I included it so you can define your own debug
+// / tp_debug() is not a real TP function.  I included it so you can define your own debug
 // / output function.
 // / the point of the first parameter is a "debug level".  I keep a system variable for how
-// / much debuggning output is wanted and if the tp_debug parameter is a LOWER number than
+// / much debugging output is wanted and if the tp_debug() parameter is a LOWER number than
 // / the global debug level I print the message.  Since I don't have your system globals,
 // / I will ignore the first parameter and always print it.
 // / I recommend you modify this function to suit your own debugging needs

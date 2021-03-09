@@ -68,11 +68,11 @@ sensitive file systems what can be seen in above example where it converts
 For users which have old Clipper code written for DOS file systems with
 mixed upper and lower letters in file names used directly or indirectly
 by procedure name, Harbour provides compile time switches which enable
-automatic filename conversions for all files opened by compiler:
-      -fn[:[l|u]|-]    set filename casing (l=lower u=upper)
+automatic file name conversions for all files opened by compiler:
+      -fn[:[l|u]|-]    set file name casing (l=lower u=upper)
       -fd[:[l|u]|-]    set directory casing (l=lower u=upper)
       -fp[:<char>]     set path separator
-      -fs[-]           turn filename space trimming on or off (default)
+      -fs[-]           turn file name space trimming on or off (default)
 This functionality is also local to Harbour so cannot be used with xHarbour
 as workaround for above problem though it should be easy to add it to this
 compiler in the future.
@@ -96,7 +96,7 @@ file system(s) and with different OS(s).
          FOR EACH a, b, c IN aVal, cVal, hVal
             ? a, b, c
          NEXT
-   b) it allows to set descending order by DESCEND flag, f.e.:
+   b) it allows to set descending order by DESCEND flag, e.g.:
          FOR EACH a, v IN aVal, cVal DESCEND
             ? a, b
          NEXT
@@ -104,7 +104,7 @@ file system(s) and with different OS(s).
          FOR EACH x IN { "ABC" => 123, "ASD" => 456, "ZXC" => 789 }
             ? x, "@", x:__enumKey()
          NEXT
-   d) it allows to assign string items, f.e.:
+   d) it allows to assign string items, e.g.:
          s := "abcdefghijk"
          FOR EACH c IN @s
             IF c $ "aei"
@@ -114,7 +114,7 @@ file system(s) and with different OS(s).
          ? s      // AbcdEfghIjk
    e) it gives OOP interface to control enumerator variables what
       is very important when more then one variable is iterated or
-      when FOR EACH is called recursively, f.e.:
+      when FOR EACH is called recursively, e.g.:
          hVal := { "ABC" => 123, "ASD" => 456, "ZXC" => 789 }
          FOR EACH x IN hVal
             ? x:__enumIndex(), ":", x:__enumKey(), "=>", x:__enumValue(), ;
@@ -126,7 +126,7 @@ file system(s) and with different OS(s).
       implement many different enumeration algorithms depending on used
       data
    g) it does not have any hardcoded limitations for recursive calls
-      (it's limited only by available memory and HVM stack size), f.e.:
+      (it's limited only by available memory and HVM stack size), e.g.:
          proc main()
             p( 0 )
          return
@@ -144,7 +144,7 @@ file system(s) and with different OS(s).
 
 2. WITH OBJECT / END[WITH]
    In Harbour it does not have any hardcoded limitations for recursive
-   calls (it's limited only by available memory and HVM stack size), f.e.:
+   calls (it's limited only by available memory and HVM stack size), e.g.:
       proc main()
          p( 0 )
       return
@@ -171,7 +171,7 @@ file system(s) and with different OS(s).
    reused for all statements so speed improvement is relatively
    small.
    In xHarbour instead of OTHERWISE the DEFAULT clause is used.
-   As SWITCH values Harbour supports integer numbers and strings, f.e.:
+   As SWITCH values Harbour supports integer numbers and strings, e.g.:
       switch x
          case 1         ; [...]
          case 10002     ; [...]
@@ -206,25 +206,25 @@ different way which does not cause any overhead and slowness for other code.
 =================================
 Both compilers support compile time extended codeblocks which allow
 to use statements but with a little bit different syntax. Harbour uses
-standard Clipper codeblock delimiters {}, f.e.:
+standard Clipper codeblock delimiters {}, e.g.:
       ? Eval( {| p1, p2, p3 |
                 ? p1, p2, p3
                 return p1 + p2 + p3
               }, 1, 2, 3 )
-and xHarbour <>, f.e.:
+and xHarbour <>, e.g.:
       ? Eval( <| p1, p2, p3 |
                 ? p1, p2, p3
                 return p1 + p2 + p3
               >, 1, 2, 3 )
 
 In Harbour extended codeblocks works like nested functions and supports
-all function attributes, f.e. they can have own static variables or
+all function attributes, e.g. they can have own static variables or
 other declarations which are local to extended codeblocks only and
 do not effect upper function body.
 In xHarbour the compiler was not fully updated for such functionality
 and extended codeblocks were added to existing compiler structures what
 causes that not all language constructs work in extended codeblocks
-and creates a set of very serious compiler bugs, f.e., like in this code
+and creates a set of very serious compiler bugs, e.g., like in this code
 with syntax errors but which is compiled by xHarbour without even single
 warning giving unexpected results at runtime:
       #ifndef __XHARBOUR__
@@ -255,13 +255,13 @@ Both compilers have support for hash arrays. They are similar to
 normal arrays but also allow to use non integer values as indexes
 like string, date, non integer number or pointer (in Harbour) items.
 They can be created using => for list of keys and values enclosed
-inside {}, f.e.:
+inside {}, e.g.:
       hVal := { "ABC"    => 123.45, ;
                 100.1    => Date(), ;
                 100.2    => 10,     ;
                 100      => 5,      ;
                 Date()-1 => .t. }
-and then items can be accessed using [] operator, f.e.:
+and then items can be accessed using [] operator, e.g.:
       ? hVal[ "ABC" ]      // 123.45
       ? hVal[ 100 ]        // 5
       ? hVal[ Date()-1 ]   // .t.
@@ -270,18 +270,18 @@ and then items can be accessed using [] operator, f.e.:
 
 By default hash items in both compiler support automatic adding new elements
 on assign operation. It can be disabled using one of hash item functions.
-Harbour has additional extension which allows to enable autoadd with default
+Harbour has additional extension which allows to enable auto-add with default
 values also for access operation and reference operator. It also supports
 well passing hash array items by reference and has some other minor
 extensions.
 
-xHarbour does not support autoadd on access or reference operations and
+xHarbour does not support auto-add on access or reference operations and
 passing hash array items by reference does not work (see passing array and
 hash item by reference).
 
 Both compilers have set of functions to make different operations on hash
 arrays which give similar functionality. In Harbour they use HB_H prefix
-(f.e. hb_HScan()) in xHarbour H prefix (f.e. HScan())
+(e.g. hb_HScan()) in xHarbour H prefix (e.g. HScan())
 
 xHarbour has additional functionality which can be enabled for each hash
 array using HSetAACompatibility() function. It's an index where is stored
@@ -313,7 +313,7 @@ In xHarbour the behavior of references stored in array is reverted in
 comparison to Clipper or Harbour.
 In Clipper and Harbour VM executing code like:
          aVal[ 1 ] := 100
-clears unconditionally 1-st item in aVal array and assigns to it value 100.
+clears unconditionally 1st item in aVal array and assigns to it value 100.
 xHarbour checks if aVal[ 1 ] is an reference and in such case it resolves
 the reference and then assign 100 to the destination item.
 On access Clipper and Harbour VM executing code like:
@@ -347,7 +347,7 @@ but xHarbour:
       A B C
 
 It's not Clipper compatible so in some cases it may cause portability
-problems. F.e. code like above was used in Clipper as workaround for
+problems. E.g. code like above was used in Clipper as workaround for
 limited number of parameters (32 in Clipper). But it allows to directly
 assign items of arrays returned by hb_AParams() and updating corresponding
 variables passed by references (see functions with variable number of
@@ -355,7 +355,7 @@ parameters below).
 Anyhow the fact that xHarbour does not have '...' operator which can
 respect existing references in passed parameters and does not support
 named parameters in functions with variable number of parameters causes
-that reverted references introduce limitation, f.e. it's not possible
+that reverted references introduce limitation, e.g. it's not possible
 to make code like:
    func f( ... )
       local aParams := hb_AParams()
@@ -374,7 +374,7 @@ which will respect references in parameters passed to f() function.
 
 ###    PASSING ARRAY AND HASH ITEMS BY REFERENCE    ###
 =======================================================
-Harbour supports passing array and hash items by reference, f.e.:
+Harbour supports passing array and hash items by reference, e.g.:
       proc main()
          local aVal := { "abc", "klm", "xyz" }, ;
                hVal := { "qwe"=>"123", "asd"=>"456", "zxc"=>"789" }
@@ -433,7 +433,7 @@ created. It's potentially very serious problem which have to be resolved
 to avoid internal VM structure corruption. In Clipper, Harbour and
 xHarbour special mechanism is used in such situation. Local variables
 are "detached" from VM stack so they are still accessible after leaving
-the function, f.e.:
+the function, e.g.:
       proc make_cb()
          local n := 123
          return {|| ++n  }
@@ -627,10 +627,10 @@ Harbour and xHarbour correctly report compile time error for it.
 ==========================================================
 Both compilers support them though xHarbour is limited to all parameters
 and does not support unnamed parameters. In Harbour you can declare some
-named parameters and then unnamed just like in many other languages, f.e.:
+named parameters and then unnamed just like in many other languages, e.g.:
       func f( p1, p2, p3, ... )
 The unnamed parameters can be used in different statements passing them
-by '...' operator, f.e. as array items:
+by '...' operator, e.g. as array items:
       proc main()
          AEval( F( "1", "2", "A", "B", "C" ), {|x, i| QOut( i, x ) } )
       func f( p1, p2, ... )
@@ -653,7 +653,7 @@ or as function parameters:
          QOut( "[" + msg +"]: ", ... )
 
 The '...' operator saves references when push parameters and it can be
-used also in codeblocks, f.e.:
+used also in codeblocks, e.g.:
       bCode := {| a, b, c, ... | QOut( a, b, c ), QOut( "[", ..., "]" ) }
 
 All parameters can be accessed also using hb_AParams() function but
@@ -684,7 +684,7 @@ passed parameters. This code illustrates it:
          ? ProcName()+"(), parameters:", PCount()
          AEval( hb_AParams(), {|x,i| QOut(i,"=>",x) } )
 
-In xHarbour it's only possible to declare all parameters as unnamed, f.e.:
+In xHarbour it's only possible to declare all parameters as unnamed, e.g.:
       func f( ... )
 and then access them using hb_AParams() or PValue() (in Harbour it's called
 hb_PValue()) function. There is no support for named parameters and ...
@@ -758,17 +758,17 @@ Many people do not know about this functionality in Clipper and Harbour
 and are quite often surprised when hearing about it.
 Harbour offers two compiler switches to control this feature. It can be
 completely disabled by -km compiler switch.
-   -km => turn off macrotext substitution
+   -km => turn off macro-text substitution
 When this switch is used for constant strings with "&" character inside
-faster code is generated which does not activate macrocompiler at runtime
+faster code is generated which does not activate macro-compiler at runtime
 so they are taken as is. This switch does not affect real macros.
 It only changes the runtime behavior of strings constants with "&"
-character inside (macrotext).
+character inside (macro-text).
 The second switch -kd extends above functionality and allows to use
-macrotexts and macros with declared symbols:
+macro-texts and macros with declared symbols:
    -kd => accept macros with declared symbols
 It means that also fields, local and static variables can be used in
-macrotexts and macros.
+macro-texts and macros.
 The above example compiled with -kd switch does not generate compile
 time error and final application shows "text" on the screen.
 When -km switch is used then "&var" is shown by final application.
@@ -781,13 +781,13 @@ or:
 or:
    ? &cLocalPref.func&cPriv1( cPriv2, &cStatic )
 etc.
-If it's possible then for macrocodeblocks Harbour compiler tries to
+If it's possible then for macro-codeblocks Harbour compiler tries to
 generate early eval code in which macros are expanded when codeblock
 is created. Otherwise macros are expanded each time codeblock is
 evaluated.
-In xHarbour macrotext substitution for pure strings is always enabled
+In xHarbour macro-text substitution for pure strings is always enabled
 like in Clipper but it does not detect situation when fields, local
-or static variables are used in macrotexts so it does not generate
+or static variables are used in macro-texts so it does not generate
 compile time errors in such case.
 xHarbour has similar to -kd extension always enabled but limited to
 macro variables used inside code blocks and it works only if other
@@ -830,7 +830,7 @@ This example illustrates macros with declared symbols.
 Above code can be compiled by xHarbour but it will not work exploiting
 some problems in this compiler and generated code.
 
-This feature can be useful also in porting some other xbase compatible
+This feature can be useful also in porting some other xBase compatible
 code to Harbour because some compilers just like xHarbour accepted
 in some limited way officially unsupported syntax with macros using
 declared symbols.
@@ -863,17 +863,17 @@ depends on the used context.
 
 
 
-###    MULTIVALUE MACROS    ###
-===============================
-In the early Harbour days was added basic support for multivalue macros
-which can be evaluated to list of values, f.e.:
+###    MULTI-VALUE MACROS    ###
+================================
+In the early Harbour days was added basic support for multi-value macros
+which can be evaluated to list of values, e.g.:
       ? &("1,2,3")
 should show:
       1,  2,  3
 The implementation of this extension was not accepted by many of Harbour
 developers and it was one of the main reasons of the xHarbour fork.
 In Harbour it was later fully removed and implemented from scratch using
-different internal algorithms and structures. Now Harbour supports multivalue
+different internal algorithms and structures. Now Harbour supports multi-value
 macros in code like:
       proc main()
          local s1 := "'a', 'b', 'c'", s2 := "1,3", a
@@ -911,7 +911,7 @@ This code can be compiled and executed by both compilers:
 Warning!. There is one difference in above implementation introduced
 intentionally to Harbour. xHarbour never generates errors for wrong
 indexes in [] operator used for string items but simply returns "",
-f.e. add to above code:
+e.g. add to above code:
       ? ">" + s[0] + "<", ">" + s[1000] + "<"
 If [] operator is used for other type of items RTE is generated.
 Harbour will generate RTE in all cases. If someone needs strict XHB
@@ -923,7 +923,7 @@ for strings in XHB.LIB for his own preferences removing the RTE.
 ###    NEGATIVE INDEXES IN [] OPERATOR USED TO ACCESS ITEMS FROM TAIL    ###
 ============================================================================
 xHarbour supports negative indexes in [] operator. They are used
-to access items from tail, f.e. aVal[ -1 ] is the same as
+to access items from tail, e.g. aVal[ -1 ] is the same as
 aVal[ Len( aVal ) ] or ATail( aVal ).
 By default Harbour core code does not give such functionality but
 it has strong enough OOP API to allow adding such extension without
@@ -950,7 +950,7 @@ and string items.
 ###    USING ONE CHARACTER LENGTH STRING AS NUMERIC VALUE    ###
 ================================================================
 xHarbour uses one byte strings as numeric values corresponding to ASCII
-value of the byte in a string, f.e.:
+value of the byte in a string, e.g.:
       ? "A" * 10 // 650
 By default Harbour core code does not give such functionality but
 it has strong enough OOP API to allow adding such extension without
@@ -970,7 +970,7 @@ and gives the same results.
 Anyhow the emulation is not full here. It works only for .prg code.
 In xHarbour standard C API functions/macros were modified to use
 one byte string items as numbers. It's potential source of very serious
-problems, f.e. ordSetFocus("1") should chose index called "1" or maybe
+problems, e.g. ordSetFocus("1") should chose index called "1" or maybe
 index 49 or what should return AScan( {49,"1"}, "1" ) (1 or 2)? so
 Harbour developers decided to not add anything like that to core code
 so in Harbour functions written in C refuse to accept one byte string
@@ -1017,11 +1017,11 @@ each hash array separately.
 ###    $ OPERATOR EXTENSIONS (arrays and hashes)    ###
 =======================================================
 In Harbour and xHarbour $ operator can be used to check if some key
-or hash pair belongs to hash, f.e.:
+or hash pair belongs to hash, e.g.:
       ? "abc" $ { "qwe"=>100, "abc"=>200, "zxc"=>300 }
 In xHarbour $ operator can be also used to check if value belongs
 to array. It works like AScan() but with exact comparison for strings,
-f.e.:
+e.g.:
       ? "abc" $ { "qwe", "abc", "zxc" } // result .T.
       ? "a" $ { "qwe", "abc", "zxc", { "a" } } // result .F.
 By default Harbour core code does not allow to use $ operator for arrays
@@ -1044,10 +1044,10 @@ Warning! Xbase++ also supports $ operator for arrays but it makes non
          should create own code to overload $ operators used for arrays
          which will follow exact Xbase++ rules.
          CLIP also has some code for such extension but it has two bugs.
-         1-st is a semi bug: it uses non exact comparison but reverts
+         1st is a semi bug: it uses non exact comparison but reverts
          arguments so ` "abc" $ { "a" } ' gives .T.
-         2-nd which is critical: it has wrong stop condition so does
-         not stop scanning when locates 1-st matching item. It should
+         2nd which is critical: it has wrong stop condition so does
+         not stop scanning when locates 1st matching item. It should
          be fixed and I do not know what will be the final CLIP behavior.
 
 
@@ -1181,7 +1181,7 @@ are send to exactly the same object. This example illustrates it:
 
 In Harbour and Xbase++ function F() is executed only once for each
 expression but in Clipper and xHarbour once for 'assign', then twice for
-'predec' and finaly three times for 'postinc'. In this code function f()
+'predec' and finally three times for 'postinc'. In this code function f()
 returns the same object 'o' on each call so it's not a problem but code
 where the expression can return different objects will not work correctly
 so OOP programmers working with Clipper or xHarbour should remember about
@@ -1194,16 +1194,16 @@ it and not create such code.
 xHarbour supports application wide static variables called GLOBALs.
 To declare GLOBAL variable you have to put
       GLOBAL <varname> [ := <initValue> ]
-before the 1-st function in compiled .prg module and use -n compiler
+before the 1st function in compiled .prg module and use -n compiler
 switch. In xHarbour GLOBAL variables cannot be declared inside function
 body. If user wants to use GLOBAL variable in different .prg module
 then he has to add declaration
       GLOBAL EXTERNAL <varname>
-to his code before the 1-st function in compiled .prg module and use
+to his code before the 1st function in compiled .prg module and use
 -n compiler switch. Also, GLOBAL EXTERNAL declaration cannot be used
 in function body. Unlike other variables GLOBALs declared in xHarbour
 reserve used names so they cannot be used in the same module in local
-function declarations, f.e. xHarbour cannot compile code like:
+function declarations, e.g. xHarbour cannot compile code like:
       GLOBAL var
       GLOBAL EXTERNAL var2
       func F1( var )
@@ -1264,7 +1264,7 @@ In xHarbour DATE type was extended to hold information about time. Clipper
 compatible DATE arithmetic in HVM was modified to respect fractional part
 in numbers which was used for time part.
 The xHarbour DATETIME implementation introduces incompatibilities to Clipper
-(f.e. compare Clipper and xHarbour results in code like: '? Date() + 1.125'
+(e.g. compare Clipper and xHarbour results in code like: '? Date() + 1.125'
 so in some cases existing Clipper code has to be carefully adopted to work
 correctly with xHarbour but it's fully functional solution though it needs
 some minor fixes in conversions between datetime values and numbers.
@@ -1331,40 +1331,40 @@ gives the same results as:
 Harbour does not set any default date value when timestamp constant contains
 only time part.
 Harbour supports VFP syntax only in Compiler. It's not supported in
-macrocompiler and it can be disabled in the future so it's not suggested
+macro-compiler and it can be disabled in the future so it's not suggested
 to use with Harbour programs.
 
-Only Harbour supports date constant (in compiler and macrocompiler) in the
-form d"YYYY-MM-DD" f.e.:
+Only Harbour supports date constant (in compiler and macro-compiler) in the
+form d"YYYY-MM-DD" e.g.:
       d"2009-05-20"
 Also delimiter "/" or "." can be used instead of "-".
 
-Only Harbour supports timestamp constant (in compiler and macrocompiler)
+Only Harbour supports timestamp constant (in compiler and macro-compiler)
 in the form t"YYYY-MM-DD HH:MM:SS.fff"
 The exact accepted timestamp pattern is is:
       YYYY-MM-DD [H[H][:M[M][:S[S][.f[f[f[f]]]]]]] [PM|AM]
-f.e.:
+e.g.:
       tValue := t"2009-03-21 5:31:45.437 PM"
 or:
       YYYY-MM-DDT[H[H][:M[M][:S[S][.f[f[f[f]]]]]]] [PM|AM]
 with literal "T" as date and time part delimiters (XML timestamp format),
-f.e.:
+e.g.:
       tValue := t"2009-03-21T17:31:45.437"
 The following characters can be used as date delimiters: "-", "/", "."
 if PM or AM is used HH is in range < 1 : 12 > otherwise in range < 0 : 23 >
 
-Harbour compiler and macrocompiler support also date constants in the
-form 0dYYYYMMDD f.e.:
+Harbour compiler and macro-compiler support also date constants in the
+form 0dYYYYMMDD e.g.:
       0d20090520.
 
 
 
-###    EXTENDED LITERAL STRING IN COMPILER AND MACROCOMPILER    ###
-===================================================================
+###    EXTENDED LITERAL STRING IN COMPILER AND MACRO-COMPILER    ###
+====================================================================
 Harbour and xHarbour support extended strings with C like escaped values
-as e"...", f.e.:
+as e"...", e.g.:
       ? e"Helow\r\nWorld \x21\041\x21\000abcdefgh"
-They works in compiler and macrocompiler but xHarbour macrocompiler does
+They works in compiler and macro-compiler but xHarbour macro-compiler does
 not support strings with embedded 0 so they are not fully functional here.
 
 
@@ -1377,7 +1377,7 @@ SYMBOL objects in Class(y) and understands NAME, EXEC and EVAL messages.
 They can be created literally by compiler using @<funcName>(), f.e:
       funcSym := @Str()
 and in such case they also create explicit reference (link time binding)
-to given functions or by macro compiler, f.e.:
+to given functions or by macro compiler, e.g.:
       funcSym := &("@Upper()")
 what does not create any explicit bindings. This is simple code which
 uses symbol items:
@@ -1393,7 +1393,7 @@ xHarbour does not have such functionality though it can create at
 compile time function references using a little bit different syntax:
       ( @<funcName>([<anyExpList,...>]) )
 the different syntax is side effect of bugs in grammar rules only and
-probably will be fixed somewhere (macrocompiler does not support such
+probably will be fixed somewhere (macro-compiler does not support such
 syntax at all).
 In xHarbour above code creates pointer item ( ValType(funcSym) == "P" )
 which can be used in some cases like in Harbour but because xHarbour VM
@@ -1414,18 +1414,22 @@ Anyhow so far in both compilers it is only source code decoration and it's
 simply ignored during compilation. The syntax is similar but not the same.
 In VO:
    LOCAL var1, var2 AS LOGICAL
-means that var1 and var2 are character variables and are initialized to .F.
+means that var1 and var2 are logical variables and are initialized to .F.
 at runtime. In Harbour and xHarbour 'AS <type>' has to be repeated after
 each variable so in above code only var2 is strongly typed but not var1.
 To declare both variables as logical ones it should be changed to:
    LOCAL var1 AS STRING, var2 AS STRING
+and to make implicit initialization user has to write code like:
+   LOCAL var1 AS STRING := "foo", var2 AS STRING := "bar"
+instead of:
+   LOCAL var := "foo", var2 := "bar" AS STRING
 Such syntax is also not compatible with syntax of typed object variables
 (see TYPED OBJECT VARIABLES below) where
    VAR v1, v2 AS LOGICAL
 declares both variables as logical ones.
 This can strongly confuse users so in the future adding fully functional
 support for strong typed variables probably it will be changed to syntax
-compatible with other xBase compatible languages.
+compatible with other xBase-like languages.
 Now please remember that neither Harbour nor xHarbour make type validation
 during compilation and at runtime and typed variables are not implicitly
 initialized to empty value of given type.
@@ -1457,7 +1461,7 @@ declared in the same .prg module just like in xHarbour by using
 So in Harbour all scopes aspects are explicitly controlled by programmer
 and AFAIK there are no side effects forced by internal implementation.
 Important is also the fact in Harbour each codeblock block created explicitly
-or by macrocompiler inherits rights from functions when it was created
+or by macro-compiler inherits rights from functions when it was created
 and then has the same scope. It means that it's not possible to break scope
 protection using codeblocks and it's very important functionality for real
 private (hidden) data because it makes it accessible for codeblocks created
@@ -1468,8 +1472,8 @@ on module symbol table.
 
 
 
-###    OOP AND MULTIINHERITANCE    ###
-======================================
+###    OOP AND MULTI-INHERITANCE    ###
+=======================================
 Harbour and xHarbour support multiple inheritance just like Class(y).
 Anyhow only Harbour correctly resolves possible name conflicts
 by casting. xHarbour and Class(y) in Clipper does not work correctly
@@ -1536,8 +1540,8 @@ important thing.
 
 
 
-###    OOP AND PRIVATE/HIDDEN DATAs    ###
-==========================================
+###    OOP AND PRIVATE/HIDDEN DATA    ###
+=========================================
 In bigger projects where different programmers work on different classes
 which are later used as ancestors of some new classes it's extremely important
 to give support for real private (hidden) data for each class programmer
@@ -1548,13 +1552,13 @@ big projects such name conflicts can be nightmare a which eliminates some
 languages.
 
 Harbour resolves this problem automatically. All hidden variables and
-messages are automatically casted to the class which is the owner of
+messages are automatically cast to the class which is the owner of
 calling code. To make it working Harbour needs fully functional scope
-protection and multiinheritance (see OOP SCOPES and OOP AND MULTIINHERITANCE).
+protection and multi-inheritance (see OOP SCOPES and OOP AND MULTI-INHERITANCE).
 Everything is done automatically without any explicit casting or other
 then declaring variables or methods as HIDDEN source code modification.
 This code illustrates it. We have two classes and each of them has its own
-_private_ 'temp' instance variable and 'set' method. 3-rd class inherits
+_private_ 'temp' instance variable and 'set' method. 3rd class inherits
 from both of them and executes it's public methods which internally
 access hidden ones but without any explicit casting. In Harbour all is done
 automatically by HVM:
@@ -1670,7 +1674,7 @@ programmer should use:
       o := mycls():new( p1, p2, p3 )
 otherwise the code will not work with future Harbour versions supporting
 real class objects. Even if programmer do not plan to pass any parameters
-to constructor then he shold call :NEW() method:
+to constructor then he should call :NEW() method:
       o := mycls():new()
 and please remember that :NEW() will be class method so it should not
 be redefined as constructor in user class. Instead :INIT() method should
@@ -1740,7 +1744,7 @@ work in the future.
 
 ###    TYPED OBJECT VARIABLES    ###
 ====================================
-Harbour supports strong typed object variables, f.e.:
+Harbour supports strong typed object variables, e.g.:
       CREATE CLASS MyClass
          VAR   var1 AS INTVAR
          VAR   var2 AS NUMERIC
@@ -1761,12 +1765,12 @@ initialize numeric and logical values to 0 and .f.
 ================================
 Both Harbour and xHarbour support object destructors and both
 compilers uses reference counters and garbage collector to
-execute destructors. Anyhow the low level implementation is
+execute destructors. Anyhow the low-level implementation is
 different in the two compilers. In Harbour HVM is reentrant safe
 so the implementation of destructors is much simpler. It also
 keeps full control about reference counters and detects user
 code errors bound with complex items in .prg and C code what
-greatly helps to detect problems in user code or 3-rd party
+greatly helps to detect problems in user code or 3rd party
 libraries and gives protection against internal HVM memory
 corruption. In the last years it also helped to located few
 very hard to exploit bugs in core code.
@@ -1783,9 +1787,9 @@ protecting against corruption. The xHarbour version behavior
 is random because this .prg code corrupts internal HVM memory.
 It's possible that it will be executed without any visible
 errors or it will generate GPF or internal error. But in all
-cases it can be well seen using tools like valgrind or CodeGuard
+cases it can be well seen using tools like Valgrind or CodeGuard
 that it corrupts internal memory so the results are unpredictable.
-I.e. this is part of valgrind log generated during execution
+I.e. this is part of Valgrind log generated during execution
 of above destruct.prg compiled by xHarbour:
 
    ==22709== Invalid read of size 2
@@ -1829,7 +1833,7 @@ Harbour executes above code cleanly without any errors:
 Missing protection and error detection is not only problem for programmers.
 It also causes that in xHarbour core code few bad bugs have not been fixed
 so far though they exist for years. It also extremely time consuming problem
-for core developers when users or 3-rd party developers reports problems with
+for core developers when users or 3rd party developers reports problems with
 some memory corruption and it's necessary to locate the reason.
 I remember how much time I lost for such things working on xHarbour
 in the past so later when I moved to Harbour it was one of the main goal
@@ -1874,7 +1878,7 @@ are not planned to be part of Harbour core code.
 ###    ARRAY AND STRING PREALLOCATION    ###
 ============================================
 Both compilers uses array and string preallocation to optimize resize
-operation, f.e. in code like:
+operation, e.g. in code like:
       s := ""
       for i := 0 to 255
          s += Chr( i )
@@ -1882,7 +1886,7 @@ operation, f.e. in code like:
 or:
       a := {}
       for i := 0 to 255
-         AAdd( a, repl( Chr( i ), 5 ) )
+         AAdd( a, Replicate( Chr( i ), 5 ) )
       next
 the string inside 's' variable and array inside 'a' variable are not
 resized 256 times but much seldom. It gives noticeable speed improvement
@@ -1985,7 +1989,7 @@ anything like that at least as documented language extension.
 ========================
 xHarbour has compile time support for namespaces which uses by default
 static bindings with optional support for dynamic bindings in HVM which
-is necessary for .hrb and macrocompiler. To exchange information about
+is necessary for .hrb and macro-compiler. To exchange information about
 defined by user namespaces xHarbour generates <namespace>.xns files
 during compilation of .prg ones which define public functions in given
 namespace. These files are automatically included by xHarbour compiler
@@ -2133,7 +2137,7 @@ are thread local which ones are shared and how they are initialized:
          - math error handler and math error block
          - default macro compiler features setting (controlled by
            hb_SetMacro())
-         - RDDI_* settings in core RDDs (some 3-rd party RDDs may use
+         - RDDI_* settings in core RDDs (some 3rd party RDDs may use
            global settings)
          - thread static variables
          - SetKey() are reset to empty array (Clipper compatible automatic
@@ -2328,7 +2332,7 @@ instead of_SET_BACKGROUNDTICK.
 Harbour does not have such functionality and probably will not have in
 such form for the following reasons:
       1. it works only from HVM loop so it will not work for code which
-         does not use it, f.e. generated with -gc3 compiler switch
+         does not use it, e.g. generated with -gc3 compiler switch
       2. such implementation causes same speed overhead even if programmer
          does not use background tasks
       3. the frequency of executing background task is very irregular
@@ -2352,10 +2356,10 @@ and in such form it will never be supported by HVM because it can work
 only in some very limited situations and then can be source of very bad
 bugs like internal HVM memory corruption or absolutely unexpected runtime
 behaviors. Compiled PCODE contains references to symbol tables or even
-memory addresses (i.e. macrocompiled codeblocks). If application stores
+memory addresses (i.e. macro-compiled codeblocks). If application stores
 such codeblock in some external holder, i.e. memo file then after restoring
 by different instance of the same application memory addresses can be
-different so for macrocompiled codeblocks it's not safe at all. For
+different so for macro-compiled codeblocks it's not safe at all. For
 codeblocks compiled by compiler it can work until exactly the same
 application is used. But any modifications in the code can change
 symbol table so after restoring the result can be unpredictable.
@@ -2396,7 +2400,7 @@ file server on TCP IP socket.
 In Harbour it's possible to dynamically register many alternative
 RDD IO APIs and use them simultaneously in one application.
 HBNETIO library in Harbour implements this so without touching even
-single line in RDD code it works for all core RDDs and also 3-rd
+single line in RDD code it works for all core RDDs and also 3rd
 party ones if they use Harbour RDD IO API (hb_file*() functions).
 Additionally client and server code in HBNETIO are fully MT safe
 so can be used in MT programs without any problems.
@@ -2433,7 +2437,7 @@ Maximal NTX file size for standard NTX files is 4 GiB and it's limited
 by internal NTX structures. Enabling 64-bit locking in [x]Harbour change
 slightly used NTX format and increase maximum NTX file size to 4 TiB.
 The NTX format in [x]Harbour has also many other extensions like support
-for multitag indexes or using record number as hidden part of index key
+for multi-tag indexes or using record number as hidden part of index key
 and many others which are unique to [x]Harbour. In practice all of CDX
 extensions are supported by NTX in [x]Harbour.
 The NSX format in [x]Harbour is also limited by default to 4 GiB but like
@@ -2477,7 +2481,7 @@ supports few different regular expression libraries and it's possible to
 use platform or CRTL native libs or PCRE which is included in Harbour.
 Harbour always uses native for given library API. xHarbour supports only
 PCRE modified to use POSIX regex interface which does not support strings
-with embedded Chr(0) characters.
+with embedded Chr( 0 ) characters.
 
 Both compilers can store and reuse compiled regular expressions.
 xHarbour stores them in string items and Harbour in GC pointer items.
@@ -2488,13 +2492,13 @@ Portable code should respect these differences.
 ###    INET SOCKETS    ###
 ==========================
 Both compilers support IP4 sockets with similar .prg API created by
-Giancarlo Niccolai though both use different low level implementations.
+Giancarlo Niccolai though both use different low-level implementations.
 In xHarbour IP4 functions have Inet*() prefix.
 In Harbour they have hb_inet*() prefix in core code and xHarbour Inet*()
 functions are available in XHB library.
 
 Harbour has also public C socket API (hbsocket.h) which is not reduced
-to IP4 protocols only and is the base low level code used for .prg level
+to IP4 protocols only and is the base low-level code used for .prg level
 [hb_]inet*() function implementation. This socket implementation was
 rewritten from scratch, it's MT safe and was designed to hide platform
 differences in BSD socket implementation. It also works in DOS builds
@@ -2507,7 +2511,7 @@ This API is available for users also at PRG level by hb_socket*() functions.
 ==========================
 Harbour and xHarbour compilers have build-in support for
 internationalization (I18N) and it's enabled during compilation using
-the same compiler time switch -j[<file>] but the low level implementation
+the same compiler time switch -j[<file>] but the low-level implementation
 in compilers and at runtime is completely different.
 
 In xHarbour during compilation with -j switch compiler looks for all
@@ -2522,7 +2526,7 @@ This programs reads .hil file show all existing strings and allow to
 type translation for each existing string and then saves the translation
 table in files with .hit extension using another internal xHarbour binary
 format. At runtime application may load .hit file and then i18n() function
-will look if string passed as 1-st parameter exists in translation table
+will look if string passed as 1st parameter exists in translation table
 and if yes then it returns translated string and if not it returns original
 string. Only pure 1 to 1 translation exists without any extensions like
 context domains, support for plural forms or automatic CP translations.
@@ -2591,10 +2595,10 @@ to original ZLIB one.
 Harbour gives common multi-platform PRG and C level API for serial port
 communication by hb_com*() functions in core libraries. It also implements
 few other known in Clipper serial port interfaces in contrib libraries
-like CT3 COM_*() functions in hbct library or basic support for Telepathy
-interface in hbtpathy library. All such implementations use at low level
+like CT3 COM_*() functions in hbct library or basic support for Telepath(y)
+interface in hbtpathy library. All such implementations use at low-level
 code the core hb_com*() interface so they can work on all platforms.
-xHarbour CVS contains only telepath library with some very basic Telepathy
+xHarbour CVS contains only telepath library with some very basic Telepath(y)
 interface which is not available for all platforms.
 xHarbour.com distribute also library compatible with CT3 COM*() interface
 but only for MS-Windows builds.
@@ -2615,7 +2619,7 @@ It's guaranteed that any valid expressions not longer then 8 MiB will be
 cleanly compiled and executed by Harbour. It's possible to compile and
 execute longer expressions (in practice there is no maximal size limit)
 but in such case it's not guaranteed that all expressions can be compiled,
-f.e. macro expressions containing string constant values longer then 16 MiB
+e.g. macro expressions containing string constant values longer then 16 MiB
 cannot be compiled. It's only guaranteed that if Harbour cannot compile
 macro expression then it generates RT error and never generates broken
 code.
@@ -2647,7 +2651,7 @@ Harbour has compiler library which allows to integrate Harbour compiler
 with user applications and use it at runtime to compile new code which
 can be also immediately executed or dynamically registered as part of
 code. In Harbour compiler code is fully MT safe so the compiler library
-can be safely used in MT programs, f.e. for parallel compilation.
+can be safely used in MT programs, e.g. for parallel compilation.
 Now compiler library is on pure GPL license so any programs which wants
 to use it have to respect the GPL license too.
 
@@ -2710,7 +2714,7 @@ future.
 =========================
 Both compilers were ported to many different platforms on different hardware.
 The list of supported platforms is really long: different *nixes (Linux,
-macOS, SunOS, HP-UX, *BSD,...) on little and big endian 32 and 64-bit
+macOS, SunOS, HP-UX, *BSD,...) on little and big-endian 32 and 64-bit
 machines, DOS, OS2, Windows (32/64-bit) and WinCE (Harbour only).
 In practice they can be ported quite easy to nearly each OS and hardware
 if it passes two important conditions: it's ASCII based machine and has
@@ -2730,13 +2734,13 @@ attribute and does not remove it from returned values. It helps to
 keep code clean and locate places where string constant values
 are overwritten what is illegal. It also helps C compiler to better
 optimize the code because it has additional information that some
-variables/memory regions are readonly and cannot be modified during
+variables/memory regions are read-only and cannot be modified during
 code execution what can give some additional speed improvement.
 If some C code does not respect it then during compilation with
 Harbour header files C compilers usually generate warning and
 C++ ones errors, i.e. code like:
       char * pszValue = hb_parc( 1 );
-is wrong because hb_parc() returns pointer to readonly strings
+is wrong because hb_parc() returns pointer to read-only strings
 which cannot be changed by user code. So this code should be
 changed to:
       const char * pszValue = hb_parc( 1 );
@@ -2744,7 +2748,7 @@ Now if compiled code tries to make something like:
       pszValue[ index ] = 'X';
 what is illegal in Harbour, xHarbour and also in Clipper for pointers
 returned by _parc() function then compiler generate warning or error
-about writing to readonly location.
+about writing to read-only location.
 In summary it means that Harbour forces to keep code clean and use
 more strict declarations but xHarbour and Clipper don't and wrong
 code can be silently compiled without any warnings or errors.
@@ -2856,7 +2860,7 @@ activation in memory manager.
 These are only examples and anyone can find many other similar problems
 in xHarbour core code so in my opinion API separation with core code
 cleanup is something what has to be done in xHarbour in the future.
-Of course such separation does not mean that we can forbid 3-rd party
+Of course such separation does not mean that we can forbid 3rd party
 programmers to access HVM internals. Programmers creating code for Harbour
 can include before any other Harbour header files "hbvmint.h", i.e.:
       #include "hbvmint.h"
@@ -3526,7 +3530,7 @@ The last test we can make is scalability in real multi CPU environment.
    [ total real time: ]..........................................212.02
 
 As we can see in xHarbour we do not have any improvement executing MT
-programs on MultiCPU machines while in Harbour the speed is noticeably
+programs on multi-CPU machines while in Harbour the speed is noticeably
 better. It means that Harbour is quite well scalable and users should
 expect speed improvement executing MT parallel programs on multi CPU
 machines. For some programs like MT servers it may be critical - programs

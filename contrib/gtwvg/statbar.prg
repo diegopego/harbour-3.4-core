@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -98,7 +98,7 @@ METHOD WvgStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
       ::style += SBARS_SIZEGRIP
    ENDIF
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -125,7 +125,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_COMMAND
       IF HB_ISEVALITEM( ::sl_lbClick )
-         Eval( ::sl_lbClick, , , self )
+         Eval( ::sl_lbClick, , , Self )
          RETURN EVENT_HANDLED
       ENDIF
 
@@ -167,7 +167,7 @@ METHOD PROCEDURE WvgStatusBar:destroy()
    LOCAL i
 
    FOR EACH i IN ::aItems
-      /* TOFIX: Why was this left empty? */
+      /* FIXME: Why was this left empty? */
    NEXT
 
    ::wvgWindow:destroy()
@@ -184,7 +184,7 @@ METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
 
    LOCAL oPanel := WvgStatusBarPanel():new( cCaption, nStyle, cKey )
 
-   oPanel:oParent := self
+   oPanel:oParent := Self
    oPanel:index := ::numItems + 1
 
    IF wvg_StatusBarCreatePanel( ::hWnd, hb_defaultValue( nMode, 0 ) )

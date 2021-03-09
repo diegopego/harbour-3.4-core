@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,6 +44,8 @@
  *
  */
 
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapirdd.h"
 
 #if defined( HB_OS_WIN )
@@ -53,17 +55,57 @@
 #if ! defined( WIN32 ) && defined( HB_OS_WIN )
    #define WIN32
 #endif
-#if ! defined( unix ) && defined( HB_OS_UNIX )
+/* ads.h considers every Unixes Linux, and this breaks on darwin */
+#if ! defined( unix ) && defined( HB_OS_UNIX ) && ! defined( HB_OS_DARWIN )
    #define unix
 #endif
 #if ! defined( x64 ) && defined( HB_ARCH_64BIT )
    #define x64
 #endif
-#if defined( __WATCOMC__ ) || defined( __LCC__ ) || ( defined( __MINGW32__ ) && ! defined( _declspec ) )
+#if defined( __WATCOMC__ ) || ( defined( __MINGW32__ ) && ! defined( _declspec ) )
    #define _declspec( dllexport )  __declspec( dllexport )
 #endif
 
+/* Emulate types require by ads.h to make it possible to compile
+   the wrapper code on platforms not natively supported by ADS */
+#if ! defined( WIN32 ) && ! defined( unix )
+   #define WINAPI
+   #define FARPROC  void *
+   #define HWND     void *
+   typedef HB_U32          UNSIGNED32;
+   typedef HB_I32          SIGNED32;
+   typedef HB_U16          UNSIGNED16;
+   typedef HB_I16          SIGNED16;
+   typedef HB_U8           UNSIGNED8;
+   typedef HB_I8           SIGNED8;
+   typedef unsigned short  WCHAR;
+   typedef double          DOUBLE;
+   #if defined( HB_ARCH_64BIT )
+      #define __int64  HB_I64
+      typedef HB_U64        ADSHANDLE;
+      typedef HB_U64        UNSIGNED64;
+      typedef HB_I64        SIGNED64;
+   #else
+      typedef HB_ULONG      ADSHANDLE;
+      typedef HB_ULONGLONG  UNSIGNED64;
+      typedef HB_LONGLONG   SIGNED64;
+   #endif
+   #define RDDUNVRS_H
+   #define WCHAR_DEFINED
+   #define ADSHANDLE_DEFINED
+#endif
+
+#if defined( __clang__ )
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#  if defined( HB_OS_WIN ) && defined( HB_CPU_X86 )
+#     pragma GCC diagnostic ignored "-Wmissing-prototype-for-cc"
+#  endif
+#endif
 #include "ace.h"
+#if defined( __clang__ )
+#  pragma GCC diagnostic pop
+#endif
 
 /* Auto-detect ACE version. */
 #if   defined( ADS_ROOT_DD_ALIAS )
@@ -165,9 +207,9 @@ typedef ADSAREA * ADSAREAP;
 #define HB_RDD_ADS_VERSION_STRING  "ADS RDD 1.4"
 
 #if defined( HB_OS_WIN )
-   #define ADS_USE_OEM_TRANSLATION
+#  define ADS_USE_OEM_TRANSLATION
 #else
-   #undef ADS_USE_OEM_TRANSLATION
+#  undef ADS_USE_OEM_TRANSLATION
 #endif
 
 #define HB_ADS_PARCONNECTION( n )     ( ( ADSHANDLE ) hb_parnintdef( n, hb_ads_getConnection() ) )
@@ -194,8 +236,8 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
 
 #ifdef ADS_USE_OEM_TRANSLATION
    extern HB_BOOL hb_ads_bOEM;
-   extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE ulLen );
-   extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE ulLen );
+   extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE nLen );
+   extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE nLen );
    extern void    hb_adsOemAnsiFree( char * pcString );
 
    /* NOTE: Undocumented ACE function. */
@@ -211,9 +253,9 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
                                          UNSIGNED32 * pulLen );
 
 #else
-   #define hb_adsOemToAnsi( s, l )  ( ( char * ) HB_UNCONST( s ) )
-   #define hb_adsAnsiToOem( s, l )  ( ( char * ) HB_UNCONST( s ) )
-   #define hb_adsOemAnsiFree( s )
+#  define hb_adsOemToAnsi( s, l )  ( ( char * ) HB_UNCONST( s ) )
+#  define hb_adsAnsiToOem( s, l )  ( ( char * ) HB_UNCONST( s ) )
+#  define hb_adsOemAnsiFree( s )
 #endif
 
 HB_EXTERN_END

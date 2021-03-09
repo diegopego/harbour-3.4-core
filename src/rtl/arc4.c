@@ -37,19 +37,23 @@
  *
  * Here the stream cipher has been modified always to include the time
  * when initializing the state.  That makes it impossible to
- * regenerate the same random sequence twice, so this can't be used
+ * regenerate the same random sequence twice, so this cannot be used
  * for encryption, but will generate good random numbers.
  *
  * RC4 is a registered trademark of RSA Laboratories.
  */
 
-#include "arc4.h"
+#include "hbapi.h"
+#include "hbarc4.h"
 #include "hbdate.h"
 #include "hbthread.h"
 
 /* XXX: Check and possibly extend this to other Unix-like platforms */
 #if ( defined( HB_OS_BSD ) && ! defined( HB_OS_DARWIN ) ) || \
-   ( defined( HB_OS_LINUX ) && ! defined ( HB_OS_ANDROID ) && ! defined ( __WATCOMC__ ) )
+   ( defined( HB_OS_LINUX ) && \
+      ! defined( HB_OS_ANDROID ) && \
+      ! defined( __WATCOMC__ ) && \
+      ! defined( __EMSCRIPTEN__ ) )
 #  define HAVE_SYS_SYSCTL_H
 #  define HAVE_DECL_CTL_KERN
 #  define HAVE_DECL_KERN_RANDOM
@@ -59,9 +63,7 @@
 #endif
 
 #if defined( HB_OS_WIN )
-#  if ! defined( __TINYC__ )
-#     include <wincrypt.h>
-#  endif
+#  include <wincrypt.h>
 #elif defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
 #  include <sys/types.h>
 #else
@@ -166,7 +168,7 @@ static HB_ISIZ read_all( int fd, HB_U8 * buf, size_t count )
 }
 #endif /* HB_OS_UNIX */
 
-#if defined( HB_OS_WIN ) && ! defined( __DMC__ ) && ! defined( __TINYC__ )
+#if defined( HB_OS_WIN )
 
 #define TRY_SEED_MS_CRYPTOAPI
 static int arc4_seed_win( void )

@@ -2,7 +2,7 @@
  * The Eval API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_itemDo()/hb_itemDoC() (based on HB_DO() by Ryszard Glab))
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb) (hb_itemDo()/hb_itemDoC() (based on HB_DO() by Ryszard Glab))
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,7 +54,7 @@
 
 HB_BOOL hb_evalNew( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_evalNew(%p, %p)", pEvalInfo, pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_evalNew(%p, %p)", ( void * ) pEvalInfo, ( void * ) pItem ) );
 
    if( pEvalInfo )
    {
@@ -83,7 +83,7 @@ HB_BOOL hb_evalNew( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
 
 HB_BOOL hb_evalPutParam( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_evalPutParam(%p, %p)", pEvalInfo, pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_evalPutParam(%p, %p)", ( void * ) pEvalInfo, ( void * ) pItem ) );
 
    if( pEvalInfo && pItem && pEvalInfo->paramCount < HB_EVAL_PARAM_MAX_ )
    {
@@ -99,7 +99,7 @@ PHB_ITEM hb_evalLaunch( PHB_EVALINFO pEvalInfo )
 {
    PHB_ITEM pResult = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_evalLaunch(%p)", pEvalInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_evalLaunch(%p)", ( void * ) pEvalInfo ) );
 
    if( pEvalInfo )
    {
@@ -154,7 +154,7 @@ PHB_ITEM hb_evalLaunch( PHB_EVALINFO pEvalInfo )
 
 HB_BOOL hb_evalRelease( PHB_EVALINFO pEvalInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_evalRelease(%p)", pEvalInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_evalRelease(%p)", ( void * ) pEvalInfo ) );
 
    if( pEvalInfo )
    {
@@ -188,7 +188,7 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, HB_ULONG ulPCount, ... )
 {
    PHB_ITEM pResult = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemDo(%p, %lu, ...)", pItem, ulPCount ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemDo(%p, %lu, ...)", ( void * ) pItem, ulPCount ) );
 
    if( pItem )
    {
@@ -564,7 +564,7 @@ HB_BOOL hb_execFromArray( PHB_ITEM pParam )
    return HB_FALSE;
 }
 
-/* hb_ExecMsg( <sFuncSym>, <object>, [<params,...>] ) -> <xResult>
+/* hb_ExecMsg( <sFuncSym>, <object>, [<params,...>] ) --> <xResult>
  * Execute <sFuncSym> with <object> set as QSELF() value
  */
 HB_FUNC( HB_EXECMSG )

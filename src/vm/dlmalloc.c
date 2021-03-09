@@ -572,7 +572,7 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #endif /* WIN32 */
 
 #ifndef __OS2__
-#if defined(OS2) || defined(OS_2) || (defined(__EMX__) && !defined(__RSXNT__))
+#if defined(OS2) || defined(OS_2) || defined(__EMX__)
 #define __OS2__
 #endif
 #endif /* __OS2__ */
@@ -1460,6 +1460,11 @@ DLMALLOC_EXPORT int mspace_mallopt(int, int);
 #ifdef _MSC_VER
 #pragma warning( disable : 4146 ) /* no "unsigned" warnings */
 #endif /* _MSC_VER */
+#if defined(__GNUC__) && \
+      (__GNUC__ > 6 || (__GNUC__ == 6 && __GNUC_MINOR__ >= 1))
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-dereference"
+#endif
 #if !NO_MALLOC_STATS
 #include <stdio.h>       /* for printing in malloc_stats */
 #endif /* NO_MALLOC_STATS */

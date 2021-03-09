@@ -229,6 +229,29 @@ PROCEDURE Main()
       CASE nKeyStd == K_F7
          SetPaletteIndex()
 
+      CASE nKeyStd == K_ALT_F7
+
+         /* https://blogs.msdn.microsoft.com/commandline/2017/08/02/updating-the-windows-console-colors/ */
+         hb_gtInfo( HB_GTI_PALETTE, { ;
+            0x0C0C0C, ;
+            0xDA3700, ;
+            0x0EA113, ;
+            0xDD963A, ;
+            0x1F0FC5, ;
+            0x981788, ;
+            0x009CC1, ;
+            0xCCCCCC, ;
+            0x767676, ;
+            0xFF783B, ;
+            0x0CC616, ;
+            0xD6D661, ;
+            0x5648E7, ;
+            0x9E00B4, ;
+            0xA5F1F9, ;
+            0xF2F2F2 } )
+
+         DispScreen()
+
       CASE nKeyStd == K_F8
          Alert( "Menu text changed. Was: " + hb_gtInfo( HB_GTI_SELECTCOPY, hb_TToS( hb_DateTime() ) ) )
 
@@ -366,8 +389,7 @@ STATIC PROCEDURE SetPalette( nMode )
    t_nG += iif( nMode == 0, -5, 5 )
    t_nB += iif( nMode == 0, -5, 5 )
 
-   // Change "W" to slightly gray everytime you press F5
-   //
+   // Change "W" to slightly gray everytime you press <F5>
    aPalette[ 8 ] := RGB( t_nR, t_nG, t_nB )
 
    hb_gtInfo( HB_GTI_PALETTE, aPalette )

@@ -27,7 +27,7 @@ PROCEDURE Main()
 
    ? tmp := FBCreateDB( cServer + cDatabase, cUser, cPass, nPageSize, cCharSet, nDialect ), FBError( tmp )
 
-   /* Connect rdbms */
+   /* Connect RDBMS */
    IF HB_ISNUMERIC( db := FBConnect( cServer + cDatabase, cUser, cPass ) )
       ? "Error:", db, FBError( db )
       RETURN
@@ -68,7 +68,7 @@ PROCEDURE Main()
 
    ? "Status Execute:", tmp := FBExecute( db, 'insert into customer(customer) values ("test 3")', nDialect ), FBError( tmp )
 
-   // TOFIX: Windows GPF below
+   // FIXME: Windows GPF below
 
    IF HB_ISNUMERIC( qry := FBQuery( db, "SELECT * FROM customer", nDialect ) )
       ? "Error:", qry, FBError( qry )
@@ -97,7 +97,7 @@ PROCEDURE Main()
       ? "Status Free Query:", FBFree( qry )
    ENDIF
 
-   /* Close connection with rdbms */
+   /* Close connection with RDBMS */
    ? "Status Close Database:", tmp := FBClose( db ), FBError( tmp )
 
    RETURN

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -378,8 +378,8 @@
 #define DB_DBFLOCK_CLIPPER      1   /* default Cl*pper locking scheme */
 #define DB_DBFLOCK_COMIX        2   /* COMIX and CL53 DBFCDX hyper locking scheme */
 #define DB_DBFLOCK_VFP          3   /* [V]FP, CL52 DBFCDX, SIx3 SIXCDX, CDXLOCK.OBJ */
-#define DB_DBFLOCK_HB32         4   /* Harbour hyper locking scheme for 32bit file API */
-#define DB_DBFLOCK_HB64         5   /* Harbour hyper locking scheme for 64bit file API */
+#define DB_DBFLOCK_HB32         4   /* Harbour hyper locking scheme for 32-bit file API */
+#define DB_DBFLOCK_HB64         5   /* Harbour hyper locking scheme for 64-bit file API */
 #define DB_DBFLOCK_CLIPPER2     6   /* extended Cl*pper locking scheme NTXLOCK2.OBJ */
 
 /* for backward compatibility */

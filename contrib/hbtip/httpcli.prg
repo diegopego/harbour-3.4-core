@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -217,13 +217,15 @@ METHOD StandardFields() CLASS TIPClientHTTP
 
    RETURN .T.
 
+#define _HEADER_MAX  10240
+
 METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
 
    LOCAL cLine, nPos, aVersion
    LOCAL aHead
 
    // Now reads the fields and set the content length
-   IF ( cLine := hb_defaultValue( ::inetRecvLine( ::SocketCon, @nPos, 500 ), "" ) ) == ""
+   IF ( cLine := hb_defaultValue( ::inetRecvLine( ::SocketCon, @nPos, _HEADER_MAX ), "" ) ) == ""
       // In case of timeout or error on receiving
       RETURN .F.
    ENDIF
@@ -249,11 +251,11 @@ METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
    IF hb_defaultValue( lClear, .F. ) .AND. ! Empty( ::hHeaders )
       ::hHeaders := { => }
    ENDIF
-   cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
+   cLine := ::inetRecvLine( ::SocketCon, @nPos, _HEADER_MAX )
    DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. HB_ISSTRING( cLine ) .AND. ! cLine == ""
 
       IF Len( aHead := hb_regexSplit( ":", cLine,,, 1 ) ) != 2
-         cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
+         cLine := ::inetRecvLine( ::SocketCon, @nPos, _HEADER_MAX )
          LOOP
       ENDIF
 
@@ -275,7 +277,7 @@ METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
          ::setCookie( aHead[ 2 ] )
       ENDCASE
 
-      cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
+      cLine := ::inetRecvLine( ::SocketCon, @nPos, _HEADER_MAX )
    ENDDO
    IF ::inetErrorCode( ::SocketCon ) != 0
       RETURN .F.
@@ -372,7 +374,7 @@ METHOD ReadAll() CLASS TIPClientHTTP
 
 METHOD PROCEDURE setCookie( cLine ) CLASS TIPClientHTTP
 
-   // docs from https://www.ietf.org/rfc/rfc2109.txt
+   // docs from https://tools.ietf.org/html/rfc2109
    LOCAL cHost, cPath, cName, cValue, aElements
    LOCAL cDefaultHost := ::oUrl:cServer, cDefaultPath := ::oUrl:cPath
    LOCAL x
@@ -471,11 +473,11 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
 /* nType: 0=as found as the separator in the stdin stream
           1=as found as the last one in the stdin stream
-          2=as found in the CGI enviroment
+          2=as found in the CGI environment
    Examples:
    0: -----------------------------41184676334     // in the body or stdin stream
    1: -----------------------------41184676334--   // last one of the stdin stream
-   2: ---------------------------41184676334       // in the header or CGI envirnment
+   2: ---------------------------41184676334       // in the header or CGI environment
  */
 METHOD Boundary( nType ) CLASS TIPClientHTTP
 
@@ -550,7 +552,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
          hb_vfClose( hFile )
       ENDIF
 
-      cData := cCrlf
+      cData += cCrlf
    NEXT
 
    cData += cBound + "--" + cCrlf

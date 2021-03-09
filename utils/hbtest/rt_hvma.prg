@@ -1,7 +1,7 @@
 /*
  * Regression tests for the runtime library (HVM)
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -230,13 +230,13 @@ PROCEDURE Main_HVMA()
 #ifdef __HARBOUR__
    #pragma -kh-
 #endif
-   HBTEST "" $ ""                         IS .T.  /* Bug in CA-Cl*ppers compiler optimizer. It should return .F. */
-   HBTEST "" $ "bcde"                     IS .T.  /* Bug in CA-Cl*ppers compiler optimizer. It should return .F. */
+   HBTEST "" $ ""                         IS .T.  /* Bug in CA-Cl*pper compiler optimizer. It should return .F. */
+   HBTEST "" $ "bcde"                     IS .T.  /* Bug in CA-Cl*pper compiler optimizer. It should return .F. */
 #ifdef __HARBOUR__
    /* enable Harbour extensions and test correct results results */
    #pragma -kh+
-   HBTEST "" $ ""                         IS .F.  /* Bug in CA-Cl*ppers compiler optimizer. It should return .F. */
-   HBTEST "" $ "bcde"                     IS .F.  /* Bug in CA-Cl*ppers compiler optimizer. It should return .F. */
+   HBTEST "" $ ""                         IS .F.  /* Bug in CA-Cl*pper compiler optimizer. It should return .F. */
+   HBTEST "" $ "bcde"                     IS .F.  /* Bug in CA-Cl*pper compiler optimizer. It should return .F. */
 #endif
    HBTEST "d" $ "bcde"                    IS .T.
    HBTEST "D" $ "BCDE"                    IS .T.
@@ -538,21 +538,13 @@ PROCEDURE Main_HVMA()
    HBTEST RTSTR( 50000000000000 )                 IS " 15  50000000000000"
    HBTEST RTSTR( 500000000000000 )                IS " 16  500000000000000"
    HBTEST RTSTR( 00000000000005 )                 IS " 10          5"
-#ifdef __HARBOUR__
    /* INCOMPATIBILITY:
       https://github.com/harbour/core/issues/98#issuecomment-105807651 */
-   HBTEST RTSTR( 00000500000000000000 )           IS " 16  500000000000000"
-   HBTEST RTSTR( 0000500000000000000 )            IS " 16  500000000000000"
-   HBTEST RTSTR( 000500000000000000 )             IS " 16  500000000000000"
-   HBTEST RTSTR( 00500000000000000 )              IS " 16  500000000000000"
-   HBTEST RTSTR( 0500000000000000 )               IS " 16  500000000000000"
-#else
-   HBTEST RTSTR( 00000500000000000000 )           IS " 21       500000000000000"
-   HBTEST RTSTR( 0000500000000000000 )            IS " 20      500000000000000"
-   HBTEST RTSTR( 000500000000000000 )             IS " 19     500000000000000"
-   HBTEST RTSTR( 00500000000000000 )              IS " 18    500000000000000"
-   HBTEST RTSTR( 0500000000000000 )               IS " 17   500000000000000"
-#endif
+   HBTEST RTSTR( 00000500000000000000 )           IS " 21       500000000000000", " 16  500000000000000"
+   HBTEST RTSTR( 0000500000000000000 )            IS " 20      500000000000000" , " 16  500000000000000"
+   HBTEST RTSTR( 000500000000000000 )             IS " 19     500000000000000"  , " 16  500000000000000"
+   HBTEST RTSTR( 00500000000000000 )              IS " 18    500000000000000"   , " 16  500000000000000"
+   HBTEST RTSTR( 0500000000000000 )               IS " 17   500000000000000"    , " 16  500000000000000"
    HBTEST RTSTR( 0500000000000000.5 )             IS " 18  500000000000000.5"
    HBTEST RTSTR( 5000000000000000 )               IS " 17  5000000000000000"
    HBTEST RTSTR( 50000000000000000 )              IS " 18  50000000000000000"

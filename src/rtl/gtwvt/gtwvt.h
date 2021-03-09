@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,6 +49,7 @@
 
 #define HB_GT_NAME  WVT
 
+#include "hbapi.h"
 #include "hbset.h"
 #include "hbgtcore.h"
 #include "hbinit.h"
@@ -70,15 +71,15 @@
 #define WVT_MAX_WINDOWS             256
 
 #if defined( HB_OS_WIN_CE )
-   #define WVT_DEFAULT_ROWS         15
-   #define WVT_DEFAULT_COLS         50
-   #define WVT_DEFAULT_FONT_HEIGHT  12
-   #define WVT_DEFAULT_FONT_WIDTH   8
+#  define WVT_DEFAULT_ROWS         15
+#  define WVT_DEFAULT_COLS         50
+#  define WVT_DEFAULT_FONT_HEIGHT  12
+#  define WVT_DEFAULT_FONT_WIDTH   8
 #else
-   #define WVT_DEFAULT_ROWS         25
-   #define WVT_DEFAULT_COLS         80
-   #define WVT_DEFAULT_FONT_HEIGHT  20
-   #define WVT_DEFAULT_FONT_WIDTH   10
+#  define WVT_DEFAULT_ROWS         25
+#  define WVT_DEFAULT_COLS         80
+#  define WVT_DEFAULT_FONT_HEIGHT  20
+#  define WVT_DEFAULT_FONT_WIDTH   10
 #endif
 
 #define WVT_DEFAULT_FONT_ATTR       0
@@ -252,6 +253,16 @@
 #define HB_BOXCH_TRANS_MAX          0xFF
 
 
+typedef struct _HB_GTWVT_MNU
+{
+   int      iKey;
+   int      iEvent;
+   void *   hName;
+   LPCTSTR  lpName;
+   struct _HB_GTWVT_MNU * pNext;
+} HB_GTWVT_MNU, * PHB_GTWVT_MNU;
+
+
 typedef struct
 {
    PHB_GT   pGT;                          /* core GT pointer */
@@ -338,6 +349,8 @@ typedef struct
    HB_BOOL  bSelectCopy;
    void *   hSelectCopy;
    LPCTSTR  lpSelectCopy;
+
+   PHB_GTWVT_MNU pMenu;
 
    RECT     sRectNew;
    RECT     sRectOld;

@@ -1,7 +1,7 @@
 /*
- * Harbour NETIO server management cmdline tool
+ * Harbour NETIO server management command-line tool
  *
- * Copyright 2009-2011 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2011 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their website at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -220,7 +220,7 @@ STATIC PROCEDURE ShowHelp( hCommands )
          QQOut( "Press any key to continue..." )
          Inkey( 0 )
 
-         hb_Scroll( Row(), 0, Row(), MaxCol(), 0 )
+         Scroll( Row(), 0, Row(), MaxCol() )
          SetPos( Row(), 0 )
       ENDIF
    NEXT

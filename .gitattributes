@@ -4,7 +4,6 @@
 # Binary files
 *.bmp     binary
 *.dbf     binary
-*.exe     binary
 *.frm     binary
 *.gif     binary
 *.icns    binary
@@ -12,11 +11,10 @@
 *.jpg     binary
 *.lbl     binary
 *.mdb     binary
-*.odt     binary
 *.pdf     binary
 *.png     binary
 *.sqlite3 binary
 *.ttf     binary
 
-# Legacy files
+*.sh      text eol=lf
 *.bat     text eol=crlf

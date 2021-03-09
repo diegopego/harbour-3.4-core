@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,6 +49,7 @@
 
 #define _HB_PP_INTERNAL
 
+#include "hbapi.h"
 #include "hbpp.h"
 #include "hbdate.h"
 
@@ -193,7 +194,7 @@ static const HB_PP_OPERATOR s_operators[] =
    { "%"    , 1, "%"    , HB_PP_TOKEN_MOD       | HB_PP_TOKEN_STATIC },
    { "^"    , 1, "^"    , HB_PP_TOKEN_POWER     | HB_PP_TOKEN_STATIC }
 /* unused: ? ~ " ' ` */
-/* not accesible: " ' `  */
+/* not accessible: " ' `  */
 /* illegal in Clipper: ~ */
 };
 
@@ -1307,7 +1308,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                ;
 
             /*
-             * In Clipper note can be used only as 1-st token and after
+             * In Clipper note can be used only as 1st token and after
              * statement separator ';' it does not work like a single line
              * comment.
              */
@@ -1492,7 +1493,11 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          n = 0;
       }
 
-      if( pEolTokenPtr && pEolTokenPtr != pState->pNextTokenPtr )
+      if( pEolTokenPtr &&
+          ( pEolTokenPtr != pState->pNextTokenPtr ||
+            ( pState->iNestedBlock && pState->pFile->iTokens &&
+              ( pState->pFile->pLineBuf ? pState->pFile->nLineBufLen == 0 :
+                                          pState->pFile->fEof ) ) ) )
       {
          PHB_PP_TOKEN pToken = *pEolTokenPtr;
 
@@ -1503,6 +1508,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             iStartLine++;
             iLines++;
          }
+         if( pToken == NULL )
+            pState->pNextTokenPtr = pEolTokenPtr;
          *pEolTokenPtr = pToken;
       }
 
@@ -1598,7 +1605,7 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
       if( iq == 0 && fQuote )
       {
          /* generate string with 'e' prefix before opening '"' and quote
-            control characters inside, f.e.:
+            control characters inside, e.g.:
                e"line1\nline2"
           */
 
@@ -3183,7 +3190,7 @@ static HB_BOOL hb_pp_matchPatternNew( PHB_PP_STATE pState, PHB_PP_TOKEN * pToken
                      return HB_FALSE;
                   }
                   /* replace the order for these optional tokens to keep
-                     the ones with keywords 1-st */
+                     the ones with keywords 1st */
                   ( *pTokenPtr )->pMTokens = *pLastPtr;
                   *pLastPtr = pOptTok;
                }
@@ -3415,7 +3422,7 @@ static void hb_pp_directiveNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
       {
          if( pMatch )
          {
-            /* Clipper PP makes sth like that for result pattern of
+            /* Clipper PP makes something like that for result pattern of
              #[x]translate and #[x]command */
             if( pStart->spaces > 1 )
                pStart->spaces = 1;
@@ -3649,11 +3656,35 @@ static HB_BOOL hb_pp_tokenStopExtBlock( PHB_PP_TOKEN * pTokenPtr )
 {
    PHB_PP_TOKEN pToken = *pTokenPtr;
 
-   if( HB_PP_TOKEN_ISEOC( pToken ) && pToken->pNext &&
-       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_RIGHT_CB )
+   if( HB_PP_TOKEN_ISEOC( pToken ) && pToken->pNext )
    {
-      *pTokenPtr = pToken->pNext->pNext;
-      return HB_TRUE;
+      pToken = pToken->pNext;
+      if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_RIGHT_CB )
+      {
+         *pTokenPtr = pToken->pNext;
+         return HB_TRUE;
+      }
+      if( pToken->pNext &&
+          HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_KEYWORD &&
+          HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD )
+      {
+         PHB_PP_TOKEN pFirst = pToken;
+
+         if( hb_pp_tokenValueCmp( pToken, "INIT", HB_PP_CMP_DBASE ) ||
+             hb_pp_tokenValueCmp( pToken, "EXIT", HB_PP_CMP_DBASE ) ||
+             hb_pp_tokenValueCmp( pToken, "STATIC", HB_PP_CMP_DBASE ) )
+            pToken = pToken->pNext;
+
+         if( hb_pp_tokenValueCmp( pToken, "FUNCTION", HB_PP_CMP_DBASE ) ||
+             hb_pp_tokenValueCmp( pToken, "PROCEDURE", HB_PP_CMP_DBASE ) )
+         {
+            if( pToken != pFirst ||
+                HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD )
+
+            *pTokenPtr = pFirst;
+            return HB_TRUE;
+         }
+      }
    }
    return HB_FALSE;
 }
@@ -3822,7 +3853,7 @@ static HB_BOOL hb_pp_tokenMatch( PHB_PP_TOKEN pMatch, PHB_PP_TOKEN * pTokenPtr,
 
       /*
        * Here we are strictly Clipper compatible. Clipper accepts dummy
-       * restrict marker which starts from comma, <id: ,[ sth,...]>
+       * restrict marker which starts from comma, <id: ,[ something,...]>
        * which always match empty expression. The same effect can be
        * reached by giving ,, in the world list on other positions.
        */
@@ -4721,7 +4752,7 @@ static PHB_PP_TOKEN hb_pp_calcPrecedence( PHB_PP_TOKEN pToken,
             pNext = pNext->pNext;
             break;
          }
-         /* no break */
+         /* fallthrough */
       /* relational */
       case HB_PP_TOKEN_EQUAL:
       case HB_PP_TOKEN_HASH:
@@ -5766,13 +5797,16 @@ void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
 /*
  * close all open input files and set the given buffer as input stream
  */
-HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE nLen, int iStartLine )
+HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * szFileName,
+                        const char * pBuffer, HB_SIZE nLen, int iStartLine )
 {
    hb_pp_InFileFree( pState );
 
    pState->fError = HB_FALSE;
 
    pState->pFile = hb_pp_FileBufNew( pBuffer, nLen );
+   if( szFileName )
+      pState->pFile->szFileName = hb_strdup( szFileName );
    pState->pFile->iCurrentLine = iStartLine;
    pState->pFile->iLastLine = iStartLine + 1;
    pState->iFiles++;
@@ -6013,11 +6047,13 @@ void hb_pp_setStream( PHB_PP_STATE pState, int iMode )
 
       case HB_PP_STREAM_INLINE_C:
          pState->iDumpLine = pState->pFile ? pState->pFile->iCurrentLine : 0;
+         /* fallthrough */
       case HB_PP_STREAM_CLIPPER:
       case HB_PP_STREAM_PRG:
       case HB_PP_STREAM_C:
          if( ! pState->pStreamBuffer )
             pState->pStreamBuffer = hb_membufNew();
+         /* fallthrough */
       case HB_PP_STREAM_OFF:
       case HB_PP_STREAM_COMMENT:
          pState->iStreamDump = iMode;

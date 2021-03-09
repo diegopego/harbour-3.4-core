@@ -23,9 +23,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -115,12 +115,16 @@
 
  */
 
+#include "hbapi.h"
+#include "hbapifs.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
 #include "hbsxfunc.h"
 
 #define HB_SX_UNCOMPRESED  0xFFFFFFFFUL
 
 
-/* number of bits for encoded item (position,length) */
+/* number of bits for encoded item (position, length) */
 #define ITEMBITS           16
 /* unused DUMMY bits - who does know why SIX has it? */
 #define DUMMYBITS          1
@@ -139,7 +143,7 @@
 #define RBUFMASK           ( ( 1 << OFFSETBITS ) - 1 )
 /* the bit mask for match length */
 #define MATCHMASK          ( ( 1 << LENGTHBITS ) - 1 )
-/* get ringbuffer index */
+/* get ring buffer index */
 #define RBUFINDEX( i )       ( ( i ) & RBUFMASK )
 
 /* get ring buffer offset position from low and high bytes */
@@ -179,8 +183,7 @@ typedef struct _HB_LZSSX_COMPR
    HB_SIZE    outBuffPos;
    HB_BOOL    fOutFree;
 
-   HB_SIZE    ulMaxSize;
-   HB_SIZE    ulOutSize;
+   HB_SIZE    nOutSize;
    HB_BOOL    fResult;
    HB_BOOL    fContinue;
 
@@ -227,8 +230,7 @@ static PHB_LZSSX_COMPR hb_LZSSxInit(
    pCompr->outBuffPos  = 0;
    pCompr->fOutFree    = ( pOutput != NULL && pDstBuf == NULL );
 
-   pCompr->ulMaxSize   = 0;
-   pCompr->ulOutSize   = 0;
+   pCompr->nOutSize    = 0;
    pCompr->fResult     = HB_TRUE;
    pCompr->fContinue   = HB_FALSE;
 
@@ -256,7 +258,7 @@ static HB_BOOL hb_LZSSxFlush( PHB_LZSSX_COMPR pCompr )
       }
       else
       {
-         pCompr->ulOutSize += pCompr->outBuffPos;
+         pCompr->nOutSize += pCompr->outBuffPos;
          pCompr->outBuffPos = 0;
       }
    }
@@ -331,7 +333,9 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
       {
          if( ( h = hb_LZSSxRead( pCompr ) ) == -1 )
          {
-            /* fResult = HB_FALSE; */
+            #if 0
+            fResult = HB_FALSE;
+            #endif
             break;
          }
          offset = LZSS_OFFSET( c, h );   /* get offset to ring buffer */

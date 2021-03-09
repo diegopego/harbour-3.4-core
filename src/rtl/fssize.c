@@ -2,7 +2,7 @@
  * hb_fsFSize() function
  *
  * Copyright 2000-2001 Jose Lalin <dezac@corevia.com>
- * Copyright 2000-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2000-2001 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,7 +46,7 @@
  */
 
 #if ! defined( _LARGEFILE64_SOURCE )
-   #define _LARGEFILE64_SOURCE  1
+#  define _LARGEFILE64_SOURCE  1
 #endif
 
 #include "hbapi.h"
@@ -54,22 +54,22 @@
 #include "hbvm.h"
 
 #if defined( HB_OS_WIN )
-   #include <windows.h>
-   #include "hbwinuni.h"
-   #if defined( HB_OS_WIN_CE )
-      #include "hbwince.h"
-   #endif
+#  include <windows.h>
+#  include "hbwinuni.h"
+#  if defined( HB_OS_WIN_CE )
+#     include "hbwince.h"
+#  endif
 #else
-   #include <sys/types.h>
-   #include <sys/stat.h>
+#  include <sys/types.h>
+#  include <sys/stat.h>
 #endif
 
 #if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * defined and effectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
+       * defined and effectively enables lseek64()/flock64()/ftruncate64()
+       * functions on 32-bit machines.
        */
       #define HB_USE_LARGEFILE64
    #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
@@ -150,7 +150,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
       pszFileName = hb_fsNameConv( pszFileName, &pszFree );
       statbuf.st_size = 0;
       hb_vmUnlock();
-      fResult = stat( ( char * ) pszFileName, &statbuf ) == 0;
+      fResult = stat( ( char * ) HB_UNCONST( pszFileName ), &statbuf ) == 0;
       hb_fsSetIOError( fResult, 0 );
       hb_vmLock();
       if( pszFree )

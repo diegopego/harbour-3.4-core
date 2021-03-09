@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -374,15 +374,15 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
       void * hDeviceName;
       LPCTSTR lpDeviceName = HB_PARSTR( 2, &hDeviceName, NULL );
 
-      if( OpenPrinter( ( LPTSTR ) lpDeviceName, &hPrinter, NULL ) )
+      if( OpenPrinter( ( LPTSTR ) HB_UNCONST( lpDeviceName ), &hPrinter, NULL ) )
       {
-         LONG lSize = DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, NULL, NULL, 0 );
+         LONG lSize = DocumentProperties( 0, hPrinter, ( LPTSTR ) HB_UNCONST( lpDeviceName ), NULL, NULL, 0 );
 
          if( lSize > 0 )
          {
             PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrabz( lSize );
 
-            if( DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER ) == IDOK )
+            if( DocumentProperties( 0, hPrinter, ( LPTSTR ) HB_UNCONST( lpDeviceName ), pDevMode, pDevMode, DM_OUT_BUFFER ) == IDOK )
             {
                DWORD dmFields = 0, fMode;
                HB_BOOL fUserDialog;
@@ -455,7 +455,7 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
                if( fUserDialog )
                   fMode |= DM_IN_PROMPT;
 
-               if( DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, fMode ) == IDOK )
+               if( DocumentProperties( 0, hPrinter, ( LPTSTR ) HB_UNCONST( lpDeviceName ), pDevMode, pDevMode, fMode ) == IDOK )
                {
                   hb_storni( pDevMode->dmPaperSize, 3 );
                   hb_storl( pDevMode->dmOrientation == DMORIENT_LANDSCAPE, 4 );
@@ -492,15 +492,15 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
    void * hDeviceName;
    LPCTSTR lpDeviceName = HB_PARSTR( 1, &hDeviceName, NULL );
 
-   if( OpenPrinter( ( LPTSTR ) lpDeviceName, &hPrinter, NULL ) )
+   if( OpenPrinter( ( LPTSTR ) HB_UNCONST( lpDeviceName ), &hPrinter, NULL ) )
    {
-      LONG lSize = DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, NULL, NULL, 0 );
+      LONG lSize = DocumentProperties( 0, hPrinter, ( LPTSTR ) HB_UNCONST( lpDeviceName ), NULL, NULL, 0 );
 
       if( lSize > 0 )
       {
          PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrabz( lSize );
 
-         if( DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER ) == IDOK )
+         if( DocumentProperties( 0, hPrinter, ( LPTSTR ) HB_UNCONST( lpDeviceName ), pDevMode, pDevMode, DM_OUT_BUFFER ) == IDOK )
          {
             hb_storni( pDevMode->dmPaperSize, 2 );
             hb_storl( pDevMode->dmOrientation == DMORIENT_LANDSCAPE, 3 );

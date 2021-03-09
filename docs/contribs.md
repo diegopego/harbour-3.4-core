@@ -11,7 +11,8 @@ but bundled with the main Harbour distribution. These components are part of
 the Harbour source package.
 
 Common to all contribs is that they are open/free software, but please note
-that [licensing terms]({{ site.baseurl }}/terms) may vary for each contrib.
+that [licensing terms]({{ site.baseurl }}/terms{{ site.ilink_suffix }}) may
+vary for each contrib.
 
 See respective authors inside the [source code](https://github.com/{{ site.repo_slug }}/tree/master/contrib).
 
@@ -26,7 +27,7 @@ But if used with GUI extensions, an appealing Windows screens without
 sacrificing the Clipper syntax. Additionally `GTWVG` has a nice set of
 `Wvt*()` classes which employ the common event loop.
 
-You can create high performance dialogs with multiple TBrowser, Reads,
+You can create high performance dialogs with multiple TBrowses, Reads,
 Bitmaps, Buttons, i.e. all GUI elements you can think of.
 
 {% if site.fork %}
@@ -39,6 +40,12 @@ A `GTWVG` alternative with multi-window support.
 
 AMF file format handling
 
+{% if site.fork %}
+## hbamqp
+
+AMQP API via librabbitmq-c bindings
+
+{% endif %}
 ## hbblink
 
 Blinker compatibility
@@ -51,10 +58,12 @@ bz2 bindings (compression)
 
 Cairo bindings (imaging)
 
+{%- unless site.fork %}
 ## hbcomm
 
 HBCOMM (xhb.com, MiniGUI) compatibility (serial communication)
 
+{% endunless %}
 {% if site.fork %}
 ## hbcrypto
 
@@ -70,7 +79,7 @@ functions, [ed25519](https://en.wikipedia.org/wiki/EdDSA) digital signature func
 This library provides functions compatible with the famous Clipper Tools for
 CA-Clipper (`CT.LIB`).
 
-## hbcups (*nix-only)
+## hbcups (\*nix-only)
 
 CUPS bindings (printing)
 
@@ -81,7 +90,7 @@ URL transfer library, supporting SSL, HTTP GET/PUT/POST/forms, HTTP2, SCP, FTPS,
 SFTP, FTP, LDAP, LDAPS, SMTP, SMTPS, IMAP, IMAPS, POP3, POP3S, TFTP, TELNET,
 FILE/SMB, proxies, cookies, authentication (Basic, Digest, NTLM, Negotiate,
 Kerberos), file transfer resume, http proxy tunneling and more.
-<span class="readmore-md">[Learn more](https://curl.haxx.se/libcurl/)</span>
+<span class="readmore-md">[Learn more](https://curl.se/libcurl/)</span>
 
 ## hbexpat
 
@@ -98,7 +107,7 @@ FreeImage graphic library bindings. FreeImage is an Open Source library project
 for developers who would like to support popular graphics image formats like
 PNG, BMP, JPEG, TIFF and others as needed by today's multimedia applications.
 
-FreeImage is easy to use, fast, multithreading safe and cross-platform (works
+FreeImage is easy to use, fast, multi-threading safe and cross-platform (works
 on Windows, Linux and Mac).
 
 ## hbformat
@@ -116,7 +125,7 @@ FlagShip compatibility
 ## [hbgd](https://harbour.github.io/doc/hbgd.html)
 
 Thomas Boutell's GD 2.x library bindings. GD Library is a powerful graphic
-library, useful expecially under CGI environment. `hbgd` supports almost all
+library, useful especially under CGI environment. `hbgd` supports almost all
 GD functions, plus a set of extra functions and classes that extend and make
 it easier to work with this library.
 <span class="readmore-md">[Learn more](https://libgd.github.io/)</span>
@@ -143,15 +152,17 @@ HTTP/HTTPS server
 
 ICU bindings/puller
 
+{%- unless site.fork %}
 ## hblzf
 
 LZF bindings (compression)
 
+{%- endunless %}
 ## hbmac (Mac-only)
 
 Apple Mac specific functions
 
-## hbmagic (*nix-only)
+## hbmagic (\*nix-only)
 
 libmagic bindings (file identification)
 
@@ -192,17 +203,19 @@ OSLib (Dave Pearson's) compatibility
 
 ## hbpgsql
 
-Low Level API bindings for PostgreSQL RDBMS. Includes a `dbf2pg.prg` utility to
+Low-level API bindings for PostgreSQL RDBMS. Includes a `dbf2pg.prg` utility to
 convert a `.dbf` file into a PostgreSQL table.
 
 ## hbsqlit3
 
 SQLite3 bindings. This library allow access an SQLite3 databases using Harbour.
 
+{%- unless site.fork %}
 ## hbsms
 
 SMS handling functions
 
+{%- endunless %}
 ## hbssl
 
 OpenSSL bindings. Supports SSL, SSL_CIPHER, SSL_CTX, RAND, SSL_SESSION (and
@@ -212,18 +225,20 @@ more) modules.
 
 Regression test framework
 
-## hbtip ([deprecated](https://github.com/vszakats/harbour-core/blob/master/contrib/hbtip/WARNING.txt), use `hbcurl` instead)
+## hbtip ([deprecated](https://github.com/vszakats/hb/blob/master/contrib/hbtip/WARNING.txt), use `hbcurl` instead)
 
 Object-oriented internet protocol library, written in Harbour. Supports HTTP,
 HTTPS, SMTP, SMTPS, POP3, FTP and more.
 
+{%- unless site.fork %}
 ## hbtpathy
 
 Telepath(y) emulation library. Telepath(y) is the best serial communication
 library for Nantucket/CA-Clipper and this library has a significant
 amount of the functionality contained in Telepath(y) in this Harbour port.
 
-## hbunix (*nix-only)
+{%- endunless %}
+## hbunix (\*nix-only)
 
 Unix specific functions
 
@@ -239,14 +254,22 @@ these features are:
 * DLL handling functions
 * …and more
 
+{% unless site.fork %}
 ## hbxdiff
 
 libxdiff bindings (diffing)
 
+{%- endunless %}
 ## [hbxpp](https://harbour.github.io/doc/hbxpp.html)
 
 Xbase++ compatibility
 
+{% if site.fork %}
+## hbyaml
+
+libyaml bindings for YAML parsing
+
+{% endif %}
 ## hbzebra
 
 Barcode creating functions
@@ -282,10 +305,12 @@ MariaDB/MySQL (via `sddmy`), Firebird (via `sddfb`) and ODBC servers
 
 I/O driver for BZIP2 compressed streams
 
+{%- unless site.fork %}
 ## hbcomio
 
 I/O driver for serial port streams
 
+{%- endunless %}
 ## hbgzio
 
 I/O driver for GZIP compressed streams

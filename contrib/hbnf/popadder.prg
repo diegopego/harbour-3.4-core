@@ -69,7 +69,7 @@
 #define nTapeSpace aAdder[ 22 ]
 #define cTapeScr   aAdder[ 23 ]
 
-// I still use a few of STATICs, but most are set to NIL when quiting
+// I still use a few of STATICs, but most are set to NIL when quitting
 THREAD STATIC t_lAdderOpen := .F.
 THREAD STATIC t_aKeys
 THREAD STATIC t_aWindow
@@ -209,7 +209,7 @@ PROCEDURE ft_Adder()
                oGet:varPut( nSavTotal )
                EXIT
             ELSE
-               _ftError( "but I can not return the total from the " + ;
+               _ftError( "but I cannot return the total from the " + ;
                   "adder to this variable. You must quit the adder using" + ;
                   " the <ESC> key and then enter the total manually." )
             ENDIF
@@ -388,7 +388,7 @@ STATIC PROCEDURE _ftAddTotal( aAdder )
          _ftSetWinColor( W_CURR, W_PROMPT )
          _ftUpdateTrans( aAdder, .T. )
          _ftDispTotal( aAdder )
-         lSubRtn   := .F.         // pressed the total key reset everyting
+         lSubRtn   := .F.         // pressed the total key reset everything
          nSavTotal := nTotal
          nTotal    := 0
          lTotalOk  := .T.
@@ -416,7 +416,7 @@ STATIC PROCEDURE _ftAddTotal( aAdder )
          CASE nAddMode == 3 ; nTotal *= nNumTotal
          CASE nAddMode == 4 ; nTotal := _ftDivide( aAdder, nTotal, nNumTotal )
             IF lDivError
-               _ftError( "you can't divide by ZERO!" )
+               _ftError( "you cannot divide by ZERO!" )
                lDivError := .F.
             ENDIF
          ENDCASE
@@ -521,7 +521,7 @@ STATIC PROCEDURE _ftMultDiv( aAdder, nKey )
          _ftUpdateTrans( aAdder, .F., nNumTotal )
          nTotal := _ftDivide( aAdder, nTotal, nNumTotal )
          IF lDivError
-            _ftError( "you can't divide by ZERO!" )
+            _ftError( "you cannot divide by ZERO!" )
             lDivError := .F.
          ENDIF
          nNumTotal := 0
@@ -563,7 +563,7 @@ STATIC PROCEDURE _ftClearAdder( aAdder )
    _ftEraseTotSubTot( aAdder )
    lDecSet   := .F.
    nDecDigit := 0
-   IF lClAdder         // If it has alredy been pressed once
+   IF lClAdder         // If it has already been pressed once
       nTotal    := 0   // then we are clearing the total
       nSavTotal := 0
       _ftUpdateTrans( aAdder, .F. )
@@ -662,7 +662,7 @@ STATIC PROCEDURE _ftDisplayTape( aAdder, nKey )
    ENDIF
    IF lTape                  // Are we in the display mode
       SetColor( "N/W" )
-      hb_Scroll( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, 1 )
+      Scroll( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, 1 )
       IF Len( aTrans ) > 0   // Any transactions been entered yet?
          hb_DispOutAt( 20 + nTopOS, 7 + nTapeSpace, ATail( aTrans ) )
       ENDIF
@@ -833,7 +833,7 @@ STATIC FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
       CASE K_ESC
          hb_keyPut( { K_CTRL_PGDN, K_ENTER } )  // Go to last item
          lAC_exit_ok := .T.
-         // Fall through
+         /* fallthrough */
       CASE K_CTRL_PGDN
          RETURN AC_CONT
       OTHERWISE
@@ -967,7 +967,7 @@ STATIC PROCEDURE _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
    ENDIF
 
    _ftSetWinColor( nWinColor, W_SCREEN, W_VARIAB )
-   hb_Scroll( t + 1, l + 1, b - 1, r - 1 )
+   Scroll( t + 1, l + 1, b - 1, r - 1 )
 
    RETURN
 
@@ -980,11 +980,11 @@ STATIC PROCEDURE _ftPopWin()
 
    LOCAL nNumWindow := Len( t_aWindow )
 
-   RestScreen( t_aWindow[ nNumWindow, 1 ], t_aWindow[ nNumWindow, 2 ], ;
-      t_aWindow[ nNumWindow, 3 ] + 1, t_aWindow[ nNumWindow, 4 ] + 2, ;
-      t_aWindow[ nNumWindow, 6 ] )
+   RestScreen( t_aWindow[ nNumWindow ][ 1 ], t_aWindow[ nNumWindow ][ 2 ], ;
+      t_aWindow[ nNumWindow ][ 3 ] + 1, t_aWindow[ nNumWindow ][ 4 ] + 2, ;
+      t_aWindow[ nNumWindow ][ 6 ] )
 
-   IF t_aWindow[ nNumWindow, 7 ]
+   IF t_aWindow[ nNumWindow ][ 7 ]
       _ftLastWinColor()
    ENDIF
 
@@ -1008,11 +1008,11 @@ STATIC FUNCTION _ftSetWinColor( nWin, nStd, nEnh, nBord, nBack, nUnsel )
    hb_default( @nEnh, 7 )
 
    RETURN SetColor( ;
-      t_aWinColor[ hb_defaultValue( nStd, 7 ), nWin ] + "," + ;
-      t_aWinColor[ nEnh, nWin ] + "," + ;
-      t_aWinColor[ hb_defaultValue( nBord, 7 ), nWin ] + "," + ;
-      t_aWinColor[ hb_defaultValue( nBack, 7 ), nWin ] + "," + ;
-      t_aWinColor[ hb_defaultValue( nUnsel, nEnh ), nWin ] )
+      t_aWinColor[ hb_defaultValue( nStd, 7 ) ][ nWin ] + "," + ;
+      t_aWinColor[ nEnh ][ nWin ] + "," + ;
+      t_aWinColor[ hb_defaultValue( nBord, 7 ) ][ nWin ] + "," + ;
+      t_aWinColor[ hb_defaultValue( nBack, 7 ) ][ nWin ] + "," + ;
+      t_aWinColor[ hb_defaultValue( nUnsel, nEnh ) ][ nWin ] )
 
 // Decrement the active window color number and return the current value
 // NOTE: If we are already on window #1 restart count by using # 4.
@@ -1035,12 +1035,14 @@ STATIC PROCEDURE _ftWinTitle( cTheTitle, cTopOrBot )
    LOCAL nCurWin  := Len( t_aWindow )
    LOCAL nLenTitle := Len( cTheTitle )
 
-   hb_DispOutAt( t_aWindow[ nCurWin, iif( cTopOrBot == NIL, 1, 3 ) ], ( t_aWindow[ nCurWin, 4 ] - ;
-      t_aWindow[ nCurWin, 2 ] - nLenTitle ) / 2 + t_aWindow[ nCurWin, 2 ], " " + cTheTitle + " " )
+   hb_DispOutAt( ;
+      t_aWindow[ nCurWin ][ iif( cTopOrBot == NIL, 1, 3 ) ], ;
+      ( t_aWindow[ nCurWin ][ 4 ] - t_aWindow[ nCurWin ][ 2 ] - nLenTitle ) / 2 + t_aWindow[ nCurWin ][ 2 ], ;
+      " " + cTheTitle + " " )
 
    RETURN
 
-// Initilize the colors for the Adder
+// Initialize the colors for the Adder
 STATIC PROCEDURE _ftInitColors()
 
    t_aWinColor := { ;

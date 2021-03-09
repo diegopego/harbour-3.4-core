@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,6 +44,7 @@
  *
  */
 
+#include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbdate.h"
@@ -82,8 +83,8 @@ int hb_lppError( PHB_LPP pSocket )
 
 HB_BOOL hb_lppSend( PHB_LPP pSocket, const void * data, HB_SIZE len, HB_MAXINT timeout )
 {
-   HB_MAXINT nTime = 0;
-   long      lSend;
+   HB_MAXUINT timer;
+   long       lSend;
 
    if( ! pSocket->pSendBuffer )
    {
@@ -94,8 +95,7 @@ HB_BOOL hb_lppSend( PHB_LPP pSocket, const void * data, HB_SIZE len, HB_MAXINT t
       pSocket->nSendPos = 0;
    }
 
-   if( timeout > 0 )
-      nTime = ( HB_MAXINT ) hb_dateMilliSeconds() + timeout;
+   timer = hb_timerInit( timeout );
 
    for( ;; )
    {
@@ -118,8 +118,7 @@ HB_BOOL hb_lppSend( PHB_LPP pSocket, const void * data, HB_SIZE len, HB_MAXINT t
          pSocket->iError      = 0;
          return HB_TRUE;
       }
-      if( timeout == 0 ||
-          ( timeout > 0 && ( timeout = nTime - ( HB_MAXINT ) hb_dateMilliSeconds() ) <= 0 ) )
+      if( ( timeout = hb_timerTest( timeout, &timer ) ) == 0 )
       {
          pSocket->iError = HB_SOCKET_ERR_TIMEOUT;
          return HB_FALSE;
@@ -129,8 +128,8 @@ HB_BOOL hb_lppSend( PHB_LPP pSocket, const void * data, HB_SIZE len, HB_MAXINT t
 
 HB_BOOL hb_lppRecv( PHB_LPP pSocket, void ** data, HB_SIZE * len, HB_MAXINT timeout )
 {
-   HB_MAXINT nTime = 0;
-   long      lRecv;
+   HB_MAXUINT timer;
+   long       lRecv;
 
    if( ! pSocket->pRecvBuffer )
    {
@@ -139,8 +138,7 @@ HB_BOOL hb_lppRecv( PHB_LPP pSocket, void ** data, HB_SIZE * len, HB_MAXINT time
       pSocket->fRecvHasSize = HB_FALSE;
    }
 
-   if( timeout > 0 )
-      nTime = ( HB_MAXINT ) hb_dateMilliSeconds() + timeout;
+   timer = hb_timerInit( timeout );
 
    for( ;; )
    {
@@ -211,8 +209,7 @@ HB_BOOL hb_lppRecv( PHB_LPP pSocket, void ** data, HB_SIZE * len, HB_MAXINT time
          pSocket->iError      = 0;
          return HB_TRUE;
       }
-      if( timeout == 0 ||
-          ( timeout > 0 && ( timeout = nTime - ( HB_MAXINT ) hb_dateMilliSeconds() ) <= 0 ) )
+      if( ( timeout = hb_timerTest( timeout, &timer ) ) == 0 )
       {
          pSocket->iError = HB_SOCKET_ERR_TIMEOUT;
          return HB_FALSE;

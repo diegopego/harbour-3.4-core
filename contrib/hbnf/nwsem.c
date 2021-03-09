@@ -1,4 +1,4 @@
-/* Rewritten in 2014 by Viktor Szakats (vszakats.net/harbour) and kept in the
+/* Rewritten in 2014 by Viktor Szakats (vsz.me/hb) and kept in the
    public domain.
    This is an original work by Glenn Scott and is placed in the public domain.
 
@@ -133,7 +133,7 @@ static int _ft_nwsemfunc( int nMode, HB_ULONG nHandle, HB_UINT nTimeOut )
 
 HB_FUNC( FT_NWSEMWAIT )
 {
-   hb_retni( _ft_nwsemfunc( SEM_WAIT, ( HB_ULONG ) hb_parnint( 1 ), ( HB_UINT ) hb_parni( 2 ) ) );
+   hb_retni( _ft_nwsemfunc( SEM_WAIT, ( HB_ULONG ) hb_parnint( 1 ), ( HB_UINT ) hb_parnl( 2 ) ) );
 }
 
 HB_FUNC( FT_NWSEMSIG )

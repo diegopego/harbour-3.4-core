@@ -10,9 +10,13 @@ gzio.c
 ${hb_name}.hbx
 
 # This is a dependency of zlib
--depurlbase=zlib:http://zlib.net/
--deppkgname=zlib:mingw-w64-i686-zlib{msys2&mingw}
--deppkgname=zlib:mingw-w64-x86_64-zlib{msys2&mingw64}
+-depurlbase=zlib:https://zlib.net/
+-deppkgname=zlib:zlib1g-dev{deb}
+-deppkgname=zlib:zlib-devel{rpm}
+-deppkgname=zlib:zlib{homebrew}
+-deppkgname=zlib:zlib{pacman}
+-deppkgname=zlib:mingw-w64-i686-zlib{msys2&x86}
+-deppkgname=zlib:mingw-w64-x86_64-zlib{msys2&x86_64}
 -depkeyhead=zlib:zlib.h
 -depcontrol=zlib:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=zlib:${HB_WITH_ZLIB}

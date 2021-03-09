@@ -3,18 +3,18 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -32,7 +32,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -44,7 +44,7 @@
 
 #include "hbhpdf.h"
 
-/* HPDF_LinkAnnot_SetHighlightMode( hAnnot, nHilightMode ) -> hStatus
+/* HPDF_LinkAnnot_SetHighlightMode( hAnnot, nHilightMode ) --> hStatus
        nHilightMode ==
    HPDF_ANNOT_NO_HIGHTLIGHT       1     No highlighting.
    HPDF_ANNOT_INVERT_BOX          2     Invert the contents of the area of annotation.
@@ -56,13 +56,13 @@ HB_FUNC( HPDF_LINKANNOT_SETHIGHLIGHTMODE )
    hb_retnl( ( long ) HPDF_LinkAnnot_SetHighlightMode( ( HPDF_Annotation ) hb_parptr( 1 ), ( HPDF_AnnotHighlightMode ) hb_parni( 2 ) ) );
 }
 
-/* HPDF_LinkAnnot_SetBorderStyle( hAnnot, nWidth, nDashOn, nDashOff ) -> hStatus */
+/* HPDF_LinkAnnot_SetBorderStyle( hAnnot, nWidth, nDashOn, nDashOff ) --> hStatus */
 HB_FUNC( HPDF_LINKANNOT_SETBORDERSTYLE )
 {
    hb_retnl( ( long ) HPDF_LinkAnnot_SetBorderStyle( ( HPDF_Annotation ) hb_parptr( 1 ), ( HPDF_REAL ) hb_parnd( 2 ), ( HPDF_UINT16 ) hb_parni( 3 ), ( HPDF_UINT16 ) hb_parni( 4 ) ) );
 }
 
-/* HPDF_TextAnnot_SetIcon( hAnnot, nIconID ) -> hStatus
+/* HPDF_TextAnnot_SetIcon( hAnnot, nIconID ) --> hStatus
        nIconID
    HPDF_ANNOT_ICON_COMMENT
    HPDF_ANNOT_ICON_KEY
@@ -77,7 +77,7 @@ HB_FUNC( HPDF_TEXTANNOT_SETICON )
    hb_retnl( ( long ) HPDF_TextAnnot_SetIcon( ( HPDF_Annotation ) hb_parptr( 1 ), ( HPDF_AnnotIcon ) hb_parni( 2 ) ) );
 }
 
-/* HPDF_TextAnnot_SetOpened( hAnnot, lOpened ) -> hStatus */
+/* HPDF_TextAnnot_SetOpened( hAnnot, lOpened ) --> hStatus */
 HB_FUNC( HPDF_TEXTANNOT_SETOPENED )
 {
    hb_retnl( ( long ) HPDF_TextAnnot_SetOpened( ( HPDF_Annotation ) hb_parptr( 1 ), hb_parl( 2 ) ? HPDF_TRUE : HPDF_FALSE ) );

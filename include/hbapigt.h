@@ -3,7 +3,7 @@
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (Keyboard related declarations, Cursor declarations)
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (Mouse related declarations, Undocumented GT API declarations)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb) (Mouse related declarations, Undocumented GT API declarations)
  * Copyright 2005 Przemyslaw Czerpak < druzus /at/ priv.onet.pl > (Internal GT code reimplemented in different way)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -98,9 +98,9 @@ HB_EXTERN_BEGIN
 
 
 #if defined( HB_COMPAT_C53 ) && ! defined( HB_CLP_STRICT )
-   #define HB_DEFAULT_INKEY_BUFSIZE  50
+#  define HB_DEFAULT_INKEY_BUFSIZE  50
 #else
-   #define HB_DEFAULT_INKEY_BUFSIZE  15
+#  define HB_DEFAULT_INKEY_BUFSIZE  15
 #endif
 
 
@@ -161,7 +161,7 @@ extern HB_EXPORT int        hb_gtMaxCol( void );
 extern HB_EXPORT int        hb_gtMaxRow( void );
 extern HB_EXPORT HB_ERRCODE hb_gtPostExt( void );
 extern HB_EXPORT HB_ERRCODE hb_gtPreExt( void );
-extern HB_EXPORT HB_ERRCODE hb_gtSuspend( void ); /* prepare the reminal for shell output */
+extern HB_EXPORT HB_ERRCODE hb_gtSuspend( void ); /* prepare the terminal for shell output */
 extern HB_EXPORT HB_ERRCODE hb_gtResume( void ); /* resume the terminal after the shell output */
 extern HB_EXPORT int        hb_gtReadKey( int iEventMask );
 extern HB_EXPORT HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, HB_SIZE * pnBuffSize );
@@ -205,11 +205,14 @@ extern HB_EXPORT HB_ERRCODE hb_gtSetClearChar( HB_USHORT usChar );
 extern HB_EXPORT HB_ERRCODE hb_gtGetScrChar( int iRow, int iCol, int * piColor, HB_BYTE * pbAttr, HB_USHORT * pusChar );
 extern HB_EXPORT HB_ERRCODE hb_gtPutScrChar( int iRow, int iCol, int iColor, HB_BYTE bAttr, HB_USHORT usChar );
 extern HB_EXPORT HB_ERRCODE hb_gtFlush( void );
-extern HB_EXPORT HB_ERRCODE hb_gtGetPosEx( int * piRow, int * piCol );
 extern HB_EXPORT HB_ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, int iColor, int iChar, int iRows, int iCols );
 extern HB_EXPORT HB_ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, const char * szFrame, int iColor );
 extern HB_EXPORT int        hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor );
 extern HB_EXPORT HB_ERRCODE hb_gtGfxText( int iTop, int iLeft, const char * szText, int iColor, int iSize, int iWidth );
+
+#if defined( HB_LEGACY_LEVEL5 )
+extern HB_EXPORT HB_ERRCODE hb_gtGetPosEx( int * piRow, int * piCol );
+#endif
 
 extern HB_EXPORT HB_BOOL    hb_mouseIsPresent( void );
 extern HB_EXPORT HB_BOOL    hb_mouseGetCursor( void );
@@ -261,7 +264,7 @@ extern HB_EXPORT void       hb_gtWCurrent( HB_GT_WND * wnd );
 extern HB_EXPORT void       hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect );
 extern HB_EXPORT HB_BOOL    hb_gtWVis( HB_GT_WND * wnd, HB_USHORT uiStatus );
 
-extern HB_EXPORT HB_ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ); /* System Level Request */
+extern HB_EXPORT HB_ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ); /* System-Level Request */
 extern HB_EXPORT HB_ERRCODE hb_gtModalRead( void * );
 extern HB_EXPORT HB_ERRCODE hb_gtFlushCursor( void );
 extern HB_EXPORT HB_ERRCODE hb_gtSetColor( HB_GT_RGB * color );
@@ -294,7 +297,7 @@ extern HB_EXPORT int        hb_inkeySetLast( int iKey );    /* Set new LastKey()
 extern HB_EXPORT void       hb_inkeyExit( void );           /* reset inkey pool to default state and free any allocated resources */
 
 extern HB_EXPORT HB_SIZE    hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize ); /* convert key value to string */
-extern HB_EXPORT int        hb_inkeyKeyStd( int iKey );     /* convert Harbour extended key code to cl*pper inkey code */
+extern HB_EXPORT int        hb_inkeyKeyStd( int iKey );     /* convert Harbour extended key code to Cl*pper inkey code */
 extern HB_EXPORT int        hb_inkeyKeyExt( int iKey );     /* extract function/edit key code value HB_KX_* from Harbour extended key code */
 extern HB_EXPORT int        hb_inkeyKeyMod( int iKey );     /* extract keyboard modifiers HB_KF_* from Harbour extended key code */
 extern HB_EXPORT int        hb_inkeyKeyVal( int iKey );     /* extract key/character code from Harbour extended key code */
@@ -337,7 +340,7 @@ extern HB_EXPORT int        hb_inkeyKeyVal( int iKey );     /* extract key/chara
 #define HB_INKEY_NEW_MPOS( x, y )   ( ( ( ( y ) & HB_INKEY_EXT_POSMASK ) << HB_INKEY_EXT_POSBITS ) | \
                                       ( ( x ) & HB_INKEY_EXT_POSMASK ) | \
                                       ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEPOS ) )
-#define HB_INKEY_NEW_EVENT( e )      ( ( e ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_EVENT ) )
+#define HB_INKEY_NEW_EVENT( e )     ( ( e ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_EVENT ) )
 
 #define HB_INKEY_MOUSEPOSX( n )     ( ( n ) & HB_INKEY_EXT_POSMASK )
 #define HB_INKEY_MOUSEPOSY( n )     ( ( ( n ) >> HB_INKEY_EXT_POSBITS ) & HB_INKEY_EXT_POSMASK )

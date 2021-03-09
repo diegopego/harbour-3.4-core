@@ -2,14 +2,13 @@
 <html lang="en">
 
 <meta charset="utf-8">
-<meta name="referrer" content="origin">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; block-all-mixed-content">
 
 <title>{% if page.layout == 'example' %}Harbour · Example · {{ page.slug }}{% else %}{% if page.title %}Harbour · {{ page.title }}{% else %}Harbour{% endif %}{% else %}{{ site.title }}{% endif %}</title>
 
 <link rel="shortcut icon" type="image/x-icon" href="{{ site.baseurl }}/favicon.ico">
-<link rel="stylesheet" href="{{ site.baseurl }}/css/styles.css">
-<link rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic">
+<link rel="stylesheet" href="{{ site.baseurl }}/css/main.css">
 
-{% include head_stat.html %}
+{% include head_stat.html -%}

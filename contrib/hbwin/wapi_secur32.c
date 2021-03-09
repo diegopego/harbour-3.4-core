@@ -1,7 +1,7 @@
 /*
  * Windows API functions (security.h)
  *
- * Copyright 2015 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2015 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,7 +51,7 @@
 #endif
 
 /* Workaround for unfixed 'w32api' (as of 3.17.2) bug:
-   https://web.archive.org/web/sourceforge.net/p/mingw/bugs/279/#efbc */
+   https://sourceforge.net/p/mingw/bugs/279/#efbc */
 #if ! defined( _WIN32_WINNT ) || _WIN32_WINNT < 0x0500
    #undef _WIN32_WINNT
    #define _WIN32_WINNT  0x0500
@@ -63,8 +63,7 @@ HB_FUNC( WAPI_GETUSERNAMEEX )
 {
    HB_BOOL fResult = HB_FALSE;
 
-#if ! defined( HB_OS_WIN_CE ) && \
-    ! defined( __TINYC__ )
+#if ! defined( HB_OS_WIN_CE )
    {
       typedef int ( WINAPI * _HB_GETUSERNAMEEX )( EXTENDED_NAME_FORMAT, LPTSTR, PULONG );
 

@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -57,7 +57,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-/* TOFIX: Leave this here, until this code is cleaned off of RTEs */
+/* FIXME: Leave this here, until this code is cleaned off of RTEs */
 #pragma linenumber=on
 
 #define _REFRESH_NONE   0
@@ -95,12 +95,12 @@ CREATE CLASS HBEditor
    METHOD ExitState()                                    // Returns ::lExitEdit
 
    METHOD KeyboardHook( nKey )                           // Gets called every time there is a key not handled directly by HBEditor
-   METHOD IdleHook()                                     // Gets called every time there are no more keys to hanlde just before HBEditor blocks itself waiting for a char
+   METHOD IdleHook()                                     // Gets called every time there are no more keys to handle just before HBEditor blocks itself waiting for a char
 
    METHOD Resize( nTop, nLeft, nBottom, nRight )         // Redefines editor window size and refreshes it
    METHOD SetColor( cColorString )                       // Sets/retrieves color used for screen writes
-   METHOD Hilite()                                       // Start Hilighting swapping first two color definitions inside cColorSpec
-   METHOD DeHilite()                                     // Stop Hilighting
+   METHOD Hilite()                                       // Start highlighting swapping first two color definitions inside cColorSpec
+   METHOD DeHilite()                                     // Stop highlighting
 
    METHOD Row()                                          // Returns current line position on the screen
    METHOD Col()                                          // Returns current column position on the screen

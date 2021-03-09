@@ -1,5 +1,5 @@
 /*
- * Test CT3 TRIGONOMETRIC functions - PART 1
+ * Test CT3 trigonometric functions - Part 1
  *   - Pi()
  *   - Sin()
  *   - Cos()
@@ -26,9 +26,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -229,8 +229,8 @@ PROCEDURE Main()
    WAIT
    CLS
 
-   /* NOTE: Atn2( x, y) have the parameters inverted, when
-            comparing with the standard C languaje ATAN2( y, x) */
+   /* NOTE: Atn2( x, y ) have the parameters inverted, when
+            comparing with the standard C language atan2( y, x ) */
 
 
    ? "Testing Atn2( x, y )... where:"

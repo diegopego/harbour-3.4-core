@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,7 +45,7 @@
  */
 
 /*
- * A simple RDD which introduce logging to file. It inheriths from
+ * A simple RDD which introduce logging to file. It inherits from
  * any existent RDD but if you write / replace / delete something
  * on tables it writes changes in a log file.
  */
@@ -239,7 +239,7 @@ INIT PROCEDURE _LOGRDD_INIT()
 
    RETURN
 
-/* USER UTILITY FUNCTIONS */
+/* User utility functions */
 
 FUNCTION hb_LogRddLogFileName( cFileName )
 
@@ -345,7 +345,7 @@ FUNCTION hb_LogRddValueToText( uValue )
 
    RETURN "[" + cType + "]>>>" + cText + "<<<"
 
-/* LOCAL UTILITY FUNCTIONS */
+/* Local utility functions */
 
 STATIC PROCEDURE OpenLogFile( nWA )
 

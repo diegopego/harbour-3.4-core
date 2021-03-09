@@ -7,9 +7,13 @@
 
 -w3 -es2
 
--depurlbase=mxml:https://www.msweet.org/projects.php?Z3
--deppkgname=mxml:mxml{pacman}
+-cpp=no
+
+-depurlbase=mxml:https://michaelrsweet.github.io/mxml/
+-deppkgname=mxml:libmxml-dev{deb}
 -deppkgname=mxml:libmxml{homebrew}
+-deppkgname=mxml:mxml{pkgng}
+-deppkgname=mxml:mxml{pacman}
 -depkeyhead=mxml:mxml.h
 -depcontrol=mxml:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=mxml:${HB_WITH_MXML}

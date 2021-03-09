@@ -1,7 +1,7 @@
 /*
  * Harbour NETIO server daemon
  *
- * Copyright 2010-2012 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2012 Viktor Szakats (vsz.me/hb)
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their website at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -27,7 +27,7 @@
          - gracefully shutting down server by waiting for connections to close and not accept new ones
          - pausing server
          - sort out console UI from server side output
-         - add support for subnet masks in allow/block lists, f.e. 172.16.0.0/12, and same for IPv6 */
+         - add support for subnet masks in allow/block lists, e.g. 172.16.0.0/12, and same for IPv6 */
 
 #include "fileio.ch"
 #include "inkey.ch"
@@ -221,7 +221,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       NIL, ;
       {| pConnectionSocket | netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, .F. ) } )
 
-   netiosrv[ _NETIOSRV_lEncryption ] := ( cPassword != NIL .AND. ! cPassword ) == ""
+   netiosrv[ _NETIOSRV_lEncryption ] := cPassword != NIL .AND. ! cPassword == ""
    cPassword := NIL
 
    IF Empty( netiosrv[ _NETIOSRV_pListenSocket ] )
@@ -830,7 +830,9 @@ STATIC PROCEDURE HB_Logo()
 
    OutStd( ;
       "Harbour NETIO Server " + HBRawVersion() + hb_eol() + ;
-      "Copyright (c) 2009-2017, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
+      "Copyright (c) 2009-" + ;
+         hb_ntos( Year( hb_Version( HB_VERSION_BUILD_DATE ) ) ) + ", " + ;
+         "Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
       hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
       hb_eol() )
 

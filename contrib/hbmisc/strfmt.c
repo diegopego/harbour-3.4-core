@@ -1,7 +1,7 @@
 /*
  * StrFormat() function
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,6 +47,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+#if defined( HB_LEGACY_LEVEL4 )
+
 #define HB_STRFORMAT_PARNUM_MAX_  9
 #define POS_TO_PAR( pos )  ( pos + 2 )
 
@@ -59,7 +61,7 @@ typedef struct
 } STRPAR;
 
 /* TODO: Add support for embedded PICTURE string in mask string. */
-/* TODO: Add a way to control trimming. (but 99.99% of the time, trimming is actually useful) */
+/* TODO: Add a way to disable trimming. (but 99.99% of the time, trimming is actually useful) */
 
 HB_FUNC( STRFORMAT )
 {
@@ -146,3 +148,5 @@ HB_FUNC( STRFORMAT )
    else
       hb_retc_null();
 }
+
+#endif

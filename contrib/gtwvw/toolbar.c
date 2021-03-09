@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -514,7 +514,7 @@ HB_FUNC( WVW_TBCREATE )
  *      otherwise it will be used as tooltip
  * nBitmapType: 0:custom, 1:system std bitmap, 2:system view bitmap, 3:system hist bitmap
  * lMap3Dcolors: defaults to .F.
- *         (meaningfull for custom bitmap only)
+ *         (meaningful for custom bitmap only)
  *         if .T. the following color mapping will be performed:
  *            RGB( 192, 192, 192 ) --> COLOR_3DFACE   ("transparent")
  *            RGB( 128, 128, 128 ) --> COLOR_3DSHADOW

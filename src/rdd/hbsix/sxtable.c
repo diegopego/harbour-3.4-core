@@ -31,9 +31,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -230,13 +230,13 @@ HB_FUNC( SX_RLOCK )
       dbLockInfo.uiMethod = DBLM_MULTIPLE;
       if( pRecords )
       {
-         HB_SIZE ul, nLen = hb_arrayLen( pRecords );
+         HB_SIZE nPos, nLen = hb_arrayLen( pRecords );
          pResult = hb_itemArrayNew( nLen );
-         for( ul = 1; ul <= nLen; ++ul )
+         for( nPos = 1; nPos <= nLen; ++nPos )
          {
-            dbLockInfo.itmRecID = hb_arrayGetItemPtr( pRecords, ul );
+            dbLockInfo.itmRecID = hb_arrayGetItemPtr( pRecords, nPos );
             SELF_LOCK( pArea, &dbLockInfo );
-            hb_arraySetL( pResult, ul, dbLockInfo.fResult );
+            hb_arraySetL( pResult, nPos, dbLockInfo.fResult );
          }
       }
       else
@@ -262,10 +262,10 @@ HB_FUNC( SX_UNLOCK )
       PHB_ITEM pRecords = hb_param( 1, HB_IT_ARRAY );
       if( pRecords )
       {
-         HB_SIZE ul, nLen = hb_arrayLen( pRecords );
-         for( ul = 1; ul <= nLen; ++ul )
+         HB_SIZE nPos, nLen = hb_arrayLen( pRecords );
+         for( nPos = 1; nPos <= nLen; ++nPos )
          {
-            SELF_UNLOCK( pArea, hb_arrayGetItemPtr( pRecords, ul ) );
+            SELF_UNLOCK( pArea, hb_arrayGetItemPtr( pRecords, nPos ) );
          }
       }
       else
@@ -301,7 +301,7 @@ HB_FUNC( SX_SETPASS )
           ( iPCount < 4 || HB_ISNUM( 4 ) ) )
       {
          /* Set pending password for table which will be open
-          * 3-rd and 4-th parameters are optional Harbour extensions
+          * 3rd and 4th parameters are optional Harbour extensions
           * with RDD name and connection number.
           */
          LPRDDNODE pRDDNode;

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -131,7 +131,7 @@ PHB_CODEBLOCK hb_codeblockNew( const HB_BYTE * pBuffer,
    PHB_ITEM pLocals, pBase;
    const HB_BYTE * pCode;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockNew(%p, %hu, %p, %p, %" HB_PFS "u)", pBuffer, uiLocals, pLocalPosTable, pSymbols, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockNew(%p, %hu, %p, %p, %" HB_PFS "u)", ( const void * ) pBuffer, uiLocals, ( const void * ) pLocalPosTable, ( void * ) pSymbols, nLen ) );
 
    /* Allocate memory for code block body and detach items hb_gcAllocRaw()
     * to be safe for automatic GC activation in hb_xgrab() without
@@ -225,7 +225,7 @@ PHB_CODEBLOCK hb_codeblockNew( const HB_BYTE * pBuffer,
    pCBlock->uiLocals  = uiLocals;
    pCBlock->pLocals   = pLocals;
 
-   HB_TRACE( HB_TR_INFO, ( "codeblock created %p", pCBlock ) );
+   HB_TRACE( HB_TR_INFO, ( "codeblock created %p", ( void * ) pCBlock ) );
 
    return pCBlock;
 }
@@ -237,7 +237,7 @@ PHB_CODEBLOCK hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen )
    PHB_ITEM pBase;
    HB_BYTE * pCode;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockMacroNew(%p, %" HB_PFS "u)", pBuffer, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockMacroNew(%p, %" HB_PFS "u)", ( const void * ) pBuffer, nLen ) );
 
    /* The codeblock pcode is stored in dynamically allocated memory that
     * can be deallocated after creation of a codeblock. We have to duplicate
@@ -256,12 +256,12 @@ PHB_CODEBLOCK hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen )
    pCBlock->dynBuffer = HB_TRUE;
    pCBlock->pDefSymb  = pBase->item.asSymbol.stackstate->uiClass ?
                         hb_clsMethodSym( pBase ) : pBase->item.asSymbol.value;
-   pCBlock->pSymbols  = NULL;  /* macro-compiled codeblock cannot acces a local symbol table */
+   pCBlock->pSymbols  = NULL;  /* macro-compiled codeblock cannot access a local symbol table */
    pCBlock->pStatics  = hb_stackGetStaticsBase();
    pCBlock->uiLocals  = 0;
    pCBlock->pLocals   = NULL;
 
-   HB_TRACE( HB_TR_INFO, ( "codeblock created %p", pCBlock ) );
+   HB_TRACE( HB_TR_INFO, ( "codeblock created %p", ( void * ) pCBlock ) );
 
    return pCBlock;
 }
@@ -271,7 +271,7 @@ PHB_ITEM hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos )
 {
    PHB_CODEBLOCK pCBlock = pItem->item.asBlock.value;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGetVar(%p, %d)", pItem, iItemPos ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGetVar(%p, %d)", ( void * ) pItem, iItemPos ) );
 
    /* local variables accessed in a codeblock are always stored as reference */
    return hb_itemUnRef( pCBlock->pLocals - iItemPos );
@@ -280,7 +280,7 @@ PHB_ITEM hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos )
 /* Get local variable passed by reference */
 PHB_ITEM hb_codeblockGetRef( PHB_CODEBLOCK pCBlock, int iItemPos )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGetRef(%p, %d)", pCBlock, iItemPos ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGetRef(%p, %d)", ( void * ) pCBlock, iItemPos ) );
 
    return pCBlock->pLocals - iItemPos;
 }
@@ -292,4 +292,13 @@ void * hb_codeblockId( PHB_ITEM pItem )
       return ( void * ) pItem->item.asBlock.value;
    else
       return NULL;
+}
+
+/* retrieves numer of references to the codeblock */
+HB_COUNTER hb_codeblockRefs( PHB_ITEM pItem )
+{
+   if( HB_IS_BLOCK( pItem ) )
+      return hb_gcRefCount( pItem->item.asBlock.value );
+   else
+      return 0;
 }

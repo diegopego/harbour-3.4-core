@@ -2,10 +2,10 @@
  * ProcName(), ProcLine() and ProcFile() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (ProcFile())
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb) (ProcFile())
  * Copyright 2001 JFL (Mafact) <jfl@mafact.com>
  *    Adding the MethodName() just calling ProcName()
- *    Special treatment in case of Object and Eval (only for methodname)
+ *    Special treatment in case of Object and Eval (only for method mame)
  *    skipping block and adding (b) before the method name
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,9 +19,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -201,7 +201,7 @@ char * hb_procname( int iLevel, char * szName, HB_BOOL fMethodName )
 
 /* NOTE: szName size must be an at least:
  *          HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5
- *       szFile szie must be an at least:
+ *       szFile size must be an at least:
  *          HB_PATH_MAX
  */
 HB_BOOL hb_procinfo( int iLevel, char * szName, HB_USHORT * puiLine, char * szFile )

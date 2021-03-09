@@ -1,7 +1,7 @@
 /*
  * hb_gt_dos_keyCodeTranslate()
- *       function used by DOS, WIN and OS2 ports of few GTs which use
- *       getkey()/getch()/_read_kbd()/KbdCharIn() or similar function
+ *       function used by MS-DOS, Windows and OS/2 ports of few GTs which
+ *       use getkey()/getch()/_read_kbd()/KbdCharIn() or similar function
  *       for keyboard input
  *
  * Copyright 2006, 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
@@ -19,9 +19,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,6 +51,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
+#include "hbapi.h"
 #include "hbgtcore.h"
 
 #if defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
@@ -328,12 +329,12 @@ int hb_gt_dos_keyCodeTranslate( int iKey, int iFlags, PHB_CODEPAGE cdp )
          iFlags |= iKeyPad;
          break;
 
-      case 370:   /*  Ctrl + Print */
+      case 370:   /* Ctrl + Print */
          iKey = HB_KX_PRTSCR;
          iFlags |= HB_KF_CTRL;
          break;
 
-      case 371:   /*  Ctrl + Left arrow */
+      case 371:   /* Ctrl + Left arrow */
          iKey = HB_KX_LEFT;
          iFlags |= HB_KF_CTRL | iKeyPad;
          break;
@@ -357,7 +358,7 @@ int hb_gt_dos_keyCodeTranslate( int iKey, int iFlags, PHB_CODEPAGE cdp )
          iKey = HB_KX_PGUP;
          iFlags |= HB_KF_CTRL | iKeyPad;
          break;
-      case 397:   /*  Ctrl + Up arrow */
+      case 397:   /* Ctrl + Up arrow */
          iKey = HB_KX_UP;
          iFlags |= HB_KF_CTRL | iKeyPad;
          break;

@@ -7,7 +7,7 @@ msgid ""
 msgstr "Project-Id-Version: Harbour\nPO-Revision-Date: 2014-10-14 22:50+0000\nLast-Translator: vszakats\nLanguage-Team: Portuguese (Brazil) (https://www.transifex.com/projects/p/harbour/language/pt_BR/)\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nLanguage: pt_BR\nPlural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #, c-format
-msgid "Exit code: %1$d: %2$s"
+msgid "Exit status: %1$d: %2$s"
 msgstr "Código de Saída: %1$d: %2$s"
 
 #, c-format
@@ -27,8 +27,8 @@ msgid "Processing environment options: %1$s"
 msgstr "Processando opções do ambiente: %1$s"
 
 #, c-format
-msgid "Warning: Old style HB_COMPILER_VER value (%1$d) detected. Update it to: %2$s"
-msgstr "Atenção: detectado valor antigo para HB_COMPILER_VER (%1$d). Atualize para: %2$s"
+msgid "Warning: Old style __HB_COMPILER_VER value (%1$d) detected. Update it to: %2$s"
+msgstr "Atenção: detectado valor antigo para __HB_COMPILER_VER (%1$d). Atualize para: %2$s"
 
 #, c-format
 msgid "Autodetected platform: %1$s"
@@ -1039,7 +1039,7 @@ msgid "create (or not) a map file"
 msgstr "criar (ou não) o arquivo map"
 
 #, c-format
-msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added."
+msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a suffix added."
 msgstr "criar (ou não) uma biblioteca importação (no modo -hbdyn/-hbexe). O nome terá um sufixo adicionado."
 
 #, c-format
@@ -1375,8 +1375,8 @@ msgid "enable pure C mode"
 msgstr "ativa modo C puro"
 
 #, c-format
-msgid "enable xhb mode"
-msgstr "habilitar modo xHb"
+msgid "enable xHarbour mode"
+msgstr "habilitar modo xHarbour"
 
 #, c-format
 msgid "fix casing of Harbour function names to their 'official' format. Core functions and functions belonging to all active contribs/addons with an .hbx file will be processed. [EXPERIMENTAL]"
@@ -1571,7 +1571,7 @@ msgid "option %1$s"
 msgstr "opção %1$s"
 
 #, c-format
-msgid "Exit codes (\"errorlevels\"):"
+msgid "Exit statuses (\"errorlevels\"):"
 msgstr "Códigos de saída (\"errorlevels\"):"
 
 #, c-format
@@ -1579,7 +1579,7 @@ msgid "<other>"
 msgstr "<outros>"
 
 #, c-format
-msgid "when -run option is used, the exit code will be the one returned by the target executable"
+msgid "when -run option is used, the exit status will be the one returned by the target executable"
 msgstr "quando a opção -run for usada, o código de saida será o código devolvido pelo executável de destino"
 
 #, c-format
@@ -1623,16 +1623,16 @@ msgid "options to be passed to resource compiler (before command-line options) (
 msgstr "opções a serem passadas ​​para o compilador de recursos (antes da linha de comando) (somente Windows)"
 
 #, c-format
-msgid "override C compiler executable directory (gcc compiler families only)"
+msgid "override C compiler executable directory (gcc compiler family only)"
 msgstr "sobrepor o diretório de execução do compilador C (apenas para família de compilador gcc)"
 
 #, c-format
-msgid "override C compiler executable prefix (gcc compiler families only)"
+msgid "override C compiler executable prefix (gcc compiler family only)"
 msgstr "sobrepor o prefixo do executável do compilador C (apenas para família de compilador gcc)"
 
 #, c-format
-msgid "override C compiler executable suffix (gcc compiler families only)"
-msgstr "sobrepor o sufixo executável do compilador C (apenas para família de compilador gcc)"
+msgid "override C compiler executable suffix (gcc/clang compiler families only)"
+msgstr "sobrepor o sufixo executável do compilador C (apenas para família de compilador gcc/clang)"
 
 #, c-format
 msgid "override C compiler version autodetection (gcc and msvc compiler families only). Format: <15><00> = <major><minor>"
@@ -1943,8 +1943,8 @@ msgid "static build (see -static and related options)"
 msgstr "construção compartilhada (veja -static e opções relativas)"
 
 #, c-format
-msgid "target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc)"
-msgstr "o compilador C alvo pertence a família gcc.(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc)"
+msgid "target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, clang64, open64, pcc)"
+msgstr "o compilador C alvo pertence a família gcc.(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, clang64, open64, pcc)"
 
 #, c-format
 msgid "target C compiler is bcc* (bcc, bcc64)"
@@ -1975,8 +1975,8 @@ msgid "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh"
 msgstr "CPU alvo. Onde <cpu> pode ser qualquer uma dessas: x86, x86_64, ia64, arm, mips, sh"
 
 #, c-format
-msgid "target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix)"
-msgstr "plataforma alvo é compatível com *nix (bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix)"
+msgid "target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, vxworks, linux, darwin, cygwin, minix, aix)"
+msgstr "plataforma alvo é compatível com *nix (bsd, hpux, sunos, beos, qnx, android, vxworks, linux, darwin, cygwin, minix, aix)"
 
 #, c-format
 msgid "target platform is Windows compatible (win, wce)"
@@ -1995,8 +1995,8 @@ msgid "Windows UNICODE (WIDE) mode (see -winuni option)"
 msgstr "Modo Windows UNICODE (WIDE) (veja opção -winuni)"
 
 #, c-format
-msgid "xhb mode (see -xhb option)"
-msgstr "modo xhb (veja opção -xhb)"
+msgid "xHarbour mode (see -xhb option)"
+msgstr "modo xHarbour (veja opção -xhb)"
 
 #, c-format
 msgid ".hbc directives (they should be written in separate lines):"
@@ -2303,7 +2303,7 @@ msgid "callback state. Can be: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c',
 msgstr "estado do retorno. Pode ser: 'init', 'pre_all', 'pre_prg', 'pre_res', 'pre_c', 'pre_link', 'pre_lib', 'pre_cleanup', 'post_build', 'post_all'"
 
 #, c-format
-msgid "Current exit code"
+msgid "Current exit status"
 msgstr "Código de saída atual"
 
 #, c-format

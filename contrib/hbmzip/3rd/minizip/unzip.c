@@ -68,11 +68,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*
+#if 0
 #ifndef NOUNCRYPT
         #define NOUNCRYPT
 #endif
-*/
+#endif
 
 #include "zlib.h"
 #include "unzip.h"
@@ -81,7 +81,15 @@
 #  define z_crc_t unsigned long
 #endif
 
-#include "hbapi.h"      /* for hb_xgrab()/hb_xfree() */
+#ifdef HB_USE_CORE_ALLOC
+#  include "hbapi.h"
+#  ifndef ALLOC
+#    define ALLOC(size) hb_xgrab(size)
+#  endif
+#  ifndef TRYFREE
+#    define TRYFREE(p) do {if (p) hb_xfree(p);} while( 0 )
+#  endif
+#endif
 
 #ifdef STDC
 #  include <stddef.h>
@@ -117,10 +125,10 @@
 #endif
 
 #ifndef ALLOC
-# define ALLOC(size) hb_xgrab(size)
+# define ALLOC(size) (malloc(size))
 #endif
 #ifndef TRYFREE
-# define TRYFREE(p)  do {if (p) hb_xfree(p);} while( 0 )
+# define TRYFREE(p) {if (p) free(p);}
 #endif
 
 #define SIZECENTRALDIRITEM (0x2e)

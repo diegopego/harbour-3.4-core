@@ -1,7 +1,7 @@
 /*
  * ED25519 wrappers
  *
- * Copyright 2015 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2015 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,7 +51,7 @@
 
 #include "ed25519.h"
 
-/* ed25519_create_keypair( @<public_key>, @<secret_key> ) -> NIL */
+/* ed25519_create_keypair( @<public_key>, @<secret_key> ) --> NIL */
 HB_FUNC( HB_ED25519_CREATE_KEYPAIR )
 {
    unsigned char seed[ 32 ], public_key[ 32 ], secret_key[ 64 ];
@@ -66,7 +66,7 @@ HB_FUNC( HB_ED25519_CREATE_KEYPAIR )
    hb_ret();
 }
 
-/* ed25519_get_pubkey( <secret_key> ) -> <public_key> */
+/* ed25519_get_pubkey( <secret_key> ) --> <public_key> */
 HB_FUNC( HB_ED25519_GET_PUBKEY )
 {
    if( hb_parclen( 1 ) == 64 )
@@ -81,7 +81,7 @@ HB_FUNC( HB_ED25519_GET_PUBKEY )
       hb_errRT_BASE_SubstR( EG_ARG, 3013, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* ed25519_sign( <message>, <public_key>, <secret_key> ) -> <signature> */
+/* ed25519_sign( <message>, <public_key>, <secret_key> ) --> <signature> */
 HB_FUNC( HB_ED25519_SIGN )
 {
    if( HB_ISCHAR( 1 ) &&
@@ -101,7 +101,7 @@ HB_FUNC( HB_ED25519_SIGN )
       hb_errRT_BASE_SubstR( EG_ARG, 3013, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* ed25519_verify( <signature>, <message>, <public_key> ) -> <lOK> */
+/* ed25519_verify( <signature>, <message>, <public_key> ) --> <lOK> */
 HB_FUNC( HB_ED25519_VERIFY )
 {
    if( hb_parclen( 1 ) == 64 &&
@@ -116,7 +116,7 @@ HB_FUNC( HB_ED25519_VERIFY )
 
 #if 0
 
-/* ed25519_key_exchange( <public_key>, <secret_key> ) -> <shared_secret> */
+/* ed25519_key_exchange( <public_key>, <secret_key> ) --> <shared_secret> */
 HB_FUNC( HB_ED25519_KEY_EXCHANGE )
 {
    if( hb_parclen( 1 ) == 32 &&

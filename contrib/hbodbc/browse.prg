@@ -2,7 +2,7 @@
  * Browse() for ODBC data
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com> for code derived from browse.prg
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) for original FieldBlock function
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb) for original FieldBlock function
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca> for original Skipped function
  * Copyright 2002 Tomaz Zupan <tomaz.zupan@orpo.si> modifications for ODBC
  *   This code is mostly derived work from Harbour RTL browse.prg, browdb.prg.
@@ -19,9 +19,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.

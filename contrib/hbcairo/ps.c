@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -63,8 +63,7 @@ HB_FUNC( CAIRO_PS_SURFACE_SET_SIZE )
    if( pSurface )
       cairo_ps_surface_set_size( pSurface, hb_parnd( 2 ), hb_parnd( 3 ) );
 #else
-   /* Parameter validation */
-   hb_cairo_surface_param( 1 );
+   hb_cairo_surface_param( 1 );  /* Parameter validation */
 #endif
 }
 
@@ -75,8 +74,7 @@ HB_FUNC( CAIRO_PS_SURFACE_SET_EPS )
    if( pSurface )
       cairo_ps_surface_set_eps( pSurface, hb_parl( 2 ) );
 #else
-   /* Parameter validation */
-   hb_cairo_surface_param( 1 );
+   hb_cairo_surface_param( 1 );  /* Parameter validation */
 #endif
 }
 
@@ -87,7 +85,6 @@ HB_FUNC( CAIRO_PS_SURFACE_GET_EPS )
    if( pSurface )
       hb_retl( cairo_ps_surface_get_eps( pSurface ) );
 #else
-   /* Parameter validation */
-   hb_cairo_surface_param( 1 );
+   hb_cairo_surface_param( 1 );  /* Parameter validation */
 #endif
 }

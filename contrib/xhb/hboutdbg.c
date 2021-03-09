@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -178,14 +178,16 @@ void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
       if( s_iDebugFd <= 0 || s_iXtermPid == 0 )
          return;
 
-      /* Chech if display process has terminated in the meanwhile */
+      /* Check if display process has terminated in the meanwhile */
       if( ! s_iUseDebugName )
       {
          int iPid = waitpid( s_iXtermPid, &iStatus, WNOHANG );
          if( iPid == s_iXtermPid || iPid == -1 )
          {
             s_iXtermPid = 0;
-            /* close( s_iDebugFd ); */
+            #if 0
+            close( s_iDebugFd );
+            #endif
             s_iDebugFd = 0;
             return;
          }
@@ -193,20 +195,11 @@ void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
 
       if( s_iDebugFd > 0 && HB_ISCHAR( 1 ) )
       {
-         fd_set wrds;
-         struct timeval tv = { 0, 100000 }; /* wait each time a tenth of second */
-         FD_ZERO( &wrds );
-         FD_SET( s_iDebugFd, &wrds );
-
-         if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
+         if( hb_fsCanWrite( s_iDebugFd, 100 ) > 0 ) /* wait each time a tenth of second */
          {
             if( ( HB_SIZE ) write( s_iDebugFd, szMsg, nMsgLen ) == nMsgLen )
             {
-               tv.tv_sec  = 0;
-               tv.tv_usec = 100000;
-               FD_ZERO( &wrds );
-               FD_SET( s_iDebugFd, &wrds );
-               if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
+               if( hb_fsCanWrite( s_iDebugFd, 100 ) > 0 )
                {
                   if( write( s_iDebugFd, "\n", 1 ) != 1 )
                   {

@@ -1,7 +1,7 @@
 /*
  * expat API - Harbour interface
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,7 +60,12 @@
 
 #include "expat.h"
 
-#define HB_EXPAT_VERS( ma, mi, mu )  ( XML_MAJOR_VERSION > ma || ( XML_MAJOR_VERSION == ma && ( XML_MINOR_VERSION > mi || ( XML_MINOR_VERSION == mi && XML_MICRO_VERSION >= mu ) ) ) )
+#define HB_EXPAT_VERS( ma, mi, mu )  \
+   ( XML_MAJOR_VERSION > ma || \
+   ( XML_MAJOR_VERSION == ma && \
+   ( XML_MINOR_VERSION > mi || \
+   ( XML_MINOR_VERSION == mi && \
+     XML_MICRO_VERSION >= mu ) ) ) )
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -69,6 +74,11 @@
 #include "hbvm.h"
 
 #include "hbexpat.ch"
+
+#if defined( HB_OS_DARWIN ) && defined( __clang__ )
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wunguarded-availability"
+#endif
 
 #define _VAR_xUserData                      0
 #define _VAR_xEncodingHandlerData           1
@@ -119,7 +129,7 @@ typedef struct _HB_EXPAT
          hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); \
    }
 
-/* --- Global initialization/deinitialization --- */
+/* --- Global initialization/de-initialization --- */
 
 static void * XMLCALL hb_expat_xgrab( size_t size )
 {
@@ -356,10 +366,10 @@ static int XMLCALL hb_expat_UnknownEncodingHandler( void * userdata,
 
          if( iResult == XML_STATUS_OK )
          {
-            HB_UINT tmp;
+            HB_SIZE nPos;
 
-            for( tmp = 0; tmp < HB_SIZEOFARRAY( info->map ); ++tmp )
-               info->map[ tmp ] = hb_arrayGetNI( pPar2, tmp + 1 );
+            for( nPos = 0; nPos < HB_SIZEOFARRAY( info->map ); ++nPos )
+               info->map[ nPos ] = hb_arrayGetNI( pPar2, nPos + 1 );
 
             /* NOTE: Not supported by wrapper layer yet. */
             info->data    = NULL;
@@ -642,7 +652,7 @@ static int XMLCALL hb_expat_NotStandaloneHandler( void * userdata )
 
 static void PHB_EXPAT_free( PHB_EXPAT hb_expat, HB_BOOL bFree )
 {
-   HB_UINT tmp;
+   unsigned int tmp;
 
    for( tmp = 0; tmp < HB_SIZEOFARRAY( hb_expat->pVar ); ++tmp )
    {
@@ -680,8 +690,8 @@ static HB_GARBAGE_FUNC( PHB_EXPAT_mark )
 
    if( hb_expat_ptr && *hb_expat_ptr )
    {
-      PHB_EXPAT hb_expat = *hb_expat_ptr;
-      HB_UINT   tmp;
+      PHB_EXPAT    hb_expat = *hb_expat_ptr;
+      unsigned int tmp;
 
       for( tmp = 0; tmp < HB_SIZEOFARRAY( hb_expat->pVar ); ++tmp )
       {

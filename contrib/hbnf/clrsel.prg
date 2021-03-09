@@ -48,7 +48,7 @@ FUNCTION ft_ClrSel( aClrs, lColor, cChr )
 
    SetCursor( SC_NONE )
    SetColor( iif( lColor, "GR+/N,,N/N", "W+/N,,N/N" ) )
-   hb_Scroll()
+   Scroll()
 
    // initialize the color palette
    aClrPal := _ftInitPal( iif( lColor, aClrTab, aClrBW ) )
@@ -60,19 +60,19 @@ FUNCTION ft_ClrSel( aClrs, lColor, cChr )
    AEval( aClrs, {| aOpt | nLen := Max( nLen, Len( aOpt[ C_NAME ] ) ) } )
    nLen := Min( Max( nLen, 1 ), 20 ) + 2
 
-   // prepare an array for use with AChoice(); truncate names at 20 chrs
+   // prepare an array for use with AChoice(); truncate names at 20 characters
    aPrompt := Array( Len( aClrs ) )
    AEval( aClrs, {| aOpt, nE | aPrompt[ nE ] := " " + Left( aOpt[ C_NAME ], nLen - 2 ) + " " } )
 
-   // determine co-ordinates for the achoice window
+   // determine co-ordinates for the AChoice() window
    nT := Max( Int( ( 18 - Len( aPrompt ) ) / 2 ) - 1, 1 )
    nB := Min( nT + Len( aPrompt ) + 1, 17 )
    nL := Max( Int( ( 27 - nLen ) / 2 ) - 2, 1 )
    nR := Min( nL + nLen + 3, 26 )
 
-   // set up the window for aChoice
+   // set up the window for AChoice()
    SetColor( iif( lColor, "N/W,W+/R", "N/W,W+/N" ) )
-   hb_Scroll( nT, nL, nB, nR )
+   Scroll( nT, nL, nB, nR )
 
    // prompt for color setting and modify
    DO WHILE nChoice != 0
@@ -97,7 +97,7 @@ FUNCTION ft_ClrSel( aClrs, lColor, cChr )
 
    RETURN iif( nChoice == 1, aClrs, aClrOld )
 
-// Highlight the current selected aChoice element
+// Highlight the current selected AChoice() element
 STATIC PROCEDURE _ftHiLite( nRow, nCol, cStr, nLen )
 
    LOCAL aClr := _ftChr2Arr( SetColor() )
@@ -139,7 +139,7 @@ STATIC FUNCTION _ftColors( aOpt, aClrPal, lColor )
    ENDSWITCH
 
    IF ! aOpt[ C_TYPE ] == "T"  // no prompt for titles
-      // we need to know top,left,bottom,right for the prompt window
+      // we need to know top, left, bottom, right for the prompt window
       AEval( aPrompt, {| cPrompt | nLen := Max( nLen, Len( cPrompt ) ) } )
       nLen := Max( nLen, Len( aOpt[ C_NAME ] ) + 2 )
       nT := iif( aOpt[ C_TYPE ] == "M", 18, 19 )
@@ -149,7 +149,7 @@ STATIC FUNCTION _ftColors( aOpt, aClrPal, lColor )
 
       // set up the window for prompt
       SetColor( "N/W" )
-      hb_Scroll( nT, nL, nB, nR )
+      Scroll( nT, nL, nB, nR )
    ENDIF
 
    DO WHILE .T.
@@ -255,7 +255,7 @@ STATIC PROCEDURE _ftShowIt( aOpt )
 
    CASE "G"    // Get windows
       SetColor( aClr[ 1 ] )
-      hb_Scroll( 19, 41, 24, 66 )
+      Scroll( 19, 41, 24, 66 )
       Single( 19, 42, 24, 65 )
       hb_DispOutAt( 20, 43, "    Invoice Entry    " )
       hb_DispOutAt( 21, 42, hb_UTF8ToStr( "├──────────────────────┤" ) )
@@ -269,7 +269,7 @@ STATIC PROCEDURE _ftShowIt( aOpt )
 
    CASE "W"    // Alert windows
       SetColor( aClr[ 1 ] )
-      hb_Scroll( 18, 40, 24, 66 )
+      Scroll( 18, 40, 24, 66 )
       Single( 18, 41, 24, 65 )
       hb_DispOutAt( 19, 42, "                       " )
       hb_DispOutAt( 20, 42, "     Test Message      " )
@@ -283,7 +283,7 @@ STATIC PROCEDURE _ftShowIt( aOpt )
 
    CASE "B"    // browse windows
       SetColor( aClr[ 1 ] )
-      hb_Scroll( 18, 37, 24, 70 )
+      Scroll( 18, 37, 24, 70 )
       Single( 18, 38, 24, 69 )
       hb_DispOutAt( 19, 39,                " Cust   Name           Amount " )
       hb_DispOutAt( 20, 38, hb_UTF8ToStr( "╞══════╤══════════════╤════════╡" ) )
@@ -298,9 +298,9 @@ STATIC PROCEDURE _ftShowIt( aOpt )
       hb_DispOutAt( 23, 61,                                      " 345.06 " )
       EXIT
 
-   CASE "A"    // achoice type window
+   CASE "A"    // AChoice() type window
       SetColor( aClr[ 1 ] )
-      hb_Scroll( 18, 42, 24, 64 )
+      Scroll( 18, 42, 24, 64 )
       Single( 18, 43, 24, 63 )
       hb_DispOutAt( 19, 44, " Daily Reports     " )
       hb_DispOutAt( 21, 44, " Quarterly Reports " )
@@ -361,16 +361,16 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
       nR := iif( nR > nDim, 1, iif( nR == 0, nDim, nR ) )
       nC := iif( nC > nDim, 1, iif( nC == 0, nDim, nC ) )
 
-      // place selected color in the appropriate spot in clr string
-      aOpt[ C_CLR ] := _ftClrPut( aOpt[ C_CLR ], nElem, aClrPal[ nR, nC ] )
+      // place selected color in the appropriate spot in color string
+      aOpt[ C_CLR ] := _ftClrPut( aOpt[ C_CLR ], nElem, aClrPal[ nR ][ nC ] )
 
       // show sample window
       _ftShowIt( aOpt )
 
       // highlight the color palette element
       SetColor( "W+/N" )
-      hb_DispOutAt( nR, nC * 3 + 26, "" ) /* LOW-ASCII "►" */
-      hb_DispOutAt( nR, nC * 3 + 29, "" ) /* LOW-ASCII "◄" */
+      hb_DispOutAt( nR, nC * 3 + 26, Chr( 22 ) ) /* LOW-ASCII "►" */
+      hb_DispOutAt( nR, nC * 3 + 29, Chr( 23 ) ) /* LOW-ASCII "◄" */
       nKey := hb_keyStd( Inkey( 0 ) )
       hb_DispOutAt( nR, nC * 3 + 26, " " )
       hb_DispOutAt( nR, nC * 3 + 29, " " )
@@ -428,7 +428,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
 
    n := nElem + 18
    DO WHILE .T.
-      // make sure boundary not exeeded
+      // make sure boundary not exceeded
       n := iif( n > Len( aChar ) + 18, 19, iif( n < 19, Len( aChar ) + 18, n ) )
 
       // show sample window
@@ -436,8 +436,8 @@ STATIC FUNCTION _ftDeskChar( aOpt )
       _ftShowIt( aOpt )
 
       SetColor( "W+/N" )
-      hb_DispOutAt( n, 28, "" ) /* LOW-ASCII "►" */
-      hb_DispOutAt( n, 39, "" ) /* LOW-ASCII "◄" */
+      hb_DispOutAt( n, 28, Chr( 22 ) ) /* LOW-ASCII "►" */
+      hb_DispOutAt( n, 39, Chr( 23 ) ) /* LOW-ASCII "◄" */
       nKey := hb_keyStd( Inkey( 0 ) )
       hb_DispOutAt( n, 28, " " )
       hb_DispOutAt( n, 39, " " )
@@ -452,11 +452,11 @@ STATIC FUNCTION _ftDeskChar( aOpt )
    ENDDO
 
    SetColor( "W+/N" )
-   hb_Scroll( 18, 28, 23, 39 )
+   Scroll( 18, 28, 23, 39 )
 
    RETURN aOpt
 
-// Convert a chr string to an array
+// Convert a character string to an array
 STATIC FUNCTION _ftChr2Arr( cString, cDelim )
 
    LOCAL n, aArray := {}
@@ -474,7 +474,7 @@ STATIC FUNCTION _ftChr2Arr( cString, cDelim )
 
    RETURN aArray
 
-// convert an array to a chr string
+// convert an array to a character string
 STATIC FUNCTION _ftArr2Chr( aArray, cDelim )
 
    LOCAL cString := ""
@@ -504,7 +504,7 @@ STATIC PROCEDURE _ftShowPal( aClrPal, cChr )
 
    RETURN
 
-// Initialise the color palette based on the passed color table aClrTab
+// Initialize the color palette based on the passed color table aClrTab
 // Load the palette with colors
 STATIC FUNCTION _ftInitPal( aClrTab )
 

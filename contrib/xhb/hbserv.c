@@ -1,7 +1,7 @@
 /*
- * The Service/Daemon support (includes also signal/low level error management)
+ * The Service/Daemon support (includes also signal/low-level error management)
  *
- * Copyright 2003 Giancarlo Niccolai [gian@niccolai.ws]
+ * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,25 +14,26 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
- * As a special exception, xHarbour license gives permission for
- * additional uses of the text contained in its release of xHarbour.
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
  *
- * The exception is that, if you link the xHarbour libraries with other
+ * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
  * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
- * linking the xHarbour library code into it.
+ * linking the Harbour library code into it.
  *
  * This exception does not however invalidate any other reasons why
  * the executable file might be covered by the GNU General Public License.
  *
- * This exception applies only to the code released with this xHarbour
- * explicit exception.  If you add/copy code from other sources,
- * as the General public License permits, the above exception does
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
@@ -76,10 +77,6 @@
 #include <signal.h>
 #endif
 
-#ifdef __LCC__
-#define EXCEPTION_ILLEGAL_INSTRUCTION  STATUS_ILLEGAL_INSTRUCTION
-#endif
-
 /* Global definition, valid for all systems */
 
 static void s_serviceSetHBSig( void );
@@ -114,8 +111,10 @@ static int s_translateSignal( HB_UINT sig, HB_UINT subsig );
 
 #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 
-/* TODO: Register the old signal action to allow graceful fallback
-         static struct sigaction s_aOldAction[ SIGUSR2 + 1 ]; */
+/* TODO: Register the old signal action to allow graceful fallback */
+#if 0
+static struct sigaction s_aOldAction[ SIGUSR2 + 1 ];
+#endif
 
 /* Implementation of the signal translation table */
 static const S_TUPLE s_sigTable[] =
@@ -225,7 +224,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
                hb_vmRequestQuit();
                /* Allow signals to go through pthreads */
                s_serviceSetDflSig();
-               /* NOTICE: should be pthread_exit(0), but a bug in linuxthread prevents it:
+               /* NOTICE: should be pthread_exit(0), but a bug in Linux threading prevents it:
                   calling pthread exit from a signal handler will cause infinite wait for
                   restart signal.
                   This solution is rude, while the other would allow clean VM termination...
@@ -441,7 +440,7 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
           * 1: low-level signal
           * 2: low-level subsignal
           * 3: low-level system error
-          * 4: address that rised the signal
+          * 4: address that rose the signal
           * 5: process id of the signal riser
           * 6: UID of the riser
           */
@@ -560,7 +559,7 @@ BOOL WINAPI s_ConsoleHandlerRoutine( DWORD dwCtrlType )
 /**
  * Filter/handlers setup/shutdown
  * This utility functions are meant to abstract the process of declare and
- * remove the signal handlers, and do it in a mutltiplatform fashon. Use this
+ * remove the signal handlers, and do it in a mutlti-platform fashion. Use this
  * to implement new platform signal/exception handlers.
  */
 
@@ -626,7 +625,7 @@ static void s_serviceSetHBSig( void )
    signal( SIGPIPE, SIG_IGN );
 #endif
 
-#ifdef HB_OS_WIN
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    /* disable all os-level error boxes */
    s_uiErrorMode = SetErrorMode(
       SEM_FAILCRITICALERRORS | SEM_NOALIGNMENTFAULTEXCEPT | SEM_NOGPFAULTERRORBOX |
@@ -635,7 +634,6 @@ static void s_serviceSetHBSig( void )
    SetUnhandledExceptionFilter( s_exceptionFilter );
    s_hMsgHook = SetWindowsHookEx( WH_GETMESSAGE, ( HOOKPROC ) s_MsgFilterFunc, NULL, GetCurrentThreadId() );
    SetConsoleCtrlHandler( s_ConsoleHandlerRoutine, TRUE );
-
 #endif
 }
 
@@ -656,7 +654,7 @@ static void s_serviceSetDflSig( void )
    signal( SIGPIPE, SIG_DFL );
 #endif
 
-#ifdef HB_OS_WIN
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    SetUnhandledExceptionFilter( NULL );
    if( s_hMsgHook != NULL )
    {
@@ -767,7 +765,7 @@ HB_FUNC( HB_STARTSERVICE )
    s_fIsService = HB_TRUE;
 
    /* in Windows, we just detach from console */
-   #ifdef HB_OS_WIN
+   #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    if( hb_parl( 1 ) )
       FreeConsole();
    #endif
@@ -884,7 +882,7 @@ HB_FUNC( HB_POPSIGNALHANDLER )
          if( hb_arrayLen( s_pHooks ) == 0 )
          {
             hb_itemRelease( s_pHooks );
-            s_pHooks = NULL;              /* So it can be reinitilized */
+            s_pHooks = NULL;              /* So it can be reinitialized */
          }
       }
       else
@@ -897,8 +895,8 @@ HB_FUNC( HB_POPSIGNALHANDLER )
 }
 
 /**
- * Return a character description of the low level signal that has been
- * issued to signal handling routines. This is system dependant.
+ * Return a character description of the low-level signal that has been
+ * issued to signal handling routines. This is system dependent.
  * TODO: Make it international through the xHarbour standard message system.
  */
 HB_FUNC( HB_SIGNALDESC )
@@ -977,6 +975,7 @@ HB_FUNC( HB_SIGNALDESC )
 
       case SIGABRT:
          hb_retc_const( "Abort" );
+         return;
 
       case SIGUSR1:
          hb_retc_const( "User defined" );

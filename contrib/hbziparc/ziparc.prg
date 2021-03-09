@@ -1,7 +1,7 @@
 /*
  * ZipArchive interface compatibility implementation.
  *
- * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008 Viktor Szakats (vsz.me/hb)
  * Copyright 2008 Toninho (toninhofwi yahoo.com.br)
  * Copyright 2000-2001 Luiz Rafael Culik <culik@sl.conex.net> (original ZipArchive interface, docs)
  *
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -171,8 +171,8 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
                nRatio := 0
             ENDIF
 
-            /* TOFIX: Original hbziparch has nMethod as string: Unknown, Stored, DeflatN, DeflatX, DeflatF. */
-            /* TOFIX: Original hbziparch has attributes as string. */
+            /* FIXME: Original hbziparch has nMethod as string: Unknown, Stored, DeflatN, DeflatX, DeflatF. */
+            /* FIXME: Original hbziparch has attributes as string. */
             AAdd( aFiles, { cFileName, nSize, nMethod, nCompSize, nRatio, dDate, cTime, hb_NumToHex( nCRC, 8 ), nInternalAttr /* cAttr */, lCrypted, cComment } )
          ELSE
             AAdd( aFiles, cFileName )

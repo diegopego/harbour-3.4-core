@@ -1,13 +1,13 @@
 /*
  * The internet protocol / TCP support
  *
- * Copyright 2002 Giancarlo Niccolai [gian@niccolai.ws]
+ * Copyright 2002 Giancarlo Niccolai <gian@niccolai.ws>
  *                Ron Pinkas [Ron@RonPinkas.com]
  *                Marcelo Lombardo [marcelo.lombardo@newage-software.com.br]
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    updated and ported to Harbour
  * Copyright 2008 Miguel Angel marchuet <miguelangel@marchuet.net>
- *    added dinamic system buffer
+ *    added dynamic system buffer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -107,15 +107,15 @@ static HB_COUNTER s_initialize = 1;
 
 #if defined( HB_OS_LINUX )
 /* #define HB_INET_LINUX_INTERRUPT     SIGUSR1 + 90 */
-   #ifdef HB_INET_LINUX_INTERRUPT
-      #include <signal.h>
+#  ifdef HB_INET_LINUX_INTERRUPT
+#     include <signal.h>
 
 static void hb_inetLinuxSigusrHandle( int sig )
 {
    /* nothing to do */
    HB_SYMBOL_UNUSED( sig );
 }
-   #endif
+#  endif
 #endif
 
 static void hb_inetErrRT( void )
@@ -1461,7 +1461,7 @@ HB_FUNC( HB_INETDGRAMRECV )
       {
          fRepeat = HB_FALSE;
          if( socket->remote )
-            hb_xfree( socket->remote );  /* TOFIX: double free */
+            hb_xfree( socket->remote );  /* FIXME: double free */
          iMax = hb_socketRecvFrom( socket->sd, buffer, iLen, 0,
                                    &socket->remote, &socket->remotelen,
                                    socket->iTimeout );

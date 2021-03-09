@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,32 +47,32 @@
 /*
      QR Code is ISO/IEC18004
 
-     JIS-X-0510  QR Code standard in Japaneese language :)
-       https://osdn.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
+     JIS-X-0510  QR Code standard in Japanese language :)
+      https://osdn.net/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
 
    https://en.wikipedia.org/wiki/QR_Code
-   http://www.qrcode.com/en/
+   https://www.nayuki.io/page/creating-a-qr-code-step-by-step
+   https://www.qrcode.com/
    https://foxdesignsstudio.com/uploads/pdf/Three_QR_Code.pdf
-   https://web.archive.org/web/www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
-   http://www.swetake.com/qr/index-e.html
+   https://web.archive.org/web/20160530202101/www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
+   https://web.archive.org/web/www.swetake.com/qrcode/index-e.html
    https://www.codeproject.com/Articles/20574/Open-Source-QRCode-Library
-   https://osdn.jp/projects/reedsolomon/
-   https://web.archive.org/web/twit88.com/platform/projects/show/mt-qrcode
+   https://osdn.net/projects/reedsolomon/
+   https://web.archive.org/web/platform.twit88.com/projects/mt-qrcode
    https://qrcode.osdn.jp/
    https://zxing.org/w/decode.jspx                         Online decoder
-   http://blog.qr4.nl/Online-QR-Code_Decoder.aspx          Online decoder (not all codes are decoded)
-   http://www.thonky.com/qr-code-tutorial/                 Tutorial
+   https://webqr.com/                                      Online decoder
+   https://www.thonky.com/qr-code-tutorial/                Tutorial
    https://github.com/zxing/zxing                          Java library
-   http://goqr.me/                                         Online encode
-   http://www.pclviewer.com/rs2/calculator.html            Reed-solomon ECC calculator
-   https://web.archive.org/web/raidenii.net/files/datasheets/misc/qr_code.pdf
+   https://qrcode.tec-it.com/                              Online encode
+   https://www.qrstuff.com/                                Online encode
+   https://www.the-qrcode-generator.com/                   Online encode
+   https://www.pclviewer.com/rs2/calculator.html           Reed-Solomon ECC calculator
+   https://web.archive.org/web/20141129033352/raidenii.net/files/datasheets/misc/qr_code.pdf
 
  */
 
 #include "hbzebra.h"
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
 /* #define DEBUG_CODE */
 
@@ -468,7 +468,7 @@ static int _qr_fixed( int iVersion, int iRow, int iCol )
    int iLength = _qr_versionlength( iVersion );
    const unsigned char * pi;
 
-   /* position detection markers and versino info */
+   /* position detection markers and version info */
    if( iRow < 9 && iCol < 9 )
       return 1;
    if( iRow < 9 && iCol >= iLength - 8 )
@@ -627,7 +627,7 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
    HB_SIZE n;
 
    /* Select encoding mode */
-   iMode = 1;  /* 1=Numeric, 2=Alphanumeric, 4=8-bit, 8=Kanji. Not modes: 0=termibator, 3=Structured append, 7=ECI, 5=FNC1(1), 9=FNC1(2)*/
+   iMode = 1;  /* 1=Numeric, 2=Alphanumeric, 4=8-bit, 8=Kanji. Not modes: 0=terminator, 3=Structured append, 7=ECI, 5=FNC1(1), 9=FNC1(2)*/
    for( n = 0; n < nSize; n++ )
    {
       char ch = szCode[ n ];
@@ -654,7 +654,7 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
 
    iLen += 4; /* Mode indicator length */
 
-   /*  Select version */
+   /* Select version */
    iDataLen = 0; /* to pacify warning with some C compilers (MSVS 2010) */
    iVersion = 0; /* to pacify warning */
    for( i = 1; i <= 40; i++ )
@@ -785,7 +785,7 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
          j ^= iPoly;
    }
 
-   /* Init Reed-Solomonn encode. Parameters: iECCLen, iIndex */
+   /* Init Reed-Solomon encode. Parameters: iECCLen, iIndex */
    iECCLen = pLevel->block[ 0 ].uiECC;
    iIndex = 0; /* why this parameter is different from DataMatrix ??? */
 
@@ -1163,7 +1163,9 @@ static int _qr_mask( PHB_BITBUFFER pBits, int iVersion )
    }
 #ifdef DEBUG_CODE
    HB_TRACE( HB_TR_ALWAYS, ( "mask:%d", iMaskMin ) );
-/* iMaskMin = 0; */
+   #if 0
+   iMaskMin = 0;
+   #endif
    HB_TRACE( HB_TR_ALWAYS, ( "mask applied:%d", iMaskMin ) );
 #endif
    _qr_mask_pattern( pBits, iVersion, iMaskMin );

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -225,7 +225,7 @@ METHOD PROCEDURE WvgPartHandler:notifierBlock( ... )
 
    RETURN
 
-/* This will be called by the WvgCrt() console for various events to be propogated to child controls */
+/* This will be called by the WvgCrt() console for various events to be propagated to child controls */
 METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    LOCAL aPos, aMenuItem, nIndex, nCtrlID, oObj
@@ -340,7 +340,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 #endif
 
    CASE nEvent == HB_GTE_GUIPARTS
-      /* Eventally every window be checked if it falls within returned rectangle or not
+      /* Eventually every window be checked if it falls within returned rectangle or not
          then it will avoid a lot of flickering */
       AEval( ::aChildren, {| o | wvg_InvalidateRect( o:hWnd ) } )
 
@@ -354,11 +354,12 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
       CASE xParams[ 1 ] == 0                             /* menu selected */
          IF HB_ISOBJECT( ::oMenu )
             IF ! Empty( aMenuItem := ::oMenu:FindMenuItemById( xParams[ 2 ] ) )
-               IF HB_ISEVALITEM( aMenuItem[ 2 ] )
+               DO CASE
+               CASE HB_ISEVALITEM( aMenuItem[ 2 ] )
                   Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], , aMenuItem[ 4 ] )
-               ELSEIF HB_ISEVALITEM( aMenuItem[ 3 ] )
+               CASE HB_ISEVALITEM( aMenuItem[ 3 ] )
                   Eval( aMenuItem[ 3 ], aMenuItem[ 1 ], , aMenuItem[ 4 ] )
-               ENDIF
+               ENDCASE
             ENDIF
          ENDIF
 
@@ -458,11 +459,12 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       IF Empty( hWndCtrl )                   /* It is menu */
          IF HB_ISOBJECT( ::oMenu )
             IF ! Empty( aMenuItem := ::oMenu:FindMenuItemById( nCtrlID ) )
-               IF HB_ISEVALITEM( aMenuItem[ 2 ] )
+               DO CASE
+               CASE HB_ISEVALITEM( aMenuItem[ 2 ] )
                   Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], , aMenuItem[ 4 ] )
-               ELSEIF HB_ISEVALITEM( aMenuItem[ 3 ] )
+               CASE HB_ISEVALITEM( aMenuItem[ 3 ] )
                   Eval( aMenuItem[ 3 ], aMenuItem[ 1 ], , aMenuItem[ 4 ] )
-               ENDIF
+               ENDCASE
             ENDIF
          ENDIF
          RETURN EVENT_HANDLED
@@ -479,11 +481,12 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
    CASE WIN_WM_NOTIFY
       IF ( nObj := AScan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
          nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, wvg_n2p( nlParam ) } )
-         IF HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_HANDLED
+         DO CASE
+         CASE HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_HANDLED
             RETURN EVENT_HANDLED
-         ELSEIF HB_ISLOGICAL( nReturn )
+         CASE HB_ISLOGICAL( nReturn )
             RETURN nReturn
-         ENDIF
+         ENDCASE
       ENDIF
       EXIT
 

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,7 +59,7 @@
       defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX ) || \
       defined( HB_OS_BSD ) || defined( HB_OS_BEOS ) || \
       defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS ) || \
-      defined( HB_OS_SYMBIAN ) || defined( HB_OS_CYGWIN ) || \
+      defined( HB_OS_CYGWIN ) || \
       defined( HB_OS_AIX )
 #  include <pthread.h>
 #  define HB_PTHREAD_API
@@ -218,7 +218,9 @@ HB_EXTERN_BEGIN
     * anyhow I'd prefer to not make such strict binding to OS values because
     * it may cause troubles when code will be ported to other platforms.
     */
-   /* typedef TID                HB_THREAD_NO; */
+   #if 0
+   typedef TID                HB_THREAD_NO;
+   #endif
    typedef HB_MAXINT          HB_THREAD_NO;
    typedef TID                HB_THREAD_ID;
    typedef TID                HB_THREAD_HANDLE;
@@ -365,7 +367,7 @@ typedef HB_THREAD_STARTFUNC( PHB_THREAD_STARTFUNC );
 
 extern HB_EXPORT void hb_threadReleaseCPU( void );
 
-/* atomic oprtations */
+/* atomic operations */
 extern HB_EXPORT void        hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value );
 extern HB_EXPORT HB_COUNTER  hb_atomic_get( volatile HB_COUNTER * pCounter );
 extern HB_EXPORT void        hb_atomic_inc( volatile HB_COUNTER * pCounter );
@@ -445,7 +447,7 @@ extern HB_BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, HB_ULONG ulMilliSec, P
    /* enable native compiler TLS support by default for this compilers
     * which are known that it will work correctly
     */
-#  if ( defined( _MSC_VER ) && ( _MSC_VER > 1500 ) ) && ! defined( __POCC__ ) && ! defined( __XCC__ )
+#  if ( defined( _MSC_VER ) && ( _MSC_VER > 1500 ) ) && ! defined( __POCC__ )
 #     define HB_USE_TLS
 #  elif defined( __GNUC__ ) && __GNUC__ >= 3 && \
         defined( __GLIBC__ ) && defined( __GLIBC_MINOR__ ) && \
@@ -460,7 +462,7 @@ extern HB_BOOL hb_threadMutexSyncWait( PHB_ITEM pItemMtx, HB_ULONG ulMilliSec, P
 #ifdef HB_USE_TLS
 #  if ( defined( __GNUC__ ) && __GNUC__ >= 3 ) || defined( __BORLANDC__ )
 #     define HB_TLS_ATTR      __thread
-#  elif defined( _MSC_VER ) || defined( __WATCOMC__ ) || defined( __DMC__ )
+#  elif defined( _MSC_VER ) || defined( __WATCOMC__ )
 #     define HB_TLS_ATTR      __declspec( thread )
 #  else
 #     undef HB_USE_TLS

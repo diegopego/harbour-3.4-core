@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -67,11 +67,11 @@ static  HB_GT_FUNCS           SuperTable;
 
 #ifdef HB_QT_NEEDLOCKS
    static QMutex s_qMtx( QMutex::Recursive );
-   #define HB_QTC_LOCK()       do { s_qMtx.lock()
-   #define HB_QTC_UNLOCK()     s_qMtx.unlock(); } while( 0 )
+#  define HB_QTC_LOCK()       do { s_qMtx.lock()
+#  define HB_QTC_UNLOCK()     s_qMtx.unlock(); } while( 0 )
 #else
-   #define HB_QTC_LOCK()       do {} while( 0 )
-   #define HB_QTC_UNLOCK()     do {} while( 0 )
+#  define HB_QTC_LOCK()       do {} while( 0 )
+#  define HB_QTC_UNLOCK()     do {} while( 0 )
 #endif
 
 static QApplication * s_qtapp = NULL;
@@ -1691,7 +1691,7 @@ static void hb_gt_qtc_Exit( PHB_GT pGT )
 {
    PHB_GTQTC pQTC;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Exit(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Exit(%p)", ( void * ) pGT ) );
 
    pQTC = HB_GTQTC_GET( pGT );
    HB_GTSUPER_EXIT( pGT );
@@ -1706,7 +1706,7 @@ static void hb_gt_qtc_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    PHB_GTQTC pQTC;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Redraw(%p,%d,%d,%d)", ( void * ) pGT, iRow, iCol, iSize ) );
 
    pQTC = HB_GTQTC_GET( pGT );
    if( pQTC )
@@ -1727,7 +1727,7 @@ static void hb_gt_qtc_Refresh( PHB_GT pGT )
 {
    PHB_GTQTC pQTC;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Refresh(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Refresh(%p)", ( void * ) pGT ) );
 
    HB_GTSUPER_REFRESH( pGT );
 
@@ -1748,7 +1748,7 @@ static HB_BOOL hb_gt_qtc_SetMode( PHB_GT pGT, int iRows, int iCols )
    PHB_GTQTC pQTC;
    HB_BOOL fResult, fCenter;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_SetMode(%p,%d,%d)", ( void * ) pGT, iRows, iCols ) );
 
    pQTC = HB_GTQTC_GET( pGT );
    fCenter = iRows != pQTC->iRows || iCols != pQTC->iCols;
@@ -1771,7 +1771,7 @@ static HB_BOOL hb_gt_qtc_SetMode( PHB_GT pGT, int iRows, int iCols )
 
 static const char * hb_gt_qtc_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Version(%p,%d)", pGT, iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Version(%p,%d)", ( void * ) pGT, iType ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1787,7 +1787,7 @@ static int hb_gt_qtc_ReadKey( PHB_GT pGT, int iEventMask )
 {
    PHB_GTQTC pQTC;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_ReadKey(%p,%d)", pGT, iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_ReadKey(%p,%d)", ( void * ) pGT, iEventMask ) );
 
    HB_SYMBOL_UNUSED( iEventMask );
 
@@ -1813,13 +1813,13 @@ static int hb_gt_qtc_ReadKey( PHB_GT pGT, int iEventMask )
 
 static void hb_gt_qtc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Tone(%p,%lf,%lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
    HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( dFrequency );
    HB_SYMBOL_UNUSED( dDuration );
 
-   /* TODO: add support for sth more advanced then simple system beep */
+   /* TODO: add support for something more advanced then simple system beep */
    QApplication::beep();
 }
 
@@ -1827,7 +1827,7 @@ static void hb_gt_qtc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 static HB_BOOL hb_gt_qtc_mouse_IsPresent( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_mouse_IsPresent(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_mouse_IsPresent(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1838,7 +1838,7 @@ static void hb_gt_qtc_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
    PHB_GTQTC pQTC;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_mouse_GetPos(%p,%p,%p)", pGT, piRow, piCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_mouse_GetPos(%p,%p,%p)", ( void * ) pGT, piRow, piCol ) );
 
    pQTC = HB_GTQTC_GET( pGT );
    *piRow = pQTC->mouseRow;
@@ -1847,7 +1847,7 @@ static void hb_gt_qtc_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 
 static HB_BOOL hb_gt_qtc_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_mouse_ButtonState(%p,%i)", pGT, iButton ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_mouse_ButtonState(%p,%i)", ( void * ) pGT, iButton ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1865,7 +1865,7 @@ static HB_BOOL hb_gt_qtc_mouse_ButtonState( PHB_GT pGT, int iButton )
 
 static int hb_gt_qtc_mouse_CountButton( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_mouse_CountButton(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_mouse_CountButton(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1879,7 +1879,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    PHB_GTQTC pQTC;
    int iVal;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Info(%p,%d,%p)", pGT, iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_Info(%p,%d,%p)", ( void * ) pGT, iType, ( void * ) pInfo ) );
 
    pQTC = HB_GTQTC_GET( pGT );
 
@@ -2314,6 +2314,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                {
                   case 0:
                      iDepth = 32;
+                     /* fallthrough */
                   case 32:
                      format = QImage::Format_RGB32;
                      break;
@@ -2414,7 +2415,7 @@ static int hb_gt_qtc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
    PHB_GTQTC pQTC;
    int iRet = 1;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_gfx_Primitive(%p,%d,%d,%d,%d,%d,%d)", pGT, iType, iTop, iLeft, iBottom, iRight, iColor ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_qtc_gfx_Primitive(%p,%d,%d,%d,%d,%d,%d)", ( void * ) pGT, iType, iTop, iLeft, iBottom, iRight, iColor ) );
 
    pQTC = HB_GTQTC_GET( pGT );
 
@@ -2511,7 +2512,7 @@ static int hb_gt_qtc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", ( void * ) pFuncTable ) );
 
    pFuncTable->Init                 = hb_gt_qtc_Init;
    pFuncTable->Exit                 = hb_gt_qtc_Exit;
@@ -2574,15 +2575,19 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parnt ) : QWidget( parnt )
    /* Warning! Qt::WA_KeyCompression attribute creates problems when
     * barcode readers are used - some characters are eaten [druzus]
     */
-   /* setAttribute( Qt::WA_KeyCompression ); */
+   #if 0
+   setAttribute( Qt::WA_KeyCompression );
+   #endif
 
    /* Qt::WA_InputMethodEnabled disables support for
     * national characters in few European countries
-    * (f.e. Polish characters with ALT in macOS)
+    * (e.g. Polish characters with ALT in macOS)
     * If some Asian users needs it then we will have
     * to enable it optionally [druzus]
     */
-   /* setAttribute( Qt::WA_InputMethodEnabled ); */
+   #if 0
+   setAttribute( Qt::WA_InputMethodEnabled );
+   #endif
 
 #if defined( HB_OS_ANDROID ) || defined( HB_OS_IOS ) || defined( HB_OS_WIN_CE )
    setInputMethodHints( Qt::ImhNoPredictiveText );

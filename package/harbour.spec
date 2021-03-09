@@ -8,8 +8,8 @@
 
 # ---------------------------------------------------------------
 # HOWTO .rpm docs:
-#    https://fedoraproject.org/wiki/PackageMaintainers/CreatingPackageHowTo
-#    https://gurulabs.com/downloads/GURULABS-RPM-LAB/GURULABS-RPM-GUIDE-v1.0.PDF
+#    https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+#    https://www.gurulabs.com/media/files/courseware-samples/GURULABS-RPM-GUIDE-v1.0.PDF
 # ---------------------------------------------------------------
 
 ######################################################################
@@ -19,19 +19,19 @@
 # please add your distro suffix if it does not belong to the ones recognized below
 # and remember that order checking can be important
 
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandriva-release-common 2>/dev/null) && echo "mdv$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' fedora-release 2>/dev/null) && echo "fc$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' fedora-release 2>/dev/null) && echo "fc$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' epel-release 2>/dev/null) && echo "el$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' centos-release 2>/dev/null) && echo "el$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' centos-release 2>/dev/null) && echo "el$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' suse-release 2>/dev/null) && echo "sus$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' suse-release 2>/dev/null) && echo "sus$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' openSUSE-release 2>/dev/null) && echo "sus$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' openSUSE-release 2>/dev/null) && echo "sus$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %([ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/')
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' system-release 2>/dev/null) && echo 'amzn1' | tr -d '.')
 %if "%{platform}" == ""
 %undefine platform
 %endif
@@ -49,22 +49,21 @@
 
 %define name      harbour
 %define dname     Harbour
-%define version   3.4.0
-%define releasen  0.1
-%define alphatag  dev
+%define version   0.0.0
+%define releasen  1
+%define verstat   dev
 %define hb_etcdir /etc/%{name}
 %define hb_plat   export HB_PLATFORM=linux
 %define hb_cc     export HB_COMPILER=gcc
 %define hb_cflag  export HB_USER_CFLAGS=
 %define hb_lflag  export HB_USER_LDFLAGS=
 %define hb_dflag  export HB_USER_DFLAGS=
-%define shl_path  export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}`pwd`/lib/${HB_PLATFORM}/${HB_COMPILER}${HB_BUILD_NAME}
+%define shl_path  export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}$(pwd)/lib/${HB_PLATFORM}/${HB_COMPILER}${HB_BUILD_NAME}
 %define hb_gpm    export HB_WITH_GPM=%{!?_without_gpm:yes}%{?_without_gpm:no}
 %define hb_crs    export HB_WITH_CURSES=%{!?_without_curses:yes}%{?_without_curses:no}
 %define hb_sln    export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
 %define hb_x11    export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
-%define hb_ssl    export HB_WITH_OPENSSL=%{?_with_openssl:yes}%{!?_with_openssl:no}
-%define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE2=%{?_with_localpcre2:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
+%define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE2=%{?_with_localpcre2:local} ; export HB_WITH_PCRE=%{?_with_localpcre1:local} ; export HB_WITH_BZIP2=%{?_with_localbz2:local} ; export HB_WITH_EXPAT=%{?_with_localexpat:local} ; export HB_WITH_LIBYAML=%{?_with_locallibyaml:local} ; export HB_WITH_SQLITE3=%{?_with_localsqlite3:local}
 %define hb_proot  export HB_INSTALL_PKG_ROOT=${RPM_BUILD_ROOT}
 %define hb_bdir   export HB_INSTALL_BIN=${RPM_BUILD_ROOT}%{_bindir}
 %define hb_ldir   export HB_INSTALL_LIB=${RPM_BUILD_ROOT}%{_libdir}/%{name}
@@ -77,8 +76,8 @@
 %define hb_blds   export HB_BUILD_STRIP=all
 %define hb_bldsh  export HB_BUILD_SHARED=%{!?_with_static:yes}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
-%define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbct hbgt hbmisc hbmzip hbbz2 hbtip hbtpathy hbcomm hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbm rddsql hbsqlit3 sddsqlt3 hbnf hbhttpd hbformat hbunix hbzebra hblzf hbcomio hbmemio hbnetio hbpipeio hbtcpio hbmlzo hbmxml hbexpat %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_firebird:hbfbird sddfb} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_ads:rddads} hbrun"
-%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_ssl} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_cdir} ; %{hb_mdir} ; %{hb_tdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
+%define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbbz2 hbcomio hbcomm hbcrypto hbct hbexpat hbformat hbformat/utils hbfoxpro hbfship hbgt hbhpdf hbhttpd hblzf hbmemio hbmisc hbmlzo hbmxml hbmzip hbnetio hbnetio/utils/hbnetio hbnf hboslib hbpipeio hbsms hbsqlit3 hbtcpio hbtest hbtip hbtpathy hbunix hbxpp hbxdiff hbyaml hbzebra hbziparc rddbm rddmisc rddsql sddsqlt3 xhb %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_openssl:hbssl} %{?_with_firebird:hbfbird sddfb} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_rabbitmq:hbamqp} %{?_with_ads:rddads} hbdoc hbrun"
+%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_cdir} ; %{hb_mdir} ; %{hb_tdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
 ######################################################################
 ## Preamble.
 ######################################################################
@@ -89,10 +88,10 @@ Summary(ru):    Свободный компилятор, совместимый 
 Summary(hu):    Szabad szoftver Clipper kompatibilis fordító
 Name:           %{name}
 Version:        %{version}
-Release:        %{releasen}%{?alphatag:.%{alphatag}}%{?platform:.%{platform}}
+Release:        %{releasen}%{?verstat:.%{verstat}}%{?platform:.%{platform}}
 License:        GPL (plus exception)
 Group:          Development/Languages
-URL:            https://github.com/vszakats/harbour-core/
+URL:            https://github.com/vszakats/hb/
 Source:         %{name}-%{version}.src.tar.gz
 BuildRequires:  gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -279,19 +278,19 @@ statikus szerkesztéshez.
 %{?_with_firebird:Ten pakiet udostępnia statyczn+ biliotekę Firebird dla kompilatora %{dname}.}
 
 ## freeimage library
-#%{?_with_freeimage:%package freeimage}
-#%{?_with_freeimage:Summary:        FreeImage library bindings for %{dname} compiler}
-#%{?_with_freeimage:Summary(pl):    Bilioteka FreeImage dla kompilatora %{dname}}
-#%{?_with_freeimage:Group:          Development/Languages}
-#%{?_with_freeimage:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+%{?_with_freeimage:%package freeimage}
+%{?_with_freeimage:Summary:        FreeImage library bindings for %{dname} compiler}
+%{?_with_freeimage:Summary(pl):    Bilioteka FreeImage dla kompilatora %{dname}}
+%{?_with_freeimage:Group:          Development/Languages}
+%{?_with_freeimage:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
-#%{?_with_freeimage:%description freeimage}
-#%{?_with_freeimage:%{dname} is a Clipper compatible compiler.}
-#%{?_with_freeimage:This package provides %{dname} FreeImage library for program linking.}
+%{?_with_freeimage:%description freeimage}
+%{?_with_freeimage:%{dname} is a Clipper compatible compiler.}
+%{?_with_freeimage:This package provides %{dname} FreeImage library for program linking.}
 
-#%{?_with_freeimage:%description -l pl freeimage}
-#%{?_with_freeimage:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
-#%{?_with_freeimage:Ten pakiet udostępnia statyczn+ biliotekę FreeImage dla kompilatora %{dname}.}
+%{?_with_freeimage:%description -l pl freeimage}
+%{?_with_freeimage:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
+%{?_with_freeimage:Ten pakiet udostępnia statyczn+ biliotekę FreeImage dla kompilatora %{dname}.}
 
 ## gd library
 %{?_with_gd:%package gd}
@@ -307,6 +306,21 @@ statikus szerkesztéshez.
 %{?_with_gd:%description -l pl gd}
 %{?_with_gd:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
 %{?_with_gd:Ten pakiet udostępnia statyczn+ biliotekę GD dla kompilatora %{dname}.}
+
+## openssl library
+%{?_with_openssl:%package openssl}
+%{?_with_openssl:Summary:        OpenSSL library bindings for %{dname} compiler}
+%{?_with_openssl:Summary(pl):    Bilioteka OpenSSL dla kompilatora %{dname}}
+%{?_with_openssl:Group:          Development/Languages}
+%{?_with_openssl:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_openssl:%description openssl}
+%{?_with_openssl:%{dname} is a Clipper compatible compiler.}
+%{?_with_openssl:This package provides %{dname} OpenSSL library for program linking.}
+
+%{?_with_openssl:%description -l pl openssl}
+%{?_with_openssl:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
+%{?_with_openssl:Ten pakiet udostępnia statyczn+ biliotekę OpenSSL dla kompilatora %{dname}.}
 
 ## mysql library
 %{?_with_mysql:%package mysql}
@@ -353,6 +367,16 @@ statikus szerkesztéshez.
 %{?_with_pgsql:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
 %{?_with_pgsql:Ten pakiet udostępnia statyczn+ biliotekę PGSQL dla kompilatora %{dname}.}
 
+## rabbitmq-c library
+%{?_with_rabbitmq:%package rabbitmq}
+%{?_with_rabbitmq:Summary:        rabbitmq-c library bindings for %{dname} compiler}
+%{?_with_rabbitmq:Summary(pl):    Bilioteka rabbitmq-c dla kompilatora %{dname}}
+%{?_with_rabbitmq:Group:          Development/Languages}
+%{?_with_rabbitmq:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_rabbitmq:%description rabbitmq}
+%{?_with_rabbitmq:%{dname} is a Clipper compatible compiler.}
+%{?_with_rabbitmq:This package provides %{dname} rabbitmq-c bindings.}
 
 ######################################################################
 ## Preperation.
@@ -360,7 +384,7 @@ statikus szerkesztéshez.
 
 %prep
 %setup -c %{name}
-rm -rf $RPM_BUILD_ROOT
+rm -rf "$RPM_BUILD_ROOT"
 
 ######################################################################
 ## Build.
@@ -387,18 +411,20 @@ make install %{?_smp_mflags}
 
 %{?_without_curses:rm -f $HB_INSTALL_LIB/libgtcrs.a}
 %{?_without_slang:rm -f $HB_INSTALL_LIB/libgtsln.a}
-%{!?_with_openssl:rm -f $HB_INSTALL_LIB/libhbssl.a}
-rm -fR %{!?hb_ldconf:$HB_INSTALL_ETC/ld.so.conf.d}
-rm -f %{?hb_ldconf:$RPM_BUILD_ROOT/%{_libdir}/*.so*}
+%{!?_with_localbz2:rm -f $HB_INSTALL_LIB/libbz2.a}
+%{!?_with_localexpat:rm -f $HB_INSTALL_LIB/libexpat.a}
+%{!?_with_locallibyaml:rm -f $HB_INSTALL_LIB/libyaml.a}
+%{!?_with_localsqlite3:rm -f $HB_INSTALL_LIB/libsqlite3.a}
+%{!?hb_ldconf:rm -fR $HB_INSTALL_ETC/ld.so.conf.d}
+%{?hb_ldconf:rm -f $RPM_BUILD_ROOT/%{_libdir}/*.so*}
 rm -f $RPM_BUILD_ROOT/%{_bindir}/{3rdpatch.hb,commit.hb,hb-uncrustify.cfg}
-rm -f $HB_INSTALL_LIB/libpng.a \
-      $HB_INSTALL_LIB/libbz2.a \
-      $HB_INSTALL_LIB/liblibhpdf.a \
-      $HB_INSTALL_LIB/libsqlite3.a \
-      $HB_INSTALL_LIB/libexpat.a \
-      $HB_INSTALL_LIB/liblzf.a \
-      $HB_INSTALL_LIB/libminilzo.a \
-      $HB_INSTALL_LIB/libmxml.a
+rm -f \
+  $HB_INSTALL_LIB/libpng.a \
+  $HB_INSTALL_LIB/libhpdf.a \
+  $HB_INSTALL_LIB/liblzf.a \
+  $HB_INSTALL_LIB/libminilzo.a \
+  $HB_INSTALL_LIB/libsqlite3.a \
+  $HB_INSTALL_LIB/libxdiff.a
 
 ######################################################################
 ## Post install/uninstall scripts
@@ -413,7 +439,7 @@ rm -f $HB_INSTALL_LIB/libpng.a \
 ######################################################################
 ## Clean.
 ######################################################################
-rm -rf $RPM_BUILD_ROOT
+rm -rf "$RPM_BUILD_ROOT"
 
 ######################################################################
 ## File list.
@@ -428,45 +454,46 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{hb_etcdir}
 %verify(not md5 mtime) %config %{hb_etcdir}/hb-charmap.def
 %{_bindir}/harbour
-%{_bindir}/hbpp
-%{_bindir}/hbtest
-%{_bindir}/hbspeed
-%{_bindir}/hbrun
+%{_bindir}/hbdoc
+%{_bindir}/hbformat
 %{_bindir}/hbi18n
 %{_bindir}/hbmk2
-%{_bindir}/hbmk2.*.hbl
-%{_bindir}/contrib.hbr
+%{_bindir}/hbnetio
+%{_bindir}/hbpp
+%{_bindir}/hbrun
+%{_bindir}/hbspeed
+%{_bindir}/hbtest
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}
 %attr(644,root,root) %{_includedir}/%{name}/*
 
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
-%{_libdir}/%{name}/libhbcpage.a
+%{_libdir}/%{name}/libgt[^a]*.a
 %{_libdir}/%{name}/libhbcommon.a
+%{_libdir}/%{name}/libhbcpage.a
 %{_libdir}/%{name}/libhbcplr.a
 %{_libdir}/%{name}/libhbdebug.a
-%{_libdir}/%{name}/librddfpt.a
-%{_libdir}/%{name}/librddcdx.a
-%{_libdir}/%{name}/librddntx.a
-%{_libdir}/%{name}/librddnsx.a
-%{_libdir}/%{name}/libgt[^a]*.a
+%{_libdir}/%{name}/libhbextern.a
+%{_libdir}/%{name}/libhbhsx.a
 %{_libdir}/%{name}/libhblang.a
 %{_libdir}/%{name}/libhbmacro.a
-%{_libdir}/%{name}/libhbextern.a
-%{_libdir}/%{name}/libhbnulrdd.a
 %{_libdir}/%{name}/libhbnortl.a
+%{_libdir}/%{name}/libhbnulrdd.a
 %{_libdir}/%{name}/libhbpp.a
 %{_libdir}/%{name}/libhbrdd.a
-%{_libdir}/%{name}/libhbhsx.a
-%{_libdir}/%{name}/libhbsix.a
 %{_libdir}/%{name}/libhbrtl.a
+%{_libdir}/%{name}/libhbsix.a
+%{_libdir}/%{name}/libhbusrrdd.a
 %{_libdir}/%{name}/libhbvm.a
 %{_libdir}/%{name}/libhbvmmt.a
-%{_libdir}/%{name}/libhbusrrdd.a
-%{?_with_localzlib:%{_libdir}/%{name}/libhbzlib.a}
+%{_libdir}/%{name}/librddcdx.a
+%{_libdir}/%{name}/librddfpt.a
+%{_libdir}/%{name}/librddnsx.a
+%{_libdir}/%{name}/librddntx.a
+%{?_with_localpcre1:%{_libdir}/%{name}/libhbpcre.a}
 %{?_with_localpcre2:%{_libdir}/%{name}/libhbpcre2.a}
-%{?_with_localpcre:%{_libdir}/%{name}/libhbpcre.a}
+%{?_with_localzlib:%{_libdir}/%{name}/libhbzlib.a}
 
 %files lib
 %defattr(755,root,root,755)
@@ -480,18 +507,71 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{name}
 %dir %{_datadir}/%{name}
 %dir %{_datadir}/%{name}/contrib
-%dir %{_datadir}/%{name}/contrib/hbnf
-%{_datadir}/%{name}/contrib/hbnf/*
-%{_libdir}/%{name}/libhbnf.a
+%{_datadir}/%{name}/contrib/contrib.hbr
+%dir %{_datadir}/%{name}/contrib/3rd/sqlite3
+%{_datadir}/%{name}/contrib/3rd/sqlite3/*
+%{?_with_locallibyaml:%{_libdir}/%{name}/libsqlite3.a}
 %dir %{_datadir}/%{name}/contrib/hbblink
 %{_datadir}/%{name}/contrib/hbblink/*
 %{_libdir}/%{name}/libhbblink.a
+%dir %{_datadir}/%{name}/contrib/hbbz2
+%{_datadir}/%{name}/contrib/hbbz2/*
+%{?_with_localbz2:%{_libdir}/%{name}/libbz2.a}
+%{_libdir}/%{name}/libhbbz2.a
+%dir %{_datadir}/%{name}/contrib/hbbz2io
+%{_datadir}/%{name}/contrib/hbbz2io/*
+%{_libdir}/%{name}/libhbbz2io.a
+%dir %{_datadir}/%{name}/contrib/hbcomio
+%{_datadir}/%{name}/contrib/hbcomio/*
+%{_libdir}/%{name}/libhbcomio.a
+%dir %{_datadir}/%{name}/contrib/hbcomm
+%{_datadir}/%{name}/contrib/hbcomm/*
+%{_libdir}/%{name}/libhbcomm.a
+%dir %{_datadir}/%{name}/contrib/hbct
+%{_datadir}/%{name}/contrib/hbct/*
+%{_libdir}/%{name}/libhbct.a
+%dir %{_datadir}/%{name}/contrib/hbcrypto
+%{_datadir}/%{name}/contrib/hbcrypto/*
+%{_libdir}/%{name}/libhbcrypto.a
+%{_libdir}/%{name}/libed25519.a
+%{_libdir}/%{name}/libscrypt.a
+%dir %{_datadir}/%{name}/contrib/hbexpat
+%{_datadir}/%{name}/contrib/hbexpat/*
+%{?_with_localexpat:%{_libdir}/%{name}/libexpat.a}
+%{_libdir}/%{name}/libhbexpat.a
+%dir %{_datadir}/%{name}/contrib/hbformat
+%{_datadir}/%{name}/contrib/hbformat/*
+%{_libdir}/%{name}/libhbformat.a
+%dir %{_datadir}/%{name}/contrib/hbfoxpro
+%{_datadir}/%{name}/contrib/hbfoxpro/*
+%{_libdir}/%{name}/libhbfoxpro.a
+%dir %{_datadir}/%{name}/contrib/hbfship
+%{_datadir}/%{name}/contrib/hbfship/*
+%{_libdir}/%{name}/libhbfship.a
+%dir %{_datadir}/%{name}/contrib/hbgt
+%{_datadir}/%{name}/contrib/hbgt/*
+%{_libdir}/%{name}/libhbgt.a
+%dir %{_datadir}/%{name}/contrib/hbgzio
+%{_datadir}/%{name}/contrib/hbgzio/*
+%{_libdir}/%{name}/libhbgzio.a
+%dir %{_datadir}/%{name}/contrib/hbhpdf
+%{_datadir}/%{name}/contrib/hbhpdf/*
+%{_libdir}/%{name}/libhbhpdf.a
+%dir %{_datadir}/%{name}/contrib/hbhttpd
+%{_datadir}/%{name}/contrib/hbhttpd/*
+%{_libdir}/%{name}/libhbhttpd.a
+%dir %{_datadir}/%{name}/contrib/hblzf
+%{_datadir}/%{name}/contrib/hblzf/*
+%{_libdir}/%{name}/libhblzf.a
+%dir %{_datadir}/%{name}/contrib/hbmemio
+%{_datadir}/%{name}/contrib/hbmemio/*
+%{_libdir}/%{name}/libhbmemio.a
 %dir %{_datadir}/%{name}/contrib/hbmisc
 %{_datadir}/%{name}/contrib/hbmisc/*
 %{_libdir}/%{name}/libhbmisc.a
-%dir %{_datadir}/%{name}/contrib/hbexpat
-%{_datadir}/%{name}/contrib/hbexpat/*
-%{_libdir}/%{name}/libhbexpat.a
+%dir %{_datadir}/%{name}/contrib/hbmlzo
+%{_datadir}/%{name}/contrib/hbmlzo/*
+%{_libdir}/%{name}/libhbmlzo.a
 %dir %{_datadir}/%{name}/contrib/hbmxml
 %{_datadir}/%{name}/contrib/hbmxml/*
 %{_libdir}/%{name}/libhbmxml.a
@@ -500,72 +580,55 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}/contrib/hbmzip/*
 %{_libdir}/%{name}/libminizip.a
 %{_libdir}/%{name}/libhbmzip.a
-%dir %{_datadir}/%{name}/contrib/hbbz2
-%{_datadir}/%{name}/contrib/hbbz2/*
-%{_libdir}/%{name}/libhbbz2.a
-%dir %{_datadir}/%{name}/contrib/hblzf
-%{_datadir}/%{name}/contrib/hblzf/*
-%{_libdir}/%{name}/libhblzf.a
-%dir %{_datadir}/%{name}/contrib/hbmlzo
-%{_datadir}/%{name}/contrib/hbmlzo/*
-%{_libdir}/%{name}/libhbmlzo.a
-%dir %{_datadir}/%{name}/contrib/hbcomm
-%{_datadir}/%{name}/contrib/hbcomm/*
-%{_libdir}/%{name}/libhbcomm.a
-%dir %{_datadir}/%{name}/contrib/hbcomio
-%{_datadir}/%{name}/contrib/hbcomio/*
-%{_libdir}/%{name}/libhbcomio.a
-%dir %{_datadir}/%{name}/contrib/hbmemio
-%{_datadir}/%{name}/contrib/hbmemio/*
-%{_libdir}/%{name}/libhbmemio.a
 %dir %{_datadir}/%{name}/contrib/hbnetio
 %{_datadir}/%{name}/contrib/hbnetio/*
 %{_libdir}/%{name}/libhbnetio.a
+%dir %{_datadir}/%{name}/contrib/hbnf
+%{_datadir}/%{name}/contrib/hbnf/*
+%{_libdir}/%{name}/libhbnf.a
+%dir %{_datadir}/%{name}/contrib/hboslib
+%{_datadir}/%{name}/contrib/hboslib/*
+%{_libdir}/%{name}/libhboslib.a
 %dir %{_datadir}/%{name}/contrib/hbpipeio
 %{_datadir}/%{name}/contrib/hbpipeio/*
 %{_libdir}/%{name}/libhbpipeio.a
+%dir %{_datadir}/%{name}/contrib/hbsms
+%{_datadir}/%{name}/contrib/hbsms/*
+%{_libdir}/%{name}/libhbsms.a
+%dir %{_datadir}/%{name}/contrib/hbsqlit3
+%{_datadir}/%{name}/contrib/hbsqlit3/*
+%{_libdir}/%{name}/libhbsqlit3.a
 %dir %{_datadir}/%{name}/contrib/hbtcpio
 %{_datadir}/%{name}/contrib/hbtcpio/*
 %{_libdir}/%{name}/libhbtcpio.a
-%dir %{_datadir}/%{name}/contrib/hbct
-%{_datadir}/%{name}/contrib/hbct/*
-%{_libdir}/%{name}/libhbct.a
+%dir %{_datadir}/%{name}/contrib/hbtest
+%{_datadir}/%{name}/contrib/hbtest/*
+%{_libdir}/%{name}/libhbtest.a
 %dir %{_datadir}/%{name}/contrib/hbtip
 %{_datadir}/%{name}/contrib/hbtip/*
 %{_libdir}/%{name}/libhbtip.a
-%dir %{_datadir}/%{name}/contrib/hbfoxpro
-%{_datadir}/%{name}/contrib/hbfoxpro/*
-%{_libdir}/%{name}/libhbfoxpro.a
-%dir %{_datadir}/%{name}/contrib/hbfship
-%{_datadir}/%{name}/contrib/hbfship/*
-%{_libdir}/%{name}/libhbfship.a
-%dir %{_datadir}/%{name}/contrib/hbxpp
-%{_datadir}/%{name}/contrib/hbxpp/*
-%{_libdir}/%{name}/libhbxpp.a
-%dir %{_datadir}/%{name}/contrib/xhb
-%{_datadir}/%{name}/contrib/xhb/*
-%{_libdir}/%{name}/libxhb.a
-%dir %{_datadir}/%{name}/contrib/hbhpdf
-%{_datadir}/%{name}/contrib/hbhpdf/*
-%{_libdir}/%{name}/libhbhpdf.a
-%dir %{_datadir}/%{name}/contrib/hbgt
-%{_datadir}/%{name}/contrib/hbgt/*
-%{_libdir}/%{name}/libhbgt.a
 %dir %{_datadir}/%{name}/contrib/hbtpathy
 %{_datadir}/%{name}/contrib/hbtpathy/*
 %{_libdir}/%{name}/libhbtpathy.a
-%dir %{_datadir}/%{name}/contrib/hbziparc
-%{_datadir}/%{name}/contrib/hbziparc/*
-%{_libdir}/%{name}/libhbziparc.a
+%dir %{_datadir}/%{name}/contrib/hbunix
+%{_datadir}/%{name}/contrib/hbunix/*
+%{_libdir}/%{name}/libhbunix.a
+%dir %{_datadir}/%{name}/contrib/hbxpp
+%{_datadir}/%{name}/contrib/hbxpp/*
+%{_libdir}/%{name}/libhbxpp.a
+%dir %{_datadir}/%{name}/contrib/hbxdiff
+%{_datadir}/%{name}/contrib/hbxdiff/*
+%{_libdir}/%{name}/libhbxdiff.a
+%dir %{_datadir}/%{name}/contrib/hbyaml
+%{_datadir}/%{name}/contrib/hbyaml/*
+%{?_with_locallibyaml:%{_libdir}/%{name}/libyaml.a}
+%{_libdir}/%{name}/libhbyaml.a
 %dir %{_datadir}/%{name}/contrib/hbzebra
 %{_datadir}/%{name}/contrib/hbzebra/*
 %{_libdir}/%{name}/libhbzebra.a
-%dir %{_datadir}/%{name}/contrib/hbformat
-%{_datadir}/%{name}/contrib/hbformat/*
-%{_libdir}/%{name}/libhbformat.a
-%dir %{_datadir}/%{name}/contrib/hbhttpd
-%{_datadir}/%{name}/contrib/hbhttpd/*
-%{_libdir}/%{name}/libhbhttpd.a
+%dir %{_datadir}/%{name}/contrib/hbziparc
+%{_datadir}/%{name}/contrib/hbziparc/*
+%{_libdir}/%{name}/libhbziparc.a
 %dir %{_datadir}/%{name}/contrib/rddbm
 %{_datadir}/%{name}/contrib/rddbm/*
 %{_libdir}/%{name}/librddbm.a
@@ -575,22 +638,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/%{name}/contrib/rddsql
 %{_datadir}/%{name}/contrib/rddsql/*
 %{_libdir}/%{name}/librddsql.a
-%dir %{_datadir}/%{name}/contrib/hbsqlit3
-%{_datadir}/%{name}/contrib/hbsqlit3/*
-%{_libdir}/%{name}/libhbsqlit3.a
 %dir %{_datadir}/%{name}/contrib/sddsqlt3
 %{_datadir}/%{name}/contrib/sddsqlt3/*
 %{_libdir}/%{name}/libsddsqlt3.a
-%dir %{_datadir}/%{name}/contrib/hbsms
-%{_datadir}/%{name}/contrib/hbsms/*
-%{_libdir}/%{name}/libhbsms.a
-%dir %{_datadir}/%{name}/contrib/hbunix
-%{_datadir}/%{name}/contrib/hbunix/*
-%{_libdir}/%{name}/libhbunix.a
-
-%{?_with_openssl:%dir %{_datadir}/%{name}/contrib/hbssl}
-%{?_with_openssl:%{_datadir}/%{name}/contrib/hbssl/*}
-%{?_with_openssl:%{_libdir}/%{name}/libhbssl.a}
+%dir %{_datadir}/%{name}/contrib/xhb
+%{_datadir}/%{name}/contrib/xhb/*
+%{_libdir}/%{name}/libxhb.a
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}
@@ -598,8 +651,8 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_ads:%dir %{_datadir}/%{name}}
 %{?_with_ads:%dir %{_datadir}/%{name}/contrib}
 %{?_with_ads:%dir %{_datadir}/%{name}/contrib/rddads}
-%{?_with_ads:%{_datadir}/%{name}/contrib/rddads/*}
 %{?_with_ads:%{_libdir}/%{name}/librddads.a}
+%{?_with_ads:%{_datadir}/%{name}/contrib/rddads/*}
 
 %{?_with_cairo:%files cairo}
 %{?_with_cairo:%defattr(644,root,root,755)}
@@ -639,14 +692,14 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_firebird:%{_datadir}/%{name}/contrib/sddfb/*}
 %{?_with_firebird:%{_datadir}/%{name}/contrib/hbfbird/*}
 
-#%{?_with_freeimage:%files freeimage}
-#%{?_with_freeimage:%defattr(644,root,root,755)}
-#%{?_with_freeimage:%dir %{_libdir}/%{name}}
-#%{?_with_freeimage:%dir %{_datadir}/%{name}}
-#%{?_with_freeimage:%dir %{_datadir}/%{name}/contrib}
-#%{?_with_freeimage:%dir %{_datadir}/%{name}/contrib/hbfimage}
-#%{?_with_freeimage:%{_libdir}/%{name}/libhbfimage.a}
-#%{?_with_freeimage:%{_datadir}/%{name}/contrib/hbfimage/*}
+%{?_with_freeimage:%files freeimage}
+%{?_with_freeimage:%defattr(644,root,root,755)}
+%{?_with_freeimage:%dir %{_libdir}/%{name}}
+%{?_with_freeimage:%dir %{_datadir}/%{name}}
+%{?_with_freeimage:%dir %{_datadir}/%{name}/contrib}
+%{?_with_freeimage:%dir %{_datadir}/%{name}/contrib/hbfimage}
+%{?_with_freeimage:%{_libdir}/%{name}/libhbfimage.a}
+%{?_with_freeimage:%{_datadir}/%{name}/contrib/hbfimage/*}
 
 %{?_with_gd:%files gd}
 %{?_with_gd:%defattr(644,root,root,755)}
@@ -656,6 +709,15 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_gd:%dir %{_datadir}/%{name}/contrib/hbgd}
 %{?_with_gd:%{_libdir}/%{name}/libhbgd.a}
 %{?_with_gd:%{_datadir}/%{name}/contrib/hbgd/*}
+
+%{?_with_openssl:%files openssl}
+%{?_with_openssl:%defattr(644,root,root,755)}
+%{?_with_openssl:%dir %{_libdir}/%{name}}
+%{?_with_openssl:%dir %{_datadir}/%{name}}
+%{?_with_openssl:%dir %{_datadir}/%{name}/contrib}
+%{?_with_openssl:%dir %{_datadir}/%{name}/contrib/hbssl}
+%{?_with_openssl:%{_libdir}/%{name}/libhbssl.a}
+%{?_with_openssl:%{_datadir}/%{name}/contrib/hbssl/*}
 
 %{?_with_mysql:%files mysql}
 %{?_with_mysql:%defattr(644,root,root,755)}
@@ -693,20 +755,32 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_pgsql:%{_datadir}/%{name}/contrib/hbpgsql/*}
 %{?_with_pgsql:%{_datadir}/%{name}/contrib/sddpg/*}
 
+%{?_with_rabbitmq:%files rabbitmq}
+%{?_with_rabbitmq:%defattr(644,root,root,755)}
+%{?_with_rabbitmq:%dir %{_libdir}/%{name}}
+%{?_with_rabbitmq:%dir %{_datadir}/%{name}}
+%{?_with_rabbitmq:%dir %{_datadir}/%{name}/contrib}
+%{?_with_rabbitmq:%dir %{_datadir}/%{name}/contrib/hbamqp}
+%{?_with_rabbitmq:%{_libdir}/%{name}/libhbamqp.a}
+%{?_with_rabbitmq:%{_datadir}/%{name}/contrib/hbamqp/*}
+
 ######################################################################
 ## Spec file Changelog.
 ######################################################################
 
 %changelog
-* Thu Aug 05 2008 Viktor Szakats (vszakats.net/harbour)
+* Tue Mar 28 2017 Viktor Szakats (vsz.me/hb)
+- lots of updates to sync with Harbour changes, see main ChangeLog.txt
+
+* Tue Aug 05 2008 Viktor Szakats (vsz.me/hb)
 - removed hbdot, hbverfix, hbpptest
-- hbrun now fully replaces hbdot.
+- hbrun now fully replaces hbdot
 
 * Thu Aug 23 2007 Przemyslaw Czerpak <druzus@priv.onet.pl>
 + added hbdot
 - removed PP package
 
-* Fri Mar 23 2005 Przemyslaw Czerpak <druzus@priv.onet.pl>
+* Wed Mar 23 2005 Przemyslaw Czerpak <druzus@priv.onet.pl>
 - removed bison and flex from dependences list
 
 * Sat Aug 09 2003 Przemyslaw Czerpak <druzus@polbox.com>
@@ -761,7 +835,7 @@ rm -rf $RPM_BUILD_ROOT
 - Added the setting of $HB_GT_LIB to the environment (ncurses is used).
 - Added support for installing hbmake.
 
-* Mon Jun 28 2001 Dave Pearson <davep@davep.org>
+* Thu Jun 28 2001 Dave Pearson <davep@davep.org>
 - Changed the gharbour script so that it only invokes the C compiler if a C
   file was output. This stops any error messages when someone is using the
   -g option to output other target types.

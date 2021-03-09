@@ -1,7 +1,7 @@
 /*
  * Simple MAPI wrapper
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009 Viktor Szakats (vsz.me/hb)
  * Copyright 2009 Toninho (toninhofwi yahoo.com.br)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,28 +48,28 @@
 #include "hbapi.h" /* for HB_OS_* detection */
 
 #if defined( UNICODE )
-   #define HB_UNICODE_ORI
+#  define HB_UNICODE_ORI
 #endif
 
 #if ! defined( HB_OS_WIN_CE )
-   #if defined( UNICODE )
-      #undef UNICODE
-   #endif
+#  if defined( UNICODE )
+#     undef UNICODE
+#  endif
 #endif
 
 #include "hbwapi.h"
 #if defined( HB_OS_WIN_CE )
-   #include "hbwince.h"
+#  include "hbwince.h"
 #endif
 
 #include <mapi.h>
 
 #if ! defined( MAPI_RECEIPT_REQUESTED )
-   #if defined( MAPI_RECIPIENT_REQUESTED )
-      #define MAPI_RECEIPT_REQUESTED  MAPI_RECIPIENT_REQUESTED
-   #else
-      #define MAPI_RECEIPT_REQUESTED  0x00000002L
-   #endif
+#  if defined( MAPI_RECIPIENT_REQUESTED )
+#     define MAPI_RECEIPT_REQUESTED  MAPI_RECIPIENT_REQUESTED
+#  else
+#     define MAPI_RECEIPT_REQUESTED  0x00000002L
+#  endif
 #endif
 
 #if defined( __WATCOMC__ ) || defined( __CYGWIN__ )
@@ -115,10 +115,10 @@ HB_FUNC( WIN_MAPISENDMAIL )
 
          hString = ( void ** ) hb_xgrab( ( 4 + 2 + ( 2 * nRecpCount ) + ( 2 * nFileCount ) ) * sizeof( void * ) );
 
-         note.lpszSubject      = ( LPSTR ) HB_PARSTR( 1, &hString[ iString++ ], NULL );
-         note.lpszNoteText     = ( LPSTR ) HB_PARSTR( 2, &hString[ iString++ ], NULL );
-         note.lpszMessageType  = ( LPSTR ) HB_PARSTR( 3, &hString[ iString++ ], NULL );
-         note.lpszDateReceived = ( LPSTR ) HB_PARSTRDEF( 4, &hString[ iString++ ], NULL );
+         note.lpszSubject      = ( LPSTR ) HB_UNCONST( HB_PARSTR( 1, &hString[ iString++ ], NULL ) );
+         note.lpszNoteText     = ( LPSTR ) HB_UNCONST( HB_PARSTR( 2, &hString[ iString++ ], NULL ) );
+         note.lpszMessageType  = ( LPSTR ) HB_UNCONST( HB_PARSTR( 3, &hString[ iString++ ], NULL ) );
+         note.lpszDateReceived = ( LPSTR ) HB_UNCONST( HB_PARSTRDEF( 4, &hString[ iString++ ], NULL ) );
 
          if( nRecpCount )
             note.lpRecips = ( MapiRecipDesc * ) hb_xgrabz( nRecpCount * sizeof( MapiRecipDesc ) );
@@ -136,15 +136,15 @@ HB_FUNC( WIN_MAPISENDMAIL )
 
          if( pFrom && hb_arrayLen( pFrom ) >= 2 )
          {
-            origin.lpszName     = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 1, &hString[ iString++ ], NULL );
-            origin.lpszAddress  = ( LPSTR ) HB_ARRAYGETSTR( pFrom, 2, &hString[ iString++ ], NULL ); /* optional */
+            origin.lpszName     = ( LPSTR ) HB_UNCONST( HB_ARRAYGETSTR( pFrom, 1, &hString[ iString++ ], NULL ) );
+            origin.lpszAddress  = ( LPSTR ) HB_UNCONST( HB_ARRAYGETSTR( pFrom, 2, &hString[ iString++ ], NULL ) ); /* optional */
             origin.ulRecipClass = MAPI_ORIG;
 
             note.lpOriginator = &origin;
          }
          else if( HB_ISCHAR( 8 ) )
          {
-            origin.lpszName     = ( LPSTR ) HB_PARSTR( 8, &hString[ iString++ ], NULL );
+            origin.lpszName     = ( LPSTR ) HB_UNCONST( HB_PARSTR( 8, &hString[ iString++ ], NULL ) );
             origin.ulRecipClass = MAPI_ORIG;
 
             note.lpOriginator = &origin;
@@ -158,13 +158,13 @@ HB_FUNC( WIN_MAPISENDMAIL )
             {
                if( hb_arrayGetCLen( pItem, 1 ) > 0 )
                {
-                  note.lpRecips[ note.nRecipCount ].lpszName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
+                  note.lpRecips[ note.nRecipCount ].lpszName = ( LPSTR ) HB_UNCONST( HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL ) );
 
                   if( hb_arrayGetCLen( pItem, 2 ) > 0 )
-                     note.lpRecips[ note.nRecipCount ].lpszAddress = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
+                     note.lpRecips[ note.nRecipCount ].lpszAddress = ( LPSTR ) HB_UNCONST( HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL ) );
                }
                else if( hb_arrayGetCLen( pItem, 2 ) > 0 )
-                  note.lpRecips[ note.nRecipCount ].lpszName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL );
+                  note.lpRecips[ note.nRecipCount ].lpszName = ( LPSTR ) HB_UNCONST( HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL ) );
                else
                   continue;
 
@@ -177,7 +177,7 @@ HB_FUNC( WIN_MAPISENDMAIL )
             }
             else if( HB_IS_STRING( pItem ) )
             {
-               note.lpRecips[ note.nRecipCount ].lpszName     = ( LPSTR ) HB_ITEMGETSTR( pItem, &hString[ iString++ ], NULL );
+               note.lpRecips[ note.nRecipCount ].lpszName     = ( LPSTR ) HB_UNCONST( HB_ITEMGETSTR( pItem, &hString[ iString++ ], NULL ) );
                note.lpRecips[ note.nRecipCount ].ulRecipClass = MAPI_TO;
 
                ++note.nRecipCount;
@@ -192,14 +192,14 @@ HB_FUNC( WIN_MAPISENDMAIL )
                 hb_arrayLen( pItem ) >= 1 &&
                 hb_arrayGetCLen( pItem, 1 ) > 0 )
             {
-               note.lpFiles[ note.nFileCount ].lpszPathName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL );
-               note.lpFiles[ note.nFileCount ].lpszFileName = ( LPSTR ) HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL ); /* optional */
+               note.lpFiles[ note.nFileCount ].lpszPathName = ( LPSTR ) HB_UNCONST( HB_ARRAYGETSTR( pItem, 1, &hString[ iString++ ], NULL ) );
+               note.lpFiles[ note.nFileCount ].lpszFileName = ( LPSTR ) HB_UNCONST( HB_ARRAYGETSTR( pItem, 2, &hString[ iString++ ], NULL ) ); /* optional */
                note.lpFiles[ note.nFileCount ].nPosition    = ( ULONG ) -1;
                ++note.nFileCount;
             }
             else if( HB_IS_STRING( pItem ) )
             {
-               note.lpFiles[ note.nFileCount ].lpszPathName = ( LPSTR ) HB_ITEMGETSTR( pItem, &hString[ iString++ ], NULL );
+               note.lpFiles[ note.nFileCount ].lpszPathName = ( LPSTR ) HB_UNCONST( HB_ITEMGETSTR( pItem, &hString[ iString++ ], NULL ) );
                note.lpFiles[ note.nFileCount ].nPosition    = ( ULONG ) -1;
                ++note.nFileCount;
             }

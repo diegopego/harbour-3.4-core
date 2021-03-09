@@ -1,7 +1,7 @@
 /*
  * libcurl 'easy' API - Harbour header.
  *
- * Copyright 2008-2016 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2017 Viktor Szakats (vsz.me/hb)
  * originally based on:
  * Copyright 2005 Luiz Rafael Culik Guimaraes <luiz at xharbour.com.br>
  *
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -65,17 +65,17 @@
 #define HB_CURLOPT_WRITEFUNCTION              11
 #define HB_CURLOPT_READFUNCTION               12
 #define HB_CURLOPT_TIMEOUT                    13
-#define HB_CURLOPT_INFILESIZE                 14
+#define HB_CURLOPT_INFILESIZE                 HB_CURLOPT_INFILESIZE_LARGE
 #define HB_CURLOPT_POSTFIELDS                 15
 #define HB_CURLOPT_REFERER                    16
 #define HB_CURLOPT_FTPPORT                    17
 #define HB_CURLOPT_USERAGENT                  18
 #define HB_CURLOPT_LOW_SPEED_LIMIT            19
 #define HB_CURLOPT_LOW_SPEED_TIME             20
-#define HB_CURLOPT_RESUME_FROM                21
+#define HB_CURLOPT_RESUME_FROM                HB_CURLOPT_RESUME_FROM_LARGE
 #define HB_CURLOPT_COOKIE                     22
 #define HB_CURLOPT_HTTPHEADER                 23
-#define HB_CURLOPT_HTTPPOST                   24
+#define HB_CURLOPT_HTTPPOST                   24  /* deprecated */
 #define HB_CURLOPT_SSLCERT                    25
 #define HB_CURLOPT_KEYPASSWD                  26
 #define HB_CURLOPT_SSLCERTPASSWD              HB_CURLOPT_KEYPASSWD
@@ -110,7 +110,7 @@
 #define HB_CURLOPT_PROGRESSDATA               57
 #define HB_CURLOPT_AUTOREFERER                58
 #define HB_CURLOPT_PROXYPORT                  59
-#define HB_CURLOPT_POSTFIELDSIZE              60
+#define HB_CURLOPT_POSTFIELDSIZE              HB_CURLOPT_POSTFIELDSIZE_LARGE
 #define HB_CURLOPT_HTTPPROXYTUNNEL            61
 #define HB_CURLOPT_INTERFACE                  62
 #define HB_CURLOPT_KRBLEVEL                   63
@@ -163,7 +163,7 @@
 #define HB_CURLOPT_PROXYAUTH                  111
 #define HB_CURLOPT_FTP_RESPONSE_TIMEOUT       112
 #define HB_CURLOPT_IPRESOLVE                  113
-#define HB_CURLOPT_MAXFILESIZE                114
+#define HB_CURLOPT_MAXFILESIZE                HB_CURLOPT_MAXFILESIZE_LARGE
 #define HB_CURLOPT_INFILESIZE_LARGE           115
 #define HB_CURLOPT_RESUME_FROM_LARGE          116
 #define HB_CURLOPT_MAXFILESIZE_LARGE          117
@@ -290,6 +290,11 @@
 #define HB_CURLOPT_PROXY_TLSAUTH_USERNAME     243
 #define HB_CURLOPT_PRE_PROXY                  244
 #define HB_CURLOPT_ABSTRACT_UNIX_SOCKET       245
+#define HB_CURLOPT_SUPPRESS_CONNECT_HEADERS   246
+#define HB_CURLOPT_REQUEST_TARGET             247
+#define HB_CURLOPT_SOCKS5_AUTH                248
+#define HB_CURLOPT_SSH_COMPRESSION            249
+#define HB_CURLOPT_MIMEPOST                   250
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_XFERINFOBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
@@ -300,8 +305,8 @@
 #define HB_CURLOPT_DL_BUFF_SETUP              1008
 #define HB_CURLOPT_DL_BUFF_GET                1009
 #define HB_CURLOPT_UL_NULL_SETUP              1010
-#define HB_CURLOPT_HTTPPOST_CONTENT           1013
-#define HB_CURLOPT_HTTPPOST_FORM              1014
+#define HB_CURLOPT_HTTPPOST_CONTENT           1013  /* deprecated */
+#define HB_CURLOPT_HTTPPOST_FORM              1014  /* deprecated */
 #define HB_CURLOPT_DEBUGBLOCK                 1015
 /* Compatibility ones. Please don't use these. */
 #define HB_CURLOPT_UL_FHANDLE_SETUP           HB_CURLOPT_UL_FILE_SETUP
@@ -330,7 +335,7 @@
 #define HB_CURLSSLOPT_ALLOW_BEAST             hb_bitShift( 1, 0 )
 #define HB_CURLSSLOPT_NO_REVOKE               hb_bitShift( 1, 1 )
 
-/* HB_CURLOPT_HTTPAUTH option */
+/* HB_CURLOPT_HTTPAUTH, HB_CURLOPT_PROXYAUTH, HB_CURLOPT_SOCKS5 options */
 #define HB_CURLAUTH_NONE                      0                    /* nothing */
 #define HB_CURLAUTH_BASIC                     hb_bitShift( 1, 0 )  /* Basic (default) */
 #define HB_CURLAUTH_DIGEST                    hb_bitShift( 1, 1 )  /* Digest */
@@ -343,6 +348,7 @@
 #define HB_CURLAUTH_ANYSAFE                   hb_bitNot( hb_bitOr( HB_CURLAUTH_BASIC, HB_CURLAUTH_DIGEST_IE ) )
 
 #define HB_CURLAUTH_GSSNEGOTIATE              HB_CURLAUTH_NEGOTIATE
+#define HB_CURLAUTH_GSSAPI                    HB_CURLAUTH_NEGOTIATE
 
 /* HB_CURLOPT_HTTP_VERSION option */
 #define HB_CURL_HTTP_VERSION_NONE               0  /* setting this means we don't care, and that we'd like the library to choose the best possible for us! */
@@ -419,14 +425,22 @@
 #define HB_CURL_SSLVERSION_TLSv1_1            5
 #define HB_CURL_SSLVERSION_TLSv1_2            6
 #define HB_CURL_SSLVERSION_TLSv1_3            7
+#define HB_CURL_SSLVERSION_MAX_NONE           0
+#define HB_CURL_SSLVERSION_MAX_DEFAULT        hb_bitShift( HB_CURL_SSLVERSION_TLSv1  , 16 )
+#define HB_CURL_SSLVERSION_MAX_TLSv1_0        hb_bitShift( HB_CURL_SSLVERSION_TLSv1_0, 16 )
+#define HB_CURL_SSLVERSION_MAX_TLSv1_1        hb_bitShift( HB_CURL_SSLVERSION_TLSv1_1, 16 )
+#define HB_CURL_SSLVERSION_MAX_TLSv1_2        hb_bitShift( HB_CURL_SSLVERSION_TLSv1_2, 16 )
+#define HB_CURL_SSLVERSION_MAX_TLSv1_3        hb_bitShift( HB_CURL_SSLVERSION_TLSv1_3, 16 )
 
 /* HB_CURLOPT_SSH_AUTH_TYPES option */
-#define HB_CURL_CURLSSH_AUTH_ANY              hb_bitNot( 0 )      /* all types supported by the server */
-#define HB_CURL_CURLSSH_AUTH_NONE             0                   /* none allowed, silly but complete */
-#define HB_CURL_CURLSSH_AUTH_PUBLICKEY        1                   /* public/private key files */
-#define HB_CURL_CURLSSH_AUTH_PASSWORD         2                   /* password */
-#define HB_CURL_CURLSSH_AUTH_HOST             4                   /* host key files */
-#define HB_CURL_CURLSSH_AUTH_KEYBOARD         8                   /* keyboard interactive */
+#define HB_CURL_CURLSSH_AUTH_ANY              hb_bitNot( 0 )       /* all types supported by the server */
+#define HB_CURL_CURLSSH_AUTH_NONE             0                    /* none allowed, silly but complete */
+#define HB_CURL_CURLSSH_AUTH_PUBLICKEY        hb_bitShift( 1, 0 )  /* public/private key files */
+#define HB_CURL_CURLSSH_AUTH_PASSWORD         hb_bitShift( 1, 1 )  /* password */
+#define HB_CURL_CURLSSH_AUTH_HOST             hb_bitShift( 1, 2 )  /* host key files */
+#define HB_CURL_CURLSSH_AUTH_KEYBOARD         hb_bitShift( 1, 3 )  /* keyboard interactive */
+#define HB_CURL_CURLSSH_AUTH_AGENT            hb_bitShift( 1, 4 )  /* agent (ssh-agent, pageant...) */
+#define HB_CURL_CURLSSH_AUTH_GSSAPI           hb_bitShift( 1, 5 )  /* gssapi (kerberos, ...) */
 #define HB_CURL_CURLSSH_AUTH_DEFAULT          HB_CURLSSH_AUTH_ANY
 
 /* CURLOPT_*PROTOCOLS options */
@@ -581,7 +595,7 @@
 #define HB_CURLE_PEER_FAILED_VERIFICATION     51 /* peer's certificate or fingerprint wasn't verified fine */
 #define HB_CURLE_GOT_NOTHING                  52 /* when this is a specific error */
 #define HB_CURLE_SSL_ENGINE_NOTFOUND          53 /* SSL crypto engine not found */
-#define HB_CURLE_SSL_ENGINE_SETFAILED         54 /* can not set SSL crypto engine as default */
+#define HB_CURLE_SSL_ENGINE_SETFAILED         54 /* cannot set SSL crypto engine as default */
 #define HB_CURLE_SEND_ERROR                   55 /* failed sending network data */
 #define HB_CURLE_RECV_ERROR                   56 /* failure in receiving network data */
 #define HB_CURLE_OBSOLETE57                   57 /* NOT IN USE */
@@ -603,7 +617,7 @@
 #define HB_CURLE_REMOTE_FILE_EXISTS           73 /* File already exists */
 #define HB_CURLE_TFTP_NOSUCHUSER              74 /* No such user */
 #define HB_CURLE_CONV_FAILED                  75 /* conversion failed */
-#define HB_CURLE_CONV_REQD                    76 /* caller must register conversion callbacks using curl_easy_setopt options CURLOPT_CONV_FROM_NETWORK_FUNCTION, CURLOPT_CONV_TO_NETWORK_FUNCTION, and CURLOPT_CONV_FROM_UTF8_FUNCTION */
+#define HB_CURLE_CONV_REQD                    76 /* caller must register conversion callbacks using curl_easy_setopt() options CURLOPT_CONV_FROM_NETWORK_FUNCTION, CURLOPT_CONV_TO_NETWORK_FUNCTION, and CURLOPT_CONV_FROM_UTF8_FUNCTION */
 #define HB_CURLE_SSL_CACERT_BADFILE           77 /* could not load CACERT file, missing or wrong format */
 #define HB_CURLE_REMOTE_FILE_NOT_FOUND        78 /* remote file not found */
 #define HB_CURLE_SSH                          79 /* error from the SSH layer, somewhat generic so the error message will be of interest when this has happened */
@@ -635,13 +649,41 @@
 #define HB_CURLVERINFO_LIBIDN                 11
 #define HB_CURLVERINFO_ICONV_VER_NUM          12
 #define HB_CURLVERINFO_LIBSSH_VERSION         13
-#define HB_CURLVERINFO_LEN                    13
+#define HB_CURLVERINFO_BROTLI_VER_NUM         14
+#define HB_CURLVERINFO_BROTLI_VERSION         15
+#define HB_CURLVERINFO_LEN                    15
 
-/* HB_CURLOPT_HTTPPOST_FORM type */
+/* HB_CURLVERINFO_FEATURES bit positions. */
+#define HB_CURL_VERSION_IPV6                  hb_bitShift( 1, 0 )   /* IPv6-enabled */
+#define HB_CURL_VERSION_KERBEROS4             hb_bitShift( 1, 1 )   /* Kerberos V4 auth is supported (deprecated) */
+#define HB_CURL_VERSION_SSL                   hb_bitShift( 1, 2 )   /* SSL options are present */
+#define HB_CURL_VERSION_LIBZ                  hb_bitShift( 1, 3 )   /* libz features are present */
+#define HB_CURL_VERSION_NTLM                  hb_bitShift( 1, 4 )   /* NTLM auth is supported */
+#define HB_CURL_VERSION_GSSNEGOTIATE          hb_bitShift( 1, 5 )   /* Negotiate auth is supported (deprecated) */
+#define HB_CURL_VERSION_DEBUG                 hb_bitShift( 1, 6 )   /* Built with debug capabilities */
+#define HB_CURL_VERSION_ASYNCHDNS             hb_bitShift( 1, 7 )   /* Asynchronous DNS resolves */
+#define HB_CURL_VERSION_SPNEGO                hb_bitShift( 1, 8 )   /* SPNEGO auth is supported */
+#define HB_CURL_VERSION_LARGEFILE             hb_bitShift( 1, 9 )   /* Supports files larger than 2GB */
+#define HB_CURL_VERSION_IDN                   hb_bitShift( 1, 10 )  /* Internationized Domain Names are supported */
+#define HB_CURL_VERSION_SSPI                  hb_bitShift( 1, 11 )  /* Built against Windows SSPI */
+#define HB_CURL_VERSION_CONV                  hb_bitShift( 1, 12 )  /* Character conversions supported */
+#define HB_CURL_VERSION_CURLDEBUG             hb_bitShift( 1, 13 )  /* Debug memory tracking supported */
+#define HB_CURL_VERSION_TLSAUTH_SRP           hb_bitShift( 1, 14 )  /* TLS-SRP auth is supported */
+#define HB_CURL_VERSION_NTLM_WB               hb_bitShift( 1, 15 )  /* NTLM delegation to winbind helper is supported */
+#define HB_CURL_VERSION_HTTP2                 hb_bitShift( 1, 16 )  /* HTTP2 support built-in */
+#define HB_CURL_VERSION_GSSAPI                hb_bitShift( 1, 17 )  /* Built against a GSS-API library */
+#define HB_CURL_VERSION_KERBEROS5             hb_bitShift( 1, 18 )  /* Kerberos V5 auth is supported */
+#define HB_CURL_VERSION_UNIX_SOCKETS          hb_bitShift( 1, 19 )  /* Unix domain sockets support */
+#define HB_CURL_VERSION_PSL                   hb_bitShift( 1, 20 )  /* Mozilla's Public Suffix List, used for cookie domain verification */
+#define HB_CURL_VERSION_HTTPS_PROXY           hb_bitShift( 1, 21 )  /* HTTPS-proxy support built-in */
+#define HB_CURL_VERSION_MULTI_SSL             hb_bitShift( 1, 22 )  /* Multiple SSL backends available */
+#define HB_CURL_VERSION_BROTLI                hb_bitShift( 1, 23 )  /* Brotli features are present */
+
+/* HB_CURLOPT_HTTPPOST_FORM type. */
 #define HB_CURLOPT_HTTPPOST_FORM_CONTENT      1
 #define HB_CURLOPT_HTTPPOST_FORM_FILE         2
 
-/* HB_CURLOPT_DEBUGBLOCK callback modes */
+/* HB_CURLOPT_DEBUGBLOCK callback modes. */
 #define HB_CURLINFO_TEXT                      0
 #define HB_CURLINFO_HEADER_IN                 1
 #define HB_CURLINFO_HEADER_OUT                2
@@ -649,5 +691,30 @@
 #define HB_CURLINFO_DATA_OUT                  4
 #define HB_CURLINFO_SSL_DATA_IN               5
 #define HB_CURLINFO_SSL_DATA_OUT              6
+
+/* curl_global_sslset() return values. */
+#define HB_CURLSSLSET_NOT_IMPLEMENTED         -1  /* Harbour-specific value */
+#define HB_CURLSSLSET_OK                      0
+#define HB_CURLSSLSET_UNKNOWN_BACKEND         1
+#define HB_CURLSSLSET_TOO_LATE                2
+#define HB_CURLSSLSET_NO_BACKENDS             3
+
+/* curl_global_sslset() 1st parameter and
+   hash key of returned 3rd parameter. */
+#define HB_CURLSSLBACKEND_NONE                0
+#define HB_CURLSSLBACKEND_OPENSSL             1
+#define HB_CURLSSLBACKEND_GNUTLS              2
+#define HB_CURLSSLBACKEND_NSS                 3
+#define HB_CURLSSLBACKEND_OBSOLETE4           4
+#define HB_CURLSSLBACKEND_GSKIT               5
+#define HB_CURLSSLBACKEND_POLARSSL            6
+#define HB_CURLSSLBACKEND_WOLFSSL             7
+#define HB_CURLSSLBACKEND_SCHANNEL            8
+#define HB_CURLSSLBACKEND_DARWINSSL           9
+#define HB_CURLSSLBACKEND_AXTLS               10
+#define HB_CURLSSLBACKEND_MBEDTLS             11
+#define HB_CURLSSLBACKEND_LIBRESSL            HB_CURLSSLBACKEND_OPENSSL
+#define HB_CURLSSLBACKEND_BORINGSSL           HB_CURLSSLBACKEND_OPENSSL
+#define HB_CURLSSLBACKEND_CYASSL              HB_CURLSSLBACKEND_WOLFSSL
 
 #endif /* HBCURL_CH_ */

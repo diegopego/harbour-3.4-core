@@ -33,20 +33,28 @@
 #  define z_crc_t unsigned long
 #endif
 
-#include "hbapi.h"      /* for hb_xgrab()/hb_xfree() */
+#ifdef HB_USE_CORE_ALLOC
+#  include "hbapi.h"
+#  ifndef ALLOC
+#    define ALLOC(size) hb_xgrab(size)
+#  endif
+#  ifndef TRYFREE
+#    define TRYFREE(p) do {if (p) hb_xfree(p);} while( 0 )
+#  endif
+#endif
 
 #ifdef STDC
 #  include <stddef.h>
 #  include <string.h>
 #  include <stdlib.h>
 #endif
-/*
+#if 0
 #ifdef NO_ERRNO_H
     extern int errno;
 #else
 #   include <errno.h>
 #endif
-*/
+#endif
 
 
 #ifndef local
@@ -67,10 +75,10 @@
 #endif
 
 #ifndef ALLOC
-# define ALLOC(size) hb_xgrab(size)
+# define ALLOC(size) (malloc(size))
 #endif
 #ifndef TRYFREE
-# define TRYFREE(p)  do {if (p) hb_xfree(p);} while( 0 )
+# define TRYFREE(p) {if (p) free(p);}
 #endif
 
 /*
@@ -194,7 +202,7 @@ typedef struct
 #include "crypt.h"
 #endif
 
-/* Forward definitions */
+/* Forward declarations */
 local linkedlist_datablock_internal* allocate_new_datablock( void );
 local void free_datablock( linkedlist_datablock_internal* ldi );
 local void init_linkedlist( linkedlist_data* ll );
@@ -1485,13 +1493,14 @@ extern int ZEXPORT zipWriteInFileInZip (zipFile file,const void* buf,unsigned in
           {
               uLong uTotalOutBefore = zi->ci.stream.total_out;
               err=deflate(&zi->ci.stream,  Z_NO_FLUSH);
-/*
+#if 0
               if(uTotalOutBefore > zi->ci.stream.total_out)
               {
                 int bBreak = 0;
                 bBreak++;
               }
-*/
+#endif
+
               zi->ci.pos_in_buffered_data += (uInt)(zi->ci.stream.total_out - uTotalOutBefore) ;
           }
           else
@@ -1694,9 +1703,9 @@ extern int ZEXPORT zipCloseFileInZipRaw64 (zipFile file, ZPOS64_T uncompressed_s
       if(zi->ci.pos_local_header >= 0xffffffff)
       {
         zip64local_putValue_inmemory(p, zi->ci.pos_local_header, 8);
-/*
+#if 0
         p += 8;
-*/
+#endif
       }
 
       // Update how much extra free space we got in the memory buffer

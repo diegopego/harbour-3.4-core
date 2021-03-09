@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -101,7 +101,7 @@ METHOD WvgScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
       ::style += SBS_HORZ
    ENDIF
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -215,7 +215,6 @@ METHOD WvgScrollBar:handleEvent( nMessage, aNM )
       Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, , Self )
       RETURN EVENT_HANDLED
 
-
    CASE nMessage == HB_GTE_VSCROLL
       IF ::isParentCrt()
          ::oParent:setFocus()
@@ -284,7 +283,7 @@ METHOD WvgScrollBar:handleEvent( nMessage, aNM )
       ENDCASE
 
       ::sl_editBuffer := nScrPos
-      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, , self )
+      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, , Self )
       RETURN EVENT_HANDLED
 
    ENDCASE
@@ -303,7 +302,7 @@ METHOD WvgScrollBar:Scroll( xParam )
       ::sl_xbeSB_Scroll := xParam
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 METHOD WvgScrollBar:setRange( aRange )
 

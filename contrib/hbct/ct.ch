@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,12 +45,11 @@
  *
  */
 
-
 #ifndef _CT_CH
 #define _CT_CH 1
 
 /* subsystem name */
-#define CT_SUBSYSTEM "CT"
+#define CT_SUBSYSTEM  "CT"
 
 /* CSetArgErr() argument error behaviour */
 #include "error.ch"
@@ -59,16 +58,6 @@
 #define CT_ARGERR_ERROR         ES_ERROR
 #define CT_ARGERR_CATASTROPHIC  ES_CATASTROPHIC
 #define CT_ARGERR_IGNORE        -1
-
-/* SETMATHERR() stati and modes for math error correction */
-#define CT_MATHERR_STATUS_NOTFOUND   -1 /* math handler is not installed */
-#define CT_MATHERR_STATUS_INACTIVE   0  /* math handler is installed but inactive */
-#define CT_MATHERR_STATUS_ACTIVE     1  /* math handler is installed and active */
-
-#define CT_MATHERR_MODE_NONE         0  /* no correction at all, program will exit */
-#define CT_MATHERR_MODE_DEFAULT      1  /* default return value will be used, no error msgs ! */
-#define CT_MATHERR_MODE_USER         2  /* error will be thrown to user who is responsible for error correction */
-#define CT_MATHERR_MODE_USERDEFAULT  3  /* error will be thrown, but if user fails, default correction will be used */
 
 /* SetAtLike() modes */
 #define CT_SETATLIKE_EXACT     0

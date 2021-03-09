@@ -12,13 +12,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -36,7 +36,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -50,6 +50,7 @@
 
 /* TODO: use Harbour FS API */
 
+#include "hbapi.h"
 #include "hbgtcore.h"
 #include "hbapifs.h"
 
@@ -325,7 +326,9 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
          }
          else if( n == 1 )
          {
-            /* printf("line: %3d\tfrom=%d, to=%d, op='%c', val=%d, mod=%d\n", line, from, to, op, val, mod); */
+            #if 0
+            printf( "line: %3d\tfrom=%d, to=%d, op='%c', val=%d, mod=%d\n", line, from, to, op, val, mod );
+            #endif
             for( i = from; i <= to; ++i )
             {
                switch( op )

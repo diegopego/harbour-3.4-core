@@ -1,5 +1,5 @@
 /*
- * xhb stream classes
+ * xHarbour stream classes
  *
  * Copyright 2009 {list of individual authors and e-mail addresses}
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -159,7 +159,7 @@ METHOD Read( sBuffer, nOffset, nCount ) CLASS TStreamFileReader
    IF HB_ISNUMERIC( nOffset ) .AND. nOffset >= 1
       cBuffer := Space( nCount )
       IF ( nRead := hb_vfRead( ::hFile, @cBuffer, nCount ) ) > 0
-         sBuffer := Stuff( sBuffer, nOffSet + 1, nRead, hb_BLeft( cBuffer, nRead ) )  /* TOFIX: use hb_BStuff() */
+         sBuffer := Stuff( sBuffer, nOffSet + 1, nRead, hb_BLeft( cBuffer, nRead ) )  /* FIXME: use hb_BStuff() */
       ENDIF
    ELSE
       nRead := hb_vfRead( ::hFile, @sBuffer, nCount )

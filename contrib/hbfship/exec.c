@@ -1,7 +1,7 @@
 /*
  * FlagShip compatible functions
- *    ExecName( [ <lFullPath> ] ) -> <cName>
- *    ExecPIDNum() -> <nPID>
+ *    ExecName( [ <lFullPath> ] ) --> <cName>
+ *    ExecPIDNum() --> <nPID>
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,12 +50,12 @@
 #include "hbapifs.h"
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-   #include <sys/types.h>
-   #include <unistd.h>
+#  include <sys/types.h>
+#  include <unistd.h>
 #elif defined( HB_OS_WIN )
-   #include <windows.h>
+#  include <windows.h>
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_DOS )
-   #include <process.h>
+#  include <process.h>
 #endif
 
 HB_FUNC( EXECNAME )

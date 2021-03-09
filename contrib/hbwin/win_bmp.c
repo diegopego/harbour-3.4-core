@@ -1,7 +1,7 @@
 /*
  * Printing subsystem for Windows using GUI printing
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010 Viktor Szakats (vsz.me/hb)
  * Copyright 2010 Xavi <jarabal/at/gmail.com>
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  *
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -93,7 +93,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 
    if( pBuffer )
    {
-      /* TOFIX: No check is done on read data from disk which is a large security hole
+      /* FIXME: No check is done on read data from disk which is a large security hole
                 and may cause GPF even in simple error cases, like invalid file content.
                 [vszakats] */
 
@@ -164,30 +164,30 @@ HB_FUNC( WIN_DRAWBITMAP )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
    HB_SIZE nSize = hb_parclen( 2 );
-   BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 2 );
+   const BITMAPFILEHEADER * pbmfh = ( const BITMAPFILEHEADER * ) hb_parc( 2 );
    int iType = hbwin_bitmapType( pbmfh, nSize );
 
-   /* TOFIX: No check is done on 2nd parameter which is a large security hole
+   /* FIXME: No check is done on 2nd parameter which is a large security hole
              and may cause GPF in simple error cases.
              [vszakats] */
    if( hbwin_bitmapIsSupported( hDC, iType, pbmfh, nSize ) == 0 )
    {
-      BITMAPINFO * pbmi = NULL;
-      BYTE * pBits = NULL;
+      const BITMAPINFO * pbmi = NULL;
+      const BYTE * pBits = NULL;
 
       int iWidth  = hb_parni( 7 );
       int iHeight = hb_parni( 8 );
 
       if( iType == HB_WIN_BITMAP_BMP )
       {
-         pbmi  = ( BITMAPINFO * ) ( pbmfh + 1 );
-         pBits = ( BYTE * ) pbmfh + pbmfh->bfOffBits;
+         pbmi  = ( const BITMAPINFO * ) ( pbmfh + 1 );
+         pBits = ( const BYTE * ) pbmfh + pbmfh->bfOffBits;
 
          /* Remember there are 2 types of BitMap File */
          if( pbmi->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
          {
-            iWidth  = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
-            iHeight = ( ( BITMAPCOREHEADER * ) pbmi )->bcHeight;
+            iWidth  = ( ( const BITMAPCOREHEADER * ) pbmi )->bcWidth;
+            iHeight = ( ( const BITMAPCOREHEADER * ) pbmi )->bcHeight;
          }
          else
          {
@@ -208,7 +208,7 @@ HB_FUNC( WIN_DRAWBITMAP )
          bmi.bmiHeader.biCompression = ( iType == HB_WIN_BITMAP_JPEG ? BI_JPEG : BI_PNG );
          bmi.bmiHeader.biSizeImage   = ( DWORD ) nSize;
          pbmi = &bmi;
-         pBits = ( BYTE * ) pbmfh;
+         pBits = ( const BYTE * ) pbmfh;
       }
 
       if( pbmi && pBits )

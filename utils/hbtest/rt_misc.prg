@@ -1,7 +1,7 @@
 /*
  * Regression tests for the runtime library (misc)
  *
- * Copyright 1999-2014 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2017 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -75,7 +75,7 @@ PROCEDURE Main_MISC()
    HBTEST              hb_HMAC_SHA1( "hello", "key", .F. )   IS "b34ceac4516ff23a143e61d79d0fa7a4fbe5f266"
    HBTEST hb_StrToHex( hb_HMAC_SHA1( "hello", "key", .T. ) ) IS "B34CEAC4516FF23A143E61D79D0FA7A4FBE5F266"
 
-   /* https://www.ietf.org/rfc/rfc3174.txt */
+   /* https://tools.ietf.org/html/rfc3174 */
 
    HBTEST Lower( hb_SHA1( "abc"                                                                               ) ) IS "a9993e364706816aba3e25717850c26c9cd0d89d"
    HBTEST Lower( hb_SHA1( "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"                          ) ) IS "84983e441c3bd26ebaae4aa1f95129e5e54670f1"
@@ -88,6 +88,12 @@ PROCEDURE Main_MISC()
    Test_SHA2_HMAC()
 
    Test_Base64()
+
+   /* MIME */
+
+   HBTEST hb_MimeStr( "MZ" )                IS "application/x-dosexec"
+   HBTEST hb_MimeStr( "hello" )             IS "application/unknown"
+   HBTEST hb_MimeStr( "hello", "fallback" ) IS "fallback"
 
 #endif
 
@@ -111,11 +117,7 @@ PROCEDURE Main_MISC()
 
 #ifdef HB_COMPAT_C53
    HBTEST Set( _SET_EVENTMASK  )       IS 128  /* INKEY_KEYBOARD */
-#ifdef HB_CLP_STRICT
-   HBTEST Set( _SET_VIDEOMODE  )       IS NIL
-#else
-   HBTEST Set( _SET_VIDEOMODE  )       IS 0
-#endif
+   HBTEST Set( _SET_VIDEOMODE  )       IS NIL, 0
    HBTEST Set( _SET_MBLOCKSIZE )       IS 64
    HBTEST Set( _SET_MFILEEXT   )       IS ""
    HBTEST Set( _SET_STRICTREAD )       IS .F.
@@ -125,11 +127,7 @@ PROCEDURE Main_MISC()
    HBTEST Set( _SET_AUTOSHARE  )       IS 0
 
    HBTEST Set( _SET_EVENTMASK , -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:39;N:-1 "
-#ifdef HB_CLP_STRICT
-   HBTEST Set( _SET_VIDEOMODE , -1 )   IS NIL
-#else
-   HBTEST Set( _SET_VIDEOMODE , -1 )   IS 0
-#endif
+   HBTEST Set( _SET_VIDEOMODE , -1 )   IS NIL, 0
    HBTEST Set( _SET_MBLOCKSIZE, -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:41;N:-1 "
    HBTEST Set( _SET_MFILEEXT  , {} )   IS ""
    HBTEST Set( _SET_STRICTREAD, {} )   IS .F.
@@ -736,7 +734,7 @@ PROCEDURE Main_MISC()
 
 #endif /* __XPP__ */
 
-   /* NOTE: BIN2*() functions are quite untable in CA-Cl*pper when the passed
+   /* NOTE: BIN2*() functions are quite unstable in CA-Cl*pper when the passed
       parameter is smaller than the required length. */
 
    /* Bin2I() */
@@ -1154,29 +1152,29 @@ STATIC FUNCTION HB_TString()
 
       oClass:AddData( "cValue" )
 
-      oClass:AddInline( "="    , {| self, cTest | ::cValue =  cTest } )
-      oClass:AddInline( "=="   , {| self, cTest | ::cValue == cTest } )
-      oClass:AddInline( "!="   , {| self, cTest | ::cValue != cTest } )
-      oClass:AddInline( "<"    , {| self, cTest | ::cValue <  cTest } )
-      oClass:AddInline( "<="   , {| self, cTest | ::cValue <= cTest } )
-      oClass:AddInline( ">"    , {| self, cTest | ::cValue >  cTest } )
-      oClass:AddInline( ">="   , {| self, cTest | ::cValue >= cTest } )
-      oClass:AddInline( "+"    , {| self, cTest | ::cValue +  cTest } )
-      oClass:AddInline( "-"    , {| self, cTest | ::cValue -  cTest } )
-      oClass:AddInline( "++"   , {| self        | ::cValue += " ", self } )
-      oClass:AddInline( "--"   , {| self        | ::cValue := hb_StrShrink( ::cValue ), self } )
-      oClass:AddInline( "$"    , {| self, cTest | ::cValue $  cTest } )
-      oClass:AddInline( "*"    , {| self, nVal  | Replicate( ::cValue, nVal ) } )
-      oClass:AddInline( "/"    , {| self, nVal  | Left( ::cValue, Len( ::cValue ) / nVal ) } )
-      oClass:AddInline( "%"    , {| self, cTest | ::cValue + " % " + cTest } )
-      oClass:AddInline( "^"    , {| self, cTest | ::cValue + " ^ " + cTest } )
-      oClass:AddInline( "**"   , {| self, cTest | ::cValue + " ^ " + cTest } )
-      oClass:AddInline( "!"    , {| self        | Descend( ::cValue ) } )
-      oClass:AddInline( ".NOT.", {| self        | Descend( ::cValue ) } )
-      oClass:AddInline( ".AND.", {| self, cTest | ::cValue + " AND " + cTest } )
-      oClass:AddInline( ".OR." , {| self, cTest | ::cValue + " OR " + cTest } )
+      oClass:AddInline( "="    , {| Self, cTest | ::cValue =  cTest } )
+      oClass:AddInline( "=="   , {| Self, cTest | ::cValue == cTest } )
+      oClass:AddInline( "!="   , {| Self, cTest | ::cValue != cTest } )
+      oClass:AddInline( "<"    , {| Self, cTest | ::cValue <  cTest } )
+      oClass:AddInline( "<="   , {| Self, cTest | ::cValue <= cTest } )
+      oClass:AddInline( ">"    , {| Self, cTest | ::cValue >  cTest } )
+      oClass:AddInline( ">="   , {| Self, cTest | ::cValue >= cTest } )
+      oClass:AddInline( "+"    , {| Self, cTest | ::cValue +  cTest } )
+      oClass:AddInline( "-"    , {| Self, cTest | ::cValue -  cTest } )
+      oClass:AddInline( "++"   , {| Self        | ::cValue += " ", Self } )
+      oClass:AddInline( "--"   , {| Self        | ::cValue := hb_StrShrink( ::cValue ), Self } )
+      oClass:AddInline( "$"    , {| Self, cTest | ::cValue $  cTest } )
+      oClass:AddInline( "*"    , {| Self, nVal  | Replicate( ::cValue, nVal ) } )
+      oClass:AddInline( "/"    , {| Self, nVal  | Left( ::cValue, Len( ::cValue ) / nVal ) } )
+      oClass:AddInline( "%"    , {| Self, cTest | ::cValue + " % " + cTest } )
+      oClass:AddInline( "^"    , {| Self, cTest | ::cValue + " ^ " + cTest } )
+      oClass:AddInline( "**"   , {| Self, cTest | ::cValue + " ^ " + cTest } )
+      oClass:AddInline( "!"    , {| Self        | Descend( ::cValue ) } )
+      oClass:AddInline( ".NOT.", {| Self        | Descend( ::cValue ) } )
+      oClass:AddInline( ".AND.", {| Self, cTest | ::cValue + " AND " + cTest } )
+      oClass:AddInline( ".OR." , {| Self, cTest | ::cValue + " OR " + cTest } )
 
-      oClass:AddInline( "HasMsg", {| self, cMsg | HB_SYMBOL_UNUSED( self ), __objHasMsg( QSelf(), cMsg ) } )
+      oClass:AddInline( "HasMsg", {| Self, cMsg | HB_SYMBOL_UNUSED( Self ), __objHasMsg( QSelf(), cMsg ) } )
 
       oClass:Create()
    ENDIF

@@ -9,18 +9,18 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -38,7 +38,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -79,7 +79,7 @@
 
 CREATE CLASS WvtDialog
 
-   /*  To hold previous settings  */
+   /* To hold previous settings */
    VAR    nOldRows
    VAR    nOldCols
    VAR    aOldFont
@@ -98,7 +98,7 @@ CREATE CLASS WvtDialog
    VAR    oldMenuBlock
    VAR    lGui
 
-   /*  Dialog Parameters  */
+   /* Dialog parameters */
    VAR    nRows
    VAR    nCols
    VAR    cFont
@@ -109,7 +109,7 @@ CREATE CLASS WvtDialog
    VAR    cTitle
    VAR    cColor
 
-   /*  Objects handelling  */
+   /* Objects handling */
    VAR    aObjects                                INIT {}
    VAR    oCurObj
    VAR    oLastObj
@@ -124,12 +124,12 @@ CREATE CLASS WvtDialog
    VAR    aDialogKeys                             INIT {}
    VAR    cDialogID                               INIT ""
 
-   /*  Tooltip Management  */
+   /* Tooltip Management */
    VAR    nTooltipWidth
    VAR    nTooltipBkColor
    VAR    nTooltipTextColor
 
-   /*  Miscellaneous  */
+   /* Miscellaneous */
    VAR    ClassName                               INIT "WVTDIALOG"
    VAR    cPaintBlockID
    VAR    nPaintID                                INIT 1
@@ -299,7 +299,7 @@ METHOD PROCEDURE WvtDialog:Destroy()
    wvt_SetToolTipBkColor( ::oldTooltipBkColor )
    wvt_SetToolTipTextColor( ::oldTooltipTextColor )
 
-   /*  Here set mode is before setting the font  */
+   /* Here set mode is before setting the font */
    SetMode( ::nOldRows, ::nOldCols )
    wvt_SetFont( ::aOldFont[ 1 ], ::aOldFont[ 2 ], ::aOldFont[ 3 ], ::aOldFont[ 4 ], ::aOldFont[ 5 ] )
    hb_gtInfo( HB_GTI_WINTITLE, ::cOldTitle )
@@ -528,7 +528,7 @@ METHOD WvtDialog:Inkey()
          IF ::nCurObj > 0
             IF ! Empty( ::aDialogKeys )
                IF ( n := AScan( ::aDialogKeys, {| e_ | e_[ 1 ] == ::nKey } ) ) > 0
-                  Eval( ::aDialogKeys[ n, 2 ], self, ::oCurObj )
+                  Eval( ::aDialogKeys[ n ][ 2 ], Self, ::oCurObj )
                ENDIF
             ENDIF
 
@@ -537,7 +537,7 @@ METHOD WvtDialog:Inkey()
             IF ::lEventHandled
                IF ::oCurObj:nChildren > 0
                   FOR i := 1 to ::oCurObj:nChildren
-                     IF AScan( ::oCurObj:aChildren[ i, OBJ_CHILD_EVENTS ], ::nKey ) > 0
+                     IF AScan( ::oCurObj:aChildren[ i ][ OBJ_CHILD_EVENTS ], ::nKey ) > 0
                         ::oCurObj:NotifyChild( i, ::nKey, ::oCurObj )
                      ENDIF
                   NEXT
@@ -632,7 +632,7 @@ METHOD WvtDialog:CreateObjects()
       ENDSWITCH
    NEXT
 
-   RETURN self
+   RETURN Self
 
 METHOD WvtDialog:Eval( bBlock, p1, p2, p3, p4, p5 )
 
@@ -754,7 +754,7 @@ CREATE CLASS WvtObject
 
    METHOD SetToolTip()                            INLINE wvt_SetToolTip( ::nTop, ::nLeft, ::nBottom, ::nRight, ::Tooltip )
    METHOD Refresh()                               INLINE wvt_InvalidateRect( ::nTop, ::nLeft, ::nTop, ::nLeft )
-   METHOD Eval( bBlock )                          INLINE iif( HB_ISEVALITEM( bBlock ), Eval( bBlock, self ), NIL )
+   METHOD Eval( bBlock )                          INLINE iif( HB_ISEVALITEM( bBlock ), Eval( bBlock, Self ), NIL )
    METHOD AddChild( aChild )                      INLINE AAdd( ::aChildren, aChild )
    METHOD AddParent( aParent )                    INLINE AAdd( ::aParent, aParent )
 
@@ -911,8 +911,8 @@ METHOD WvtObject:ShowPopup()
          IF ( n := AScan( ::aPopup, {| e_ | e_[ 3 ] == nRet } ) ) > 0
             lRet := .T.
 
-            IF HB_ISEVALITEM( ::aPopup[ n, 2 ] )
-               Eval( ::aPopup[ n, 2 ] )
+            IF HB_ISEVALITEM( ::aPopup[ n ][ 2 ] )
+               Eval( ::aPopup[ n ][ 2 ] )
             ENDIF
          ENDIF
       ENDIF
@@ -996,7 +996,7 @@ METHOD WvtBrowse:Create()
 METHOD WvtBrowse:SetVBar()
 
    IF ::lVSBar
-      ::oVBar := WvtScrollBar():New( self, 999991, ;
+      ::oVBar := WvtScrollBar():New( Self, 999991, ;
          ::oBrw:nTop, ::oBrw:nRight + 1, ::oBrw:nBottom, ::oBrw:nRight + 2 )
       ::oVBar:nBarType   := WVT_SCROLLBAR_VERT
       ::oVBar:bTotal     := ::bTotalRecords
@@ -1026,7 +1026,7 @@ METHOD WvtBrowse:SetVBar()
 METHOD WvtBrowse:SetHBar()
 
    IF ::lHSBar
-      ::oHBar := WvtScrollBar():New( self, 999990, ;
+      ::oHBar := WvtScrollBar():New( Self, 999990, ;
          ::oBrw:nBottom + 1, ::oBrw:nLeft, ::oBrw:nBottom + 1, ::oBrw:nRight )
       ::oHBar:nBarType   := 2
       ::oHBar:bTotal     := ::bTotalColumns
@@ -1054,7 +1054,7 @@ METHOD WvtBrowse:SetHBar()
 METHOD WvtBrowse:Refresh()
 
    IF HB_ISEVALITEM( ::bOnRefresh )
-      Eval( ::bOnRefresh, self )
+      Eval( ::bOnRefresh, Self )
    ELSE
       ( ::cAlias )->( ::oBrw:RefreshAll():ForceStable() )
    ENDIF
@@ -1064,7 +1064,7 @@ METHOD WvtBrowse:Refresh()
 METHOD WvtBrowse:HandleEvent( nKey )
 
    IF HB_ISEVALITEM( ::bHandleEvent )
-      RETURN Eval( ::bHandleEvent, self, ::oParent:cPaintBlockID, ::oBrw, nKey )
+      RETURN Eval( ::bHandleEvent, Self, ::oParent:cPaintBlockID, ::oBrw, nKey )
    ENDIF
 
    RETURN .F.
@@ -1074,23 +1074,23 @@ METHOD WvtBrowse:NotifyChild( nIndex, nKey, oCurObj )
    LOCAL xData, i
 
    IF nIndex >= 1 .AND. nIndex <= Len( ::aChildren )
-      IF HB_ISEVALITEM( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] )
-         xData := Eval( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] )
+      IF HB_ISEVALITEM( ::aChildren[ nIndex ][ OBJ_CHILD_DATABLOCK ] )
+         xData := Eval( ::aChildren[ nIndex ][ OBJ_CHILD_DATABLOCK ] )
       ENDIF
 
-      Eval( ::aChildren[ nIndex, OBJ_CHILD_REFRESHBLOCK ], ;
-         ::aChildren[ nIndex, OBJ_CHILD_OBJ ], ;
-         ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:oParent:cPaintBlockID, ;
-         ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:oBrw, ;
+      Eval( ::aChildren[ nIndex ][ OBJ_CHILD_REFRESHBLOCK ], ;
+         ::aChildren[ nIndex ][ OBJ_CHILD_OBJ ], ;
+         ::aChildren[ nIndex ][ OBJ_CHILD_OBJ ]:oParent:cPaintBlockID, ;
+         ::aChildren[ nIndex ][ OBJ_CHILD_OBJ ]:oBrw, ;
          nKey, ;
          xData )
 
-      IF ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:nChildren > 0
+      IF ::aChildren[ nIndex ][ OBJ_CHILD_OBJ ]:nChildren > 0
          /* Pretend IF focus is current on this object */
-         Eval( ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:bOnFocus, ::aChildren[ nIndex, OBJ_CHILD_OBJ ] )
+         Eval( ::aChildren[ nIndex ][ OBJ_CHILD_OBJ ]:bOnFocus, ::aChildren[ nIndex ][ OBJ_CHILD_OBJ ] )
 
-         FOR i := 1 to ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:nChildren
-            ::aChildren[ nIndex, OBJ_CHILD_OBJ ]:NotifyChild( i, nKey, ::aChildren[ nIndex, OBJ_CHILD_OBJ ] )
+         FOR i := 1 to ::aChildren[ nIndex ][ OBJ_CHILD_OBJ ]:nChildren
+            ::aChildren[ nIndex ][ OBJ_CHILD_OBJ ]:NotifyChild( i, nKey, ::aChildren[ nIndex ][ OBJ_CHILD_OBJ ] )
          NEXT
 
          /* Restore previous environments */
@@ -1139,7 +1139,7 @@ METHOD WvtBrowse:SetTooltip()
 METHOD WvtBrowse:SaveSettings()
 
    IF HB_ISEVALITEM( ::bSaveSettings )
-      ::xSettings := Eval( ::bSaveSettings, self )
+      ::xSettings := Eval( ::bSaveSettings, Self )
    ENDIF
 
    RETURN Self
@@ -1147,7 +1147,7 @@ METHOD WvtBrowse:SaveSettings()
 METHOD WvtBrowse:RestSettings()
 
    IF ::xSettings != NIL .AND. HB_ISEVALITEM( ::bRestSettings )
-      Eval( ::bRestSettings, self )
+      Eval( ::bRestSettings, Self )
    ENDIF
 
    RETURN Self
@@ -1215,7 +1215,7 @@ METHOD WvtStatusBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 METHOD WvtStatusBar:Create()
 
    ::Refresh()
-   ::PaintBlock( DLG_OBJ_STATUSBAR, self )
+   ::PaintBlock( DLG_OBJ_STATUSBAR, Self )
 
    ::Super:Create()
 
@@ -1264,7 +1264,7 @@ METHOD WvtStatusBar:SetPanels( aPanels )
       oPanel:cColor := ::cColor
    NEXT
 
-   RETURN self
+   RETURN Self
 
 METHOD WvtStatusBar:Update( nPanel, cText, cColor )
 
@@ -1558,7 +1558,7 @@ METHOD WvtToolBar:AddButton( cFileImage, bBlock, cTooltip )
 
    nCol := ( ::nBottom - ::nTop + 1 ) * 2
 
-   oObj := WvtToolButton():New( self )
+   oObj := WvtToolButton():New( Self )
 
    oObj:lActive    := ::lActive
    oObj:nTop       := ::nTop
@@ -1599,7 +1599,7 @@ METHOD WvtToolBar:HoverOn()
       ::Refresh()
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 METHOD WvtToolBar:HoverOff()
 
@@ -1976,11 +1976,11 @@ METHOD WvtGets:Create()
 
    FOR i := 1 TO Len( ::aGetList )
 
-      __defaultNIL( @::aGetList[ i, 7 ], "N/W*,N/W*,,,N/GR*" )
-      __defaultNIL( @::aGetList[ i, 5 ], {|| .T. } )
-      __defaultNIL( @::aGetList[ i, 6 ], {|| .T. } )
+      __defaultNIL( @::aGetList[ i ][ 7 ], "N/W*,N/W*,,,N/GR*" )
+      __defaultNIL( @::aGetList[ i ][ 5 ], {|| .T. } )
+      __defaultNIL( @::aGetList[ i ][ 6 ], {|| .T. } )
 
-      AAdd( ::GetList, Get():New( ::aGetList[ i, 1 ], ::aGetList[ i, 2 ], {| v | iif( PCount() == 0, ::aGetList[ i, 3 ], ::aGetList[ i, 3 ] := v ) }, "::aGetList[ i, 3 ]", ::aGetList[ i, 7 ] ) )
+      AAdd( ::GetList, Get():New( ::aGetList[ i ][ 1 ], ::aGetList[ i ][ 2 ], {| v | iif( PCount() == 0, ::aGetList[ i ][ 3 ], ::aGetList[ i ][ 3 ] := v ) }, "::aGetList[ i ][ 3 ]", ::aGetList[ i ][ 7 ] ) )
 
       ::GetList[ i ]:Display()
       ::PaintBlock( i )
@@ -1996,13 +1996,13 @@ METHOD WvtGets:PaintBlock( nIndex )
 
    LOCAL nLen, bPaint
 
-   nLen   := Len( Transform( ::aGetList[ nIndex, 3 ], ::aGetList[ nIndex, 4 ] ) )
+   nLen   := Len( Transform( ::aGetList[ nIndex ][ 3 ], ::aGetList[ nIndex ][ 4 ] ) )
 
-   bPaint := {|| wvt_DrawBoxGet( ::aGetList[ nIndex, 1 ], ::aGetList[ nIndex, 2 ], nLen ) }
+   bPaint := {|| wvt_DrawBoxGet( ::aGetList[ nIndex ][ 1 ], ::aGetList[ nIndex ][ 2 ], nLen ) }
 
    AAdd( ::aPaint, { bPaint, ;
-      { WVT_BLOCK_GETS, ::aGetList[ nIndex, 1 ] - 1, ::aGetList[ nIndex, 2 ] - 1, ;
-      ::aGetList[ nIndex, 1 ] - 1,  ::aGetList[ nIndex, 2 ] + nLen } } )
+      { WVT_BLOCK_GETS, ::aGetList[ nIndex ][ 1 ] - 1, ::aGetList[ nIndex ][ 2 ] - 1, ;
+      ::aGetList[ nIndex ][ 1 ] - 1,  ::aGetList[ nIndex ][ 2 ] + nLen } } )
 
    RETURN Self
 
@@ -2981,8 +2981,8 @@ METHOD wvtMenu:DelItem( nItemNum )
    LOCAL lResult := .F.
 
    IF nItemNum >= 1 .AND. nItemNum <= ::NumItems()
-      IF ::aItems[ nItemNum, WVT_MENU_TYPE ] == WIN_MF_POPUP
-         ::aItems[ nItemNum, WVT_MENU_MENUOBJ ]:Destroy()
+      IF ::aItems[ nItemNum ][ WVT_MENU_TYPE ] == WIN_MF_POPUP
+         ::aItems[ nItemNum ][ WVT_MENU_MENUOBJ ]:Destroy()
       ENDIF
 
       IF ( lResult := wapi_DeleteMenu( ::hMenu, nItemNum - 1, WIN_MF_BYPOSITION ) ) /* Remember ZERO base */
@@ -3032,9 +3032,9 @@ METHOD wvtMenu:FindMenuItemById( nId )
    IF ! Empty( nId )
       x := ::NumItems()
       DO WHILE x > 0 .AND. Empty( aResult )
-         IF ::aItems[ x, WVT_MENU_TYPE ] == WIN_MF_POPUP
-            aResult := ::aItems[ x, WVT_MENU_MENUOBJ ]:FindMenuItemById( nId )
-         ELSEIF ::aItems[ x, WVT_MENU_IDENTIFIER ] == nId
+         IF ::aItems[ x ][ WVT_MENU_TYPE ] == WIN_MF_POPUP
+            aResult := ::aItems[ x ][ WVT_MENU_MENUOBJ ]:FindMenuItemById( nId )
+         ELSEIF ::aItems[ x ][ WVT_MENU_IDENTIFIER ] == nId
             aResult := ::aItems[ x ]
          ENDIF
          x--

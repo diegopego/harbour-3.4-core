@@ -2,7 +2,7 @@
  * Set functions
  *
  * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
- * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour) (hb_osEncode(), hb_osDecode())
+ * Copyright 2008-2009 Viktor Szakats (vsz.me/hb) (hb_osEncode(), hb_osDecode())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -78,7 +78,7 @@ static char set_char( PHB_ITEM pItem, char oldChar )
 {
    char newChar = oldChar;
 
-   HB_TRACE( HB_TR_DEBUG, ( "set_char(%p, %c)", pItem, oldChar ) );
+   HB_TRACE( HB_TR_DEBUG, ( "set_char(%p, %c)", ( void * ) pItem, oldChar ) );
 
    if( HB_IS_STRING( pItem ) )
    {
@@ -100,7 +100,7 @@ static HB_BOOL set_logical( PHB_ITEM pItem, HB_BOOL bDefault )
 {
    HB_BOOL bLogical = bDefault;
 
-   HB_TRACE( HB_TR_DEBUG, ( "set_logical(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "set_logical(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -128,7 +128,7 @@ static HB_BOOL set_logical( PHB_ITEM pItem, HB_BOOL bDefault )
 
 static int set_number( PHB_ITEM pItem, int iOldValue )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "set_number(%p, %d)", pItem, iOldValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "set_number(%p, %d)", ( void * ) pItem, iOldValue ) );
 
    return HB_IS_NUMERIC( pItem ) ? hb_itemGetNI( pItem ) : iOldValue;
 }
@@ -137,7 +137,7 @@ static char * set_string( PHB_ITEM pItem, char * szOldString )
 {
    char * szString;
 
-   HB_TRACE( HB_TR_DEBUG, ( "set_string(%p, %s)", pItem, szOldString ) );
+   HB_TRACE( HB_TR_DEBUG, ( "set_string(%p, %s)", ( void * ) pItem, szOldString ) );
 
    if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
    {
@@ -156,7 +156,7 @@ static void close_handle( PHB_SET_STRUCT pSet, HB_set_enum set_specifier )
 {
    PHB_FILE * handle_ptr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "close_handle(%p,%d)", pSet, ( int ) set_specifier ) );
+   HB_TRACE( HB_TR_DEBUG, ( "close_handle(%p, %d)", ( void * ) pSet, ( int ) set_specifier ) );
 
    switch( set_specifier )
    {
@@ -270,7 +270,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    char ** set_value;
    HB_BOOL fPipe = HB_FALSE, fStripEof;
 
-   HB_TRACE( HB_TR_DEBUG, ( "open_handle(%p, %s, %d, %d)", pSet, file_name, ( int ) fAppend, ( int ) set_specifier ) );
+   HB_TRACE( HB_TR_DEBUG, ( "open_handle(%p, %s, %d, %d)", ( void * ) pSet, file_name, ( int ) fAppend, ( int ) set_specifier ) );
 
    switch( set_specifier )
    {
@@ -522,7 +522,7 @@ static char * hb_set_PRINTFILE_default( void )
 #elif defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
    return hb_strdup( "LPT1" );
 #else
-   return hb_strdup( "PRN" ); /* TOFIX */
+   return hb_strdup( "PRN" ); /* FIXME */
 #endif
 }
 
@@ -1086,7 +1086,7 @@ HB_FUNC( SET )
 
 void hb_setInitialize( PHB_SET_STRUCT pSet )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_setInitialize(%p)", pSet ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_setInitialize(%p)", ( void * ) pSet ) );
 
    pSet->HB_SET_ALTERNATE = HB_FALSE;
    pSet->HB_SET_ALTFILE = NULL;
@@ -1119,7 +1119,9 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
     * IMHO it's a bug in Clipper (side effect of some internal solutions) and
     * we should not try to emulate it [druzus].
     */
-   /* pSet->HB_SET_DEBUG = HB_FALSE; */
+   #if 0
+   pSet->HB_SET_DEBUG = HB_FALSE;
+   #endif
    pSet->HB_SET_DEBUG = hb_dynsymFind( "__DBGENTRY" ) ? HB_TRUE : HB_FALSE;
    pSet->HB_SET_DECIMALS = 2;
    pSet->HB_SET_DEFAULT = hb_strdup( "" );
@@ -1345,7 +1347,7 @@ HB_BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
          case HB_SET_ALTFILE:
          case HB_SET_EXTRAFILE:
          case HB_SET_PRINTFILE:
-            /* This sets needs 3-rd parameter to indicate additive mode
+            /* This sets needs 3rd parameter to indicate additive mode
              * so they cannot be fully supported by this function
              */
             if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )

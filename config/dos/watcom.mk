@@ -54,7 +54,7 @@ endif
 
 # different SYS values: dos4g (default), pmodew (commercial), causeway,
 # dos32a (DOS/32A LE executable), dos32x (DOS/32A LX executable)
-ifeq ($(HB_BUILD_DYN),dostest)
+ifeq ($(__HB_BUILD_DYN),dostest)
    LDFLAGS += SYS causeway
 else
    LDFLAGS += SYS dos32a
@@ -75,7 +75,7 @@ ifeq ($(CC),wcc386)
    LDLIBS += clib3r
 endif
 
-ifeq ($(HB_BUILD_DYN),dostest)
+ifeq ($(__HB_BUILD_DYN),dostest)
 
    HB_DYN_COPT := -DHB_DYNLIB -bd
 
@@ -105,11 +105,13 @@ ifeq ($(HB_BUILD_DYN),dostest)
    define create_dynlib
       $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
       $(foreach file,$^,$(dynlib_object))
-      $(DY) $(DFLAGS) $(HB_USER_DFLAGS) NAME '$(subst /,$(DIRSEP),$(DYN_DIR)/$@)' OP implib='$(IMP_FILE)' @__dyn__.tmp $(DLIBS_COMMA)
+      $(DY) $(DFLAGS) $(HB_USER_DFLAGS) \
+         NAME '$(subst /,$(DIRSEP),$(DYN_DIR)/$@)' \
+         OP implib='$(IMP_FILE)' @__dyn__.tmp $(DLIBS_COMMA)
    endef
 
    DY_RULE = $(create_dynlib)
 
-endif # HB_BUILD_DYN
+endif # __HB_BUILD_DYN
 
 include $(TOP)$(ROOT)config/common/watcom.mk

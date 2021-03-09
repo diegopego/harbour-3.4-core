@@ -50,7 +50,7 @@ endif
 
 RC := wrc
 RC_OUT := -fo=
-RCFLAGS += -i. -i$(GRANDP) -i$(HB_HOST_INC) -q -r -zm -bt=nt
+RCFLAGS += -i. -i$(GRANDP) -i$(HB_HOST_INC) -q -r -bt=nt
 
 LD := wlink
 ifeq ($(HB_BUILD_DEBUG),yes)
@@ -85,7 +85,9 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dynlib_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) NAME '$(subst /,$(DIRSEP),$(DYN_DIR)/$@)' OP implib='$(IMP_FILE)' @__dyn__.tmp $(DLIBS_COMMA)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) \
+      NAME '$(subst /,$(DIRSEP),$(DYN_DIR)/$@)' \
+      OP implib='$(IMP_FILE)' @__dyn__.tmp $(DLIBS_COMMA)
 endef
 
 DY_RULE = $(create_dynlib)

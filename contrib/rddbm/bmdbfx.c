@@ -19,9 +19,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,7 +60,7 @@
 #include "rddsys.ch"
 
 
-/* now this function is RDD independent and can work with any RDD suporting
+/* now this function is RDD independent and can work with any RDD supporting
  * DBOI_SKIPWILD and DBOI_SKIPWILDBACK
  */
 HB_FUNC( BM_DBSEEKWILD )
@@ -520,6 +520,10 @@ static HB_ERRCODE hb_bmSkipFilter( AREAP pArea, HB_LONG lUpDown )
    return errCode;
 }
 
+#if defined( HB_GCC_HAS_DIAG ) && ( HB_GCC_VER >= 601 )
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wnull-dereference"
+#endif
 static HB_ERRCODE hb_bmPutRec( AREAP pArea, const HB_BYTE * pBuffer )
 {
    HB_ERRCODE errCode = SUPER_PUTREC( pArea, pBuffer );
@@ -594,7 +598,9 @@ static HB_ERRCODE hb_bmSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
    }
    return errCode;
 }
-
+#if defined( HB_GCC_HAS_DIAG ) && ( HB_GCC_VER >= 601 )
+#  pragma GCC diagnostic pop
+#endif
 
 static const RDDFUNCS bmTable =
 {
@@ -735,7 +741,7 @@ static void hb_bmGetFuncTable( const char * szSuper )
    uiRddId = ( HB_USHORT ) hb_parni( 4 );
    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
-   HB_TRACE( HB_TR_DEBUG, ( "BM%s_GETFUNCTABLE(%p, %p, %p, %hu, %p)", szSuper, puiCount, pTable, pSuperTable, uiRddId, puiSuperRddId ) );
+   HB_TRACE( HB_TR_DEBUG, ( "BM%s_GETFUNCTABLE(%p, %p, %p, %hu, %p)", szSuper, ( void * ) puiCount, pTable, pSuperTable, uiRddId, puiSuperRddId ) );
 
    if( puiCount && pTable && pSuperTable && puiSuperRddId )
    {
@@ -798,8 +804,8 @@ HB_CALL_ON_STARTUP_BEGIN( _hb_bm_rdd_init_ )
 HB_CALL_ON_STARTUP_END( _hb_bm_rdd_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hb_bm_InitSymbols_
-   #pragma startup _hb_bm_rdd_init_
+#  pragma startup _hb_bm_InitSymbols_
+#  pragma startup _hb_bm_rdd_init_
 #elif defined( HB_DATASEG_STARTUP )
    #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_bm_InitSymbols_ ) \
                               HB_DATASEG_FUNC( _hb_bm_rdd_init_ )

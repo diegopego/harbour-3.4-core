@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,8 +56,7 @@
 #include "hbsetup.h"
 #include "hbver.h"
 
-#if defined( __XCC__ ) || defined( __POCC__ ) || defined( __LCC__ ) || \
-    defined( __MINGW32__ ) || defined( __DMC__ ) || defined( __TINYC__ ) || \
+#if defined( __POCC__ ) || defined( __MINGW32__ ) || \
     ( defined( _MSC_VER ) && _MSC_VER >= 1600 ) || \
     ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \
@@ -88,6 +87,16 @@
    #endif
 #endif
 
+#if ( defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) ) && \
+    ( defined( _ISOC99_SOURCE ) || defined( _STDC_C99 ) || \
+      ( defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L ) )
+   #define HB_C99_STATIC    static
+   #define HB_C99_RESTRICT  restrict
+#else
+   #define HB_C99_STATIC
+   #define HB_C99_RESTRICT
+#endif
+
 #if 0
 #define HB_CLIPPER_INT_ITEMS
 #define HB_LONG_LONG_OFF
@@ -105,10 +114,6 @@
       #define HB_DOS_INT86 int386
       #define HB_DOS_INT86X int386x
       #define HB_XREGS w
-   #elif defined( __RSX32__ )
-      #define HB_DOS_INT86 _int86
-      #define HB_DOS_INT86X _int86x
-      #define HB_XREGS x
    #elif defined( __DJGPP__ )
       #define HB_DOS_INT86 int86
       #define HB_DOS_INT86X int86x
@@ -472,6 +477,12 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
 #define HB_LIM_INT32(l)       ( INT32_MIN <= (l) && (l) <= INT32_MAX )
 #define HB_LIM_INT64(l)       ( INT64_MIN <= (l) && (l) <= INT64_MAX )
 
+#define HB_CAST_INT( d )      ( ( int ) ( HB_MAXINT ) ( d ) )
+#define HB_CAST_LONG( d )     ( ( long ) ( HB_MAXINT ) ( d ) )
+#define HB_CAST_LONGLONG( d ) ( ( HB_LONGLONG ) ( d ) )
+#define HB_CAST_MAXINT( d )   ( ( HB_MAXINT ) ( d ) )
+#define HB_CAST_ISIZ( d )     ( ( HB_ISIZ ) ( HB_MAXINT ) ( d ) )
+
 /*
  * It's a hack for compilers which don't support LL suffix for LONGLONG
  * numeric constant. This suffix is necessary for some compilers -
@@ -545,7 +556,9 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
 /* #define PCODE_LONG_LIM(l)     HB_LIM_LONG( l ) */
 
 /* type of HB_ITEM */
-/* typedef USHORT HB_TYPE; */
+#if 0
+typedef USHORT HB_TYPE;
+#endif
 typedef HB_U32 HB_TYPE;
 
 /* type of file attributes */
@@ -628,9 +641,9 @@ typedef HB_U32 HB_FATTR;
 #if ! defined( HB_PDP_ENDIAN ) && ! defined( HB_BIG_ENDIAN ) && \
     ! defined( HB_LITTLE_ENDIAN )
 
-   /* I intentionaly move the first two #if/#elif to the begining
+   /* I intentionaly move the first two #if/#elif to the beginning
       to avoid compiler error when this macro will be defined as
-      empty statement in next conditions, F.e. SunOS
+      empty statement in next conditions, e.g. SunOS
     */
 #  if ( defined( __LITTLE_ENDIAN__ ) && ! defined( __BIG_ENDIAN__ ) ) || \
       ( defined( __LITTLE_ENDIAN ) && ! defined( __BIG_ENDIAN ) ) || \
@@ -1255,7 +1268,7 @@ typedef HB_U32 HB_FATTR;
 /*
  * HB_FORCE_IEEE754_DOUBLE will can be used on platforms which use different
  * double format and we want to force storing double number as IEEE754
- * double value for sharing binary data (f.e. PCODE in .hrb files or CDX
+ * double value for sharing binary data (e.g. PCODE in .hrb files or CDX
  * indexes or DBFs with "B" fields.
  */
 #if defined( HB_FORCE_IEEE754_DOUBLE )
@@ -1466,7 +1479,7 @@ typedef HB_U32 HB_FATTR;
 #define HB_DECONST( c, p )    ( ( c ) HB_UNCONST( p ) )
 
 
-#if defined( __POCC__ ) || defined( __XCC__ )
+#if defined( __POCC__ )
    #define HB_SYMBOL_UNUSED( symbol )  do if( symbol ) {;} while( 0 )
 #else
    #define HB_SYMBOL_UNUSED( symbol )  ( void ) symbol
@@ -1480,13 +1493,12 @@ typedef HB_U32 HB_FATTR;
  * starting procedure (due to unknown order of static data initialization)
  */
 #define HB_START_PROCEDURE "MAIN"
-#if defined( __WATCOMC__ ) || defined( __DMC__ ) || \
+#if defined( __WATCOMC__ ) || \
     ( defined( __GNUC__ ) && ! defined( __DJGPP__ ) && ! defined( HB_OS_OS2_GCC ) )
    #define HB_START_PROC_STRICT
 #endif
 
-#if defined( __WATCOMC__ ) || defined( __DMC__ ) || \
-    defined( _MSC_VER ) || defined( __POCC__ )
+#if defined( __WATCOMC__ ) || defined( _MSC_VER ) || defined( __POCC__ )
    #define HB_DLL_ENTRY_POINT    DllMain
 #else
    #define HB_DLL_ENTRY_POINT    DllEntryPoint
@@ -1494,14 +1506,7 @@ typedef HB_U32 HB_FATTR;
 
 #define HB_EXTERN extern
 
-#if defined( __RSXNT__ )
-   /* RSXNT does not support any type of export keyword.
-      Exported (i.e., public) names can be obtained via
-      the emxexp utility and the output can be used for
-      input to a module definition file. See emxdev.doc
-      in the RSXNT doc/ directory for more information. */
-   #define HB_EXPORT_ATTR
-#elif defined( __GNUC__ ) && defined( HB_OS_WIN )
+#if defined( __GNUC__ ) && defined( HB_OS_WIN )
    #define HB_EXPORT_ATTR     __attribute__ (( dllexport ))
 #elif defined( __GNUC__ ) && defined( HB_OS_LINUX ) && __GNUC__ >= 3
    #define HB_EXPORT_ATTR     __attribute__ ((visibility ("default")))
@@ -1525,14 +1530,7 @@ typedef HB_U32 HB_FATTR;
 
 #define HB_EXPORT_INT HB_EXPORT
 
-#if defined( __RSXNT__ )
-   /* RSXNT does not support any type of export keyword.
-      Exported (i.e., public) names can be obtained via
-      the emxexp utility and the output can be used for
-      input to a module definition file. See emxdev.doc
-      in the RSXNT doc/ directory for more information. */
-   #define HB_IMPORT_ATTR
-#elif defined( __GNUC__ ) && defined( HB_OS_WIN )
+#if defined( __GNUC__ ) && defined( HB_OS_WIN )
    #define HB_IMPORT_ATTR     __attribute__ (( dllimport ))
 #elif defined( __BORLANDC__ )
    #define HB_IMPORT_ATTR     __declspec( dllimport )

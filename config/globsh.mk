@@ -1,15 +1,13 @@
 # ---------------------------------------------------------------
-# Copyright 2009 Viktor Szakats (vszakats.net/harbour) (rework)
+# Copyright 2009-2017 Viktor Szakats (vsz.me/hb) (rework)
 # See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
 # See batch docs here:
 #    https://www.computerhope.com/batch.htm
-#    http://www.robvanderwoude.com/batchcommands.php
+#    https://www.robvanderwoude.com/batchcommands.php
 
 ifneq ($(HB_SHELL),sh)
-
-TOOL_DIR := $(subst /,\,$(TOP)$(ROOT)config/)
 
 # Have to use '=' operator here for rules to work
 PKG_DIR_OS = $(subst /,\,$(PKG_DIR))
@@ -35,44 +33,45 @@ LN := ln -sf
 MD := mkdir
 MDP := mkdir -p
 ECHO := echo
-ECHOQUOTE := "
+ECHOQUOTE := '
+QUOTE := '
 TRUE := TRUE=true
 FALSE := false
 
 dirbase::
-	@[ -d "$(OBJ_DIR)" ] || $(MDP) "$(OBJ_DIR)"
-	@[ -z "$(LIB_FILE)" ] || [ -d "$(LIB_DIR)" ] || $(MDP) "$(LIB_DIR)"
-	@[ -z "$(BIN_FILE)" ] || [ -d "$(BIN_DIR)" ] || $(MDP) "$(BIN_DIR)"
-	@[ -z "$(DYN_FILE)" ] || [ -d "$(DYN_DIR)" ] || $(MDP) "$(DYN_DIR)"
-	@[ -z "$(IMP_FILE)" ] || [ -d "$(IMP_DIR)" ] || $(MDP) "$(IMP_DIR)"
+	@[ -d '$(OBJ_DIR)' ] || $(MDP) '$(OBJ_DIR)'
+	@[ -z '$(LIB_FILE)' ] || [ -d '$(LIB_DIR)' ] || $(MDP) '$(LIB_DIR)'
+	@[ -z '$(BIN_FILE)' ] || [ -d '$(BIN_DIR)' ] || $(MDP) '$(BIN_DIR)'
+	@[ -z '$(DYN_FILE)' ] || [ -d '$(DYN_DIR)' ] || $(MDP) '$(DYN_DIR)'
+	@[ -z '$(IMP_FILE)' ] || [ -d '$(IMP_DIR)' ] || $(MDP) '$(IMP_DIR)'
 
 clean::
 	-@$(RDP) $(PKG_DIR) $(OBJ_DIR) $(LIB_FILE) $(BIN_FILE) $(DYN_FILE) $(IMP_FILE); \
-	if [ -n "$(LIB_FILE)" ]; then \
-	   $(RM) "$(basename $(LIB_FILE)).bak"; \
-	   [ "`$(ECHO) $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) "$(LIB_DIR)"; \
+	if [ -n '$(LIB_FILE)' ]; then \
+	  $(RM) '$(basename $(LIB_FILE)).bak'; \
+	  [ "$$($(ECHO) $(LIB_DIR)/*)" != '$(LIB_DIR)/*' ] || $(RDP) '$(LIB_DIR)'; \
 	fi ; \
-	if [ -n "$(BIN_FILE)" ]; then \
-	   $(RM) "$(basename $(BIN_FILE)).tds"; \
-	   $(RM) "$(basename $(BIN_FILE)).pch"; \
-	   $(RM) "$(basename $(BIN_FILE)).pdb"; \
-	   $(RM) "$(basename $(BIN_FILE)).ilk"; \
-	   [ "`$(ECHO) $(BIN_DIR)/*`" != "$(BIN_DIR)/*" ] || $(RDP) "$(BIN_DIR)"; \
+	if [ -n '$(BIN_FILE)' ]; then \
+	  $(RM) '$(basename $(BIN_FILE)).tds'; \
+	  $(RM) '$(basename $(BIN_FILE)).pch'; \
+	  $(RM) '$(basename $(BIN_FILE)).pdb'; \
+	  $(RM) '$(basename $(BIN_FILE)).ilk'; \
+	  [ "$$($(ECHO) $(BIN_DIR)/*)" != '$(BIN_DIR)/*' ] || $(RDP) '$(BIN_DIR)'; \
 	fi ; \
-	if [ -n "$(DYN_FILE)" ]; then \
-	   $(RM) "$(basename $(DYN_FILE)).tds"; \
-	   $(RM) "$(basename $(DYN_FILE)).pch"; \
-	   $(RM) "$(basename $(DYN_FILE)).pdb"; \
-	   $(RM) "$(basename $(DYN_FILE)).ilk"; \
-	   $(RM) "$(basename $(DYN_FILE)).def"; \
-	   $(RM) "$(basename $(DYN_FILE)).exp"; \
-	   $(RM) "$(DYN_FILE_NVR)"; \
-	   $(RM) "$(DYN_FILE_CPT)"; \
-	   [ "`$(ECHO) $(DYN_DIR)/*`" != "$(DYN_DIR)/*" ] || $(RDP) "$(DYN_DIR)"; \
+	if [ -n '$(DYN_FILE)' ]; then \
+	  $(RM) '$(basename $(DYN_FILE)).tds'; \
+	  $(RM) '$(basename $(DYN_FILE)).pch'; \
+	  $(RM) '$(basename $(DYN_FILE)).pdb'; \
+	  $(RM) '$(basename $(DYN_FILE)).ilk'; \
+	  $(RM) '$(basename $(DYN_FILE)).def'; \
+	  $(RM) '$(basename $(DYN_FILE)).exp'; \
+	  $(RM) '$(DYN_FILE_NVR)'; \
+	  $(RM) '$(DYN_FILE_CPT)'; \
+	  [ "$$($(ECHO) $(DYN_DIR)/*)" != '$(DYN_DIR)/*' ] || $(RDP) '$(DYN_DIR)'; \
 	fi ; \
-	if [ -n "$(IMP_FILE)" ]; then \
-	   $(RM) "$(basename $(IMP_FILE)).exp"; \
-	   [ "`$(ECHO) $(IMP_DIR)/*`" != "$(IMP_DIR)/*" ] || $(RDP) "$(IMP_DIR)"; \
+	if [ -n '$(IMP_FILE)' ]; then \
+	  $(RM) '$(basename $(IMP_FILE)).exp'; \
+	  [ "$$($(ECHO) $(IMP_DIR)/*)" != '$(IMP_DIR)/*' ] || $(RDP) '$(IMP_DIR)'; \
 	fi
 
 endif
@@ -96,6 +95,7 @@ MD := mkdir
 MDP := mkdir
 ECHO := echo
 ECHOQUOTE :=
+QUOTE := "
 TRUE := $(ECHO) > nul
 FALSE := $(MD) . 2> nul
 
@@ -142,14 +142,15 @@ ifeq ($(HB_SHELL),os2)
 #       os2rm expects backslashes in filenames. [vszakats]
 
 MK := $(subst \,/,$(MAKE))
-RM := $(TOOL_DIR)os2rm -f
-RDP := $(TOOL_DIR)os2rm -fr
-CP := $(TOOL_DIR)os2cp -f
+RM := rm -f
+RDP := rm -fr
+CP := cp -f
 LN :=
-MD := $(TOOL_DIR)os2mkdir
-MDP := $(TOOL_DIR)os2mkdir -p
+MD := mkdir
+MDP := mkdir -p
 ECHO := echo
 ECHOQUOTE :=
+QUOTE := "
 TRUE := $(ECHO) > nul
 # TODO
 FALSE := $(TRUE)
@@ -188,19 +189,20 @@ ifeq ($(HB_SHELL),dos)
 #       When using DJGPP GNU Make to invoke other DJGPP tools this limit
 #       is about 13 kB, as they do special trick to overcome it.
 #       See these DJGPP FAQs:
-#          http://www.delorie.com/djgpp/v2faq/faq16_4.html
-#          http://www.delorie.com/djgpp/v2faq/faq16_5.html
+#          https://www.delorie.com/djgpp/v2faq/faq16_4.html
+#          https://www.delorie.com/djgpp/v2faq/faq16_5.html
 #       [vszakats]
 
 MK := $(subst \,/,$(MAKE))
-RM := $(TOOL_DIR)dosrm -f
-RDP := $(TOOL_DIR)dosrm -fr
-CP := $(TOOL_DIR)doscp -f
+RM := rm -f
+RDP := rm -fr
+CP := cp -f
 LN :=
-MD := $(TOOL_DIR)dosmkdir
-MDP := $(TOOL_DIR)dosmkdir -p
-ECHO := $(TOOL_DIR)dosecho
+MD := mkdir
+MDP := mkdir -p
+ECHO := echo
 ECHOQUOTE := "
+QUOTE :=
 TRUE := $(ECHO) > nul
 # TODO
 FALSE := $(TRUE)

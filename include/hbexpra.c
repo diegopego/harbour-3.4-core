@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -328,12 +328,12 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                   pVar->pNext = hb_compExprNewNil( HB_COMP_PARAM );
                pVar = pVar->pNext;
             }
-            if( pVar->pNext ) /* Delete 6-th argument if present */
+            if( pVar->pNext ) /* Delete 6th argument if present */
             {
                pIndex->pNext = pVar->pNext->pNext;
                HB_COMP_EXPR_FREE( pVar->pNext );
             }
-            pVar->pNext = pIndex;   /* Set a new 6-th argument */
+            pVar->pNext = pIndex;   /* Set a new 6th argument */
 
             /* Remove the index expression from a string representation
              */
@@ -440,7 +440,7 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                 */
                PHB_EXPR pFirst = pArg; /* save first argument */
 
-               pArg = hb_compExprNewNil( HB_COMP_PARAM ); /* replace 1-st with NIL */
+               pArg = hb_compExprNewNil( HB_COMP_PARAM ); /* replace 1st with NIL */
                if( pFirst->pNext && pFirst->pNext->ExprType == HB_ET_STRING )
                   pArg->pNext = pFirst->pNext;
                else
@@ -688,7 +688,7 @@ PHB_EXPR hb_compExprAssignStatic( PHB_EXPR pLeftExpr, PHB_EXPR pRightExpr, HB_CO
 
 PHB_EXPR hb_compExprSetCodeblockBody( PHB_EXPR pExpr, HB_BYTE * pCode, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprSetCodeblockBody(%p,%p,%" HB_PFS "u)", pExpr, pCode, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprSetCodeblockBody(%p,%p,%" HB_PFS "u)", ( void * ) pExpr, ( void * ) pCode, nLen ) );
 
    pExpr->value.asCodeblock.string = ( char * ) hb_xgrab( nLen + 1 );
    memcpy( pExpr->value.asCodeblock.string, pCode, nLen );
@@ -753,7 +753,7 @@ PHB_EXPR hb_compExprGenPop( PHB_EXPR pExpr, HB_COMP_DECL )
  */
 PHB_EXPR hb_compExprGenStatement( PHB_EXPR pExpr, HB_COMP_DECL )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprGenStatement(%p)", pExpr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprGenStatement(%p)", ( void * ) pExpr ) );
    if( pExpr )
    {
       if( pExpr->ExprType == HB_EO_EQUAL )
@@ -773,5 +773,3 @@ PHB_EXPR hb_compExprReduce( PHB_EXPR pExpr, HB_COMP_DECL )
    return HB_EXPR_USE( pExpr, HB_EA_REDUCE );
 }
 #endif
-
-/* ************************************************************************* */

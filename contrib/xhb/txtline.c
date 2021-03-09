@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,7 +56,9 @@ static void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen
    HB_SIZE nPos, nCurrCol, nLastBlk;
    HB_BOOL bBreak = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_readLine(%p, %" HB_PFS "u, %" HB_PFS "u, %" HB_PFS "u, %d, %p, %p, %" HB_PFS "u, %p, %p, %p, %p)", szText, nTextLen, nLineLen, nTabLen, bWrap, pTerm, pnTermSizes, nTerms, pbFound, pbEOF, pnEnd, pnEndOffset ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_readLine(%p, %" HB_PFS "u, %" HB_PFS "u, %" HB_PFS "u, %d, %p, %p, %" HB_PFS "u, %p, %p, %p, %p)",
+             ( const void * ) szText, nTextLen, nLineLen, nTabLen, bWrap, ( const void * ) pTerm,
+             ( void * ) pnTermSizes, nTerms, ( void * ) pbFound, ( void * ) pbEOF, ( void * ) pnEnd, ( void * ) pnEndOffset ) );
 
    *pbFound     = HB_FALSE;
    *pbEOF       = HB_FALSE;
@@ -116,7 +118,7 @@ static void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen
       }
       else if( szText[ nPos ] == HB_CHAR_SOFT1 && szText[ nPos + 1 ] == HB_CHAR_SOFT2 )
       {
-         /* Clipper does NOT considers SOFT CR as a word seperator - WHY?
+         /* Clipper does NOT consider SOFT CR as a word separator - WHY?
             Should we not fix that? */
          #if 0
          nLastBlk = nPos;

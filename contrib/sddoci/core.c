@@ -1,7 +1,7 @@
 /*
  * Oracle (via OCILIB) Database Driver
  *
- * Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2014 Viktor Szakats (vsz.me/hb)
  * Originally based on ODBC driver by:
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  *
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,18 +46,22 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbrddsql.h"
+
 #include "hbapiitm.h"
 #include "hbdate.h"
 #include "hbapistr.h"
 #include "hbset.h"
 #include "hbvm.h"
 
-#include "hbrddsql.h"
-
 #include "ocilib.h"
 
-#define HB_OCILIB_VERS( ma, mi, mu )  ( OCILIB_MAJOR_VERSION > ma || ( OCILIB_MAJOR_VERSION == ma && ( OCILIB_MINOR_VERSION > mi || ( OCILIB_MINOR_VERSION == mi && OCILIB_REVISION_VERSION >= mu ) ) ) )
+#define HB_OCILIB_VERS( ma, mi, mu )  \
+   ( OCILIB_MAJOR_VERSION > ma || \
+   ( OCILIB_MAJOR_VERSION == ma && \
+   ( OCILIB_MINOR_VERSION > mi || \
+   ( OCILIB_MINOR_VERSION == mi && \
+     OCILIB_REVISION_VERSION >= mu ) ) ) )
 
 #define M_HB_ARRAYGETSTR( arr, n, phstr, plen )  ( s_fOCI_CharsetMetaDataUni ? \
                                                  ( const mtext * ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen ) : \
@@ -66,14 +70,14 @@
                                                  ( const mtext * ) hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen ) : \
                                                  ( const mtext * ) hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen ) )
 #define M_HB_ITEMPUTSTR( itm, str )              ( s_fOCI_CharsetMetaDataUni ? \
-                                                 hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, ( HB_WCHAR * ) str ) : \
-                                                 hb_itemPutStr( itm, hb_setGetOSCP(), ( char * ) str ) )
+                                                 hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) str ) : \
+                                                 hb_itemPutStr( itm, hb_setGetOSCP(), ( const char * ) str ) )
 #define D_HB_ITEMPUTSTR( itm, str )              ( s_fOCI_CharsetUserDataUni ? \
-                                                 hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, ( HB_WCHAR * ) str ) : \
-                                                 hb_itemPutStr( itm, hb_setGetOSCP(), ( char * ) str ) )
+                                                 hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) str ) : \
+                                                 hb_itemPutStr( itm, hb_setGetOSCP(), ( const char * ) str ) )
 #define D_HB_ITEMPUTSTRLEN( itm, str, len )      ( s_fOCI_CharsetUserDataUni ? \
-                                                 hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, ( HB_WCHAR * ) str, len ) : \
-                                                 hb_itemPutStrLen( itm, hb_setGetOSCP(), ( char * ) str, len ) )
+                                                 hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, ( const HB_WCHAR * ) str, len ) : \
+                                                 hb_itemPutStrLen( itm, hb_setGetOSCP(), ( const char * ) str, len ) )
 
 typedef struct
 {

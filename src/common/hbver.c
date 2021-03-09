@@ -7,7 +7,7 @@
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    hb_verPlatform() (support for determining many Windows flavours)
  *    hb_verCompiler() (support for determining some compiler version/revision)
- * Copyright 2000-2014 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2000-2014 Viktor Szakats (vsz.me/hb)
  *    hb_verCPU(), hb_verHostBitWidth(), hb_iswinver(), hb_iswinsp()
  *    hb_verPlatform() (support for detecting Windows NT on DOS, Wine, post-Windows 8, cleanups)
  *
@@ -22,9 +22,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -266,8 +266,6 @@ const char * hb_verPlatformMacro( void )
    return "QNX";
 #elif defined( HB_OS_VXWORKS )
    return "VXWORKS";
-#elif defined( HB_OS_SYMBIAN )
-   return "SYMBIAN";
 #elif defined( HB_OS_CYGWIN )
    return "CYGWIN";
 #else
@@ -292,8 +290,7 @@ static int     s_iWine     = 0;
 
 #if ! defined( HB_OS_WIN_CE )
 
-#if ( defined( __DMC__ ) || ( defined( _MSC_VER ) && _MSC_VER < 1400 ) ) && \
-   ! defined( __POCC__ )
+#if ( defined( _MSC_VER ) && _MSC_VER < 1400 ) && ! defined( __POCC__ )
 
    typedef struct _OSVERSIONINFOEXW
    {
@@ -978,27 +975,6 @@ char * hb_verCompiler( void )
    iVerMinor = __POCC__ % 100;
    iVerPatch = 0;
 
-#elif defined( __XCC__ )
-
-   pszName = "Pelles ISO C Compiler (XCC)";
-   iVerMajor = __XCC__ / 100;
-   iVerMinor = __XCC__ % 100;
-   iVerPatch = 0;
-
-#elif defined( __LCC__ )
-
-   pszName = "Logiciels/Informatique lcc-win32";
-   iVerMajor = 0 /* __LCC__ / 100 */;
-   iVerMinor = 0 /* __LCC__ % 100 */;
-   iVerPatch = 0;
-
-#elif defined( __DMC__ )
-
-   pszName = __DMC_VERSION_STRING__;
-   iVerMajor = 0;
-   iVerMinor = 0;
-   iVerPatch = 0;
-
 #elif defined( __INTEL_COMPILER )
 
    pszName = "Intel(R) C";
@@ -1155,20 +1131,6 @@ char * hb_verCompiler( void )
       iVerPatch = 0;
    #endif
 
-#elif defined( __TURBOC__ )
-
-   pszName = "Borland Turbo C";
-   iVerMajor = __TURBOC__ >> 8;
-   iVerMinor = __TURBOC__ & 0xFF;
-   iVerPatch = 0;
-
-#elif defined( __MPW__ )
-
-   pszName = "MPW C";
-   iVerMajor = __MPW__ / 100;
-   iVerMinor = __MPW__ % 100;
-   iVerPatch = 0;
-
 #elif defined( __WATCOMC__ )
 
    #if __WATCOMC__ < 1200
@@ -1200,14 +1162,6 @@ char * hb_verCompiler( void )
    iVerMicro = __VERSION_NUMBER__ % 10;
    iElements = 4;
 
-#elif defined( __TINYC__ )
-
-   pszName = "Tiny C Compiler";
-
-   iVerMajor = __TINYC__ / 100;
-   iVerMinor = ( __TINYC__ % 100 ) / 10;
-   iVerPatch = ( __TINYC__ % 100 ) % 10;
-
 #elif defined( __PCC__ )
 
    pszName = "Portable C Compiler";
@@ -1229,10 +1183,6 @@ char * hb_verCompiler( void )
       pszName = "Cygwin GNU C";
    #elif defined( __MINGW32__ )
       pszName = "MinGW GNU C";
-   #elif defined( __RSX32__ )
-      pszName = "EMX/RSXNT/DOS GNU C";
-   #elif defined( __RSXNT__ )
-      pszName = "EMX/RSXNT/Win32 GNU C";
    #elif defined( __EMX__ )
       pszName = "EMX GNU C";
    #else

@@ -177,6 +177,7 @@ DYNAMIC wapi_MAKELPARAM
 DYNAMIC wapi_MAKEWPARAM
 DYNAMIC wapi_MessageBeep
 DYNAMIC wapi_MessageBox
+DYNAMIC wapi_MessageBoxTimeout
 DYNAMIC wapi_MoveToEx
 DYNAMIC wapi_MoveWindow
 DYNAMIC wapi_MulDiv
@@ -184,6 +185,7 @@ DYNAMIC wapi_OpenMutex
 DYNAMIC wapi_OutputDebugString
 DYNAMIC wapi_PlaySound
 DYNAMIC wapi_PostMessage
+DYNAMIC wapi_QueryDosDevice
 DYNAMIC wapi_QueryPerformanceCounter
 DYNAMIC wapi_QueryPerformanceFrequency
 DYNAMIC wapi_Rectangle
@@ -475,6 +477,7 @@ DYNAMIC __oleIsDisp
 DYNAMIC __oleVariantGetType
 DYNAMIC __oleVariantGetValue
 DYNAMIC __oleVariantNew
+DYNAMIC __oleVariantNil2Null
 DYNAMIC __oleVariantNullDate
 DYNAMIC __wapi_DbgUnsafeHandles
 DYNAMIC __wapi_DEVMODE_Get

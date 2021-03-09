@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,11 +45,10 @@
  */
 
 
-#include "hbapi.h"
+#include "hbrddsql.h"
+
 #include "hbapiitm.h"
 #include "hbvm.h"
-
-#include "hbrddsql.h"
 
 #include "libpq-fe.h"
 
@@ -518,7 +517,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    LPFIELD   pField;
    char *    pValue;
    HB_BOOL   bError;
-   HB_SIZE   ulLen;
+   HB_SIZE   nLen;
 
    bError = HB_FALSE;
    uiIndex--;
@@ -527,25 +526,25 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) )
    {
       hb_itemClear( pItem );
-      /* TOFIX: it breaks defined field type */
+      /* FIXME: it breaks defined field type */
       return HB_SUCCESS;
    }
 
    pValue = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
-   ulLen  = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
+   nLen   = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
 
 #if 0
-   HB_TRACE( HB_TR_ALWAYS, ( "fieldget recno=%d index=%d value=%s len=%d", dbFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), pArea->ulRecNo, uiIndex, pValue, ulLen ) );
+   HB_TRACE( HB_TR_ALWAYS, ( "fieldget recno=%d index=%d value=%s len=%d", dbFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), pArea->ulRecNo, uiIndex, pValue, nLen ) );
 #endif
 
    switch( pField->uiType )
    {
       case HB_FT_STRING:
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
          break;
 
       case HB_FT_MEMO:
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
          hb_itemSetCMemo( pItem );
          break;
 

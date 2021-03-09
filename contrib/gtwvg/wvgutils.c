@@ -25,9 +25,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -68,7 +68,7 @@
 
 /* wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
  *                                lItalic, lUnderline, lStrikeout )
- * -> { cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout, nRGB }
+ * --> { cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout, nRGB }
  */
 HB_FUNC( WVT_CHOOSEFONT )
 {
@@ -200,7 +200,7 @@ HB_FUNC( WVT_SETTOOLTIP )
             iBottom = xy.y - 1;
             iRight  = xy.x - 1;
 
-            ti.lpszText    = ( LPTSTR ) HB_PARSTR( 5, &hText, NULL );
+            ti.lpszText    = ( LPTSTR ) HB_UNCONST( HB_PARSTR( 5, &hText, NULL ) );
             ti.rect.left   = iLeft;
             ti.rect.top    = iTop;
             ti.rect.right  = iRight;
@@ -231,7 +231,7 @@ HB_FUNC( WVT_SETTOOLTIPTEXT )
       if( SendMessage( _s->hWndTT, TTM_GETTOOLINFO, 0, ( LPARAM ) &ti ) )
       {
          void * hText;
-         ti.lpszText = ( LPTSTR ) HB_PARSTR( 1, &hText, NULL );
+         ti.lpszText = ( LPTSTR ) HB_UNCONST( HB_PARSTR( 1, &hText, NULL ) );
          SendMessage( _s->hWndTT, TTM_UPDATETIPTEXT, 0, ( LPARAM ) &ti );
          hb_strfree( hText );
       }
@@ -814,8 +814,7 @@ static INT_PTR CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM w
                break;
 
             case 2: /* Block */
-               /* eval the codeblock */
-               if( HB_IS_EVALITEM( pFunc ) )
+               if( HB_IS_EVALITEM( pFunc ) )  /* eval the codeblock */
                {
                   if( hb_vmRequestReenter() )
                   {
@@ -877,7 +876,8 @@ static INT_PTR CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM w
 
 HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
 {
-   PHB_GTWVT _s = hb_wvt_gtGetWVT();
+   PHB_GTWVT _s   = hb_wvt_gtGetWVT();
+   HWND      hDlg = 0;
 
    if( _s )
    {
@@ -895,7 +895,6 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
          PHB_ITEM pFirst = hb_param( 3, HB_IT_ANY );
          PHB_ITEM pFunc  = NULL;
          PHB_DYNS pExecSym;
-         HWND     hDlg  = 0;
          int      iType = 0;
          int      iResource = hb_parni( 4 );
 
@@ -916,7 +915,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
          if( hbwapi_is_HANDLE( 3 ) )
             /* argument 1 is already unicode compliant, so no conversion */
             hDlg = CreateDialogIndirect( GetModuleHandle( NULL ),
-                                         ( LPDLGTEMPLATE ) hb_parc( 1 ),
+                                         ( LPCDLGTEMPLATE ) hb_parc( 1 ),
                                          hb_parl( 2 ) ? _s->hWnd : NULL,
                                          hbwapi_par_raw_DLGPROC( 3 ) );
          else
@@ -944,7 +943,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
                case 2:
                   /* argument 1 is already unicode compliant, so no conversion */
                   hDlg = CreateDialogIndirect( GetModuleHandle( NULL ),
-                                               ( LPDLGTEMPLATE ) hb_parc( 1 ),
+                                               ( LPCDLGTEMPLATE ) hb_parc( 1 ),
                                                hb_parl( 2 ) ? _s->hWnd : NULL,
                                                ( DLGPROC ) hb_wvt_gtDlgProcMLess );
                   break;
@@ -979,18 +978,16 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
 
             _s->hDlgModeless[ iIndex ] = NULL;
          }
-
-         hbwapi_ret_raw_HANDLE( hDlg );
-         return;
       }
    }
 
-   hbwapi_ret_raw_HANDLE( 0 );
+   hbwapi_ret_raw_HANDLE( hDlg );
 }
 
 HB_FUNC( WVT_CREATEDIALOGMODAL )
 {
-   PHB_GTWVT _s = hb_wvt_gtGetWVT();
+   PHB_GTWVT  _s      = hb_wvt_gtGetWVT();
+   HB_PTRDIFF iResult = 0;
 
    if( _s )
    {
@@ -1009,7 +1006,6 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          PHB_ITEM   pFunc  = NULL;
          PHB_DYNS   pExecSym;
          int        iResource = hb_parni( 4 );
-         HB_PTRDIFF iResult   = 0;
          HWND       hParent   = hbwapi_is_HANDLE( 5 ) ? hbwapi_par_raw_HWND( 5 ) : _s->hWnd;
 
          if( HB_IS_EVALITEM( pFirst ) )
@@ -1057,19 +1053,16 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
             case 2:
                /* argument 1 is already unicode compliant, so no conversion */
                iResult = DialogBoxIndirectParam( GetModuleHandle( NULL ),
-                                                 ( LPDLGTEMPLATE ) hb_parc( 1 ),
+                                                 ( LPCDLGTEMPLATE ) hb_parc( 1 ),
                                                  hParent,
                                                  ( DLGPROC ) hb_wvt_gtDlgProcModal,
                                                  ( LPARAM ) ( DWORD ) iIndex + 1 );
                break;
          }
-
-         hb_retnint( iResult );
-         return;
       }
    }
 
-   hb_retnint( 0 );
+   hb_retnint( iResult );
 }
 
 HB_FUNC( WVT_LBADDSTRING )
@@ -1128,7 +1121,7 @@ HB_FUNC( WVT_GETFONTHANDLE )
       hbwapi_ret_raw_HANDLE( 0 );
 }
 
-HB_FUNC( WVG_N2P )  /* NOTE: Unsafe: allows to pass arbitary pointers to functions, potentially causing a crash or worse. */
+HB_FUNC( WVG_N2P )  /* NOTE: Unsafe: allows to pass arbitrary pointers to functions, potentially causing a crash or worse. */
 {
    hb_retptr( HB_ISPOINTER( 1 ) ? hb_parptr( 1 ) : ( void * ) ( HB_PTRUINT ) hb_parnint( 1 ) );
 }

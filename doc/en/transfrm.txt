@@ -14,7 +14,7 @@
    $SYNTAX$
       Transform( <xExpression>, <cTemplate> ) --> cFormatted
    $ARGUMENTS$
-      <xExpression> Any expression to be formated.
+      <xExpression> Any expression to be formatted.
 
       <cTemplate> Character string with picture template
    $RETURNS$
@@ -82,8 +82,8 @@
       ? "All uppercased", Transform( cString, "@!" )
       ? "Date is", dDate
       ? "Date is", Transform( dDate, "@D" )
-      ? Transform( nNumber, "@L 99999999" )  //  "009923.34"
-      ? Transform( 0      , "@L 9999"     )  //  "0000"
+      ? Transform( nNumber, "@L 99999999" )  // --> "009923.34"
+      ? Transform( 0      , "@L 9999"     )  // --> "0000"
    $STATUS$
       R
    $COMPLIANCE$

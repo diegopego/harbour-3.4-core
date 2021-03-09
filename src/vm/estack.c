@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -160,7 +160,7 @@ static void hb_stack_init( PHB_STACK pStack )
 {
    HB_ISIZ n;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_init(%p)", pStack ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_init(%p)", ( void * ) pStack ) );
 
    memset( pStack, 0, sizeof( HB_STACK ) );
 
@@ -186,7 +186,7 @@ static void hb_stack_init( PHB_STACK pStack )
 
 static void hb_stack_destroy_TSD( PHB_STACK pStack )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_destroy_TSD(%p)", pStack ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_destroy_TSD(%p)", ( void * ) pStack ) );
 
    while( pStack->iTSD )
    {
@@ -212,7 +212,7 @@ static void hb_stack_free( PHB_STACK pStack )
 {
    HB_ISIZ n;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_free(%p)", pStack ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stack_free(%p)", ( void * ) pStack ) );
 
    hb_stack_destroy_TSD( pStack );
 
@@ -257,7 +257,7 @@ void * hb_stackGetTSD( PHB_TSD pTSD )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stackGetTSD(%p)", pTSD ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackGetTSD(%p)", ( void * ) pTSD ) );
 
 #if defined( HB_MT_VM )
    if( pTSD->iHandle == 0 || pTSD->iHandle > hb_stack.iTSD ||
@@ -308,7 +308,7 @@ void * hb_stackTestTSD( PHB_TSD pTSD )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stackTestTSD(%p)", pTSD ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackTestTSD(%p)", ( void * ) pTSD ) );
 
 #if defined( HB_MT_VM )
    return ( pTSD->iHandle && pTSD->iHandle <= hb_stack.iTSD ) ?
@@ -322,7 +322,7 @@ void hb_stackReleaseTSD( PHB_TSD pTSD )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stackReleaseTSD(%p)", pTSD ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackReleaseTSD(%p)", ( void * ) pTSD ) );
 
    if( pTSD->iHandle && pTSD->iHandle <= hb_stack.iTSD &&
        hb_stack.pTSD[ pTSD->iHandle ].value )
@@ -335,7 +335,7 @@ void hb_stackReleaseTSD( PHB_TSD pTSD )
       pTSD->iHandle = 0;
       /* TODO: add recovery system to not lose TSD handles and
        *       make this functionality more general and public
-       *       for 3-rd party developers
+       *       for 3rd party developers
        */
    }
 }
@@ -1384,7 +1384,7 @@ void hb_stackIsStackRef( void * pStackId, PHB_TSD_FUNC pCleanFunc )
 
 void hb_stackUpdateAllocator( void * pStackId, PHB_ALLOCUPDT_FUNC pFunc, int iCount )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_stackUpdateAllocator(%p, %p, %d)", pStackId, pFunc, iCount ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackUpdateAllocator(%p, %p, %d)", pStackId, ( void * ) pFunc, iCount ) );
 
 #if defined( HB_MT_VM )
    {

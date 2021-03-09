@@ -1,7 +1,7 @@
 /*
  * SQLite3 Database Driver
  *
- * Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2014 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,15 +44,14 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbrddsql.h"
+
 #include "hbapiitm.h"
 #include "hbapistr.h"
 #include "hbdate.h"
 #include "hbset.h"
 #include "hbvm.h"
 #include "hbset.h"
-
-#include "hbrddsql.h"
 
 #include <sqlite3.h>
 
@@ -293,6 +292,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    HB_ERRCODE     errCode;
    char *         szError;
    HB_BOOL        bError;
+   int            result;
 
    pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
    pSDDData        = ( SDDDATA * ) pArea->pSDDData;
@@ -300,7 +300,13 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    pItem    = hb_itemPutC( NULL, pArea->szQuery );
    pszQuery = S_HB_ITEMGETSTR( pItem, &hQuery, &nQueryLen );
 
-   if( sqlite3_prepare_v2( pDb, pszQuery, ( int ) nQueryLen, &st, NULL ) != SQLITE_OK )
+#if SQLITE_VERSION_NUMBER >= 3020000
+   result = sqlite3_prepare_v3( pDb, pszQuery, ( int ) nQueryLen, 0, &st, NULL );
+#else
+   result = sqlite3_prepare_v2( pDb, pszQuery, ( int ) nQueryLen, &st, NULL );
+#endif
+
+   if( result != SQLITE_OK )
    {
       hb_strfree( hQuery );
       hb_itemRelease( pItem );
@@ -343,7 +349,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
 
       /* There are no field length limits stored in the SQLite3 database,
          so we're resorting to setting some arbitrary default values to
-         make apps relying on these (f.e. Browse()/GET) to behave somewhat
+         make apps relying on these (e.g. Browse()/GET) to behave somewhat
          better. For better results, update apps to untie UI metrics from
          any database field/value widths. [vszakats] */
 

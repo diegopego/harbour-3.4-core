@@ -1,7 +1,7 @@
 /*
  * Header file for the Date API
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,10 +54,10 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT double hb_secondsCPU( int n );
 
 extern HB_EXPORT double hb_dateSeconds( void );
-/* return UTC julian timestamp in milliseconds */
+/* return UTC Julian timestamp in milliseconds */
 extern HB_EXPORT HB_MAXUINT hb_dateMilliSeconds( void );
 
-/* functions to operate on julian date values */
+/* functions to operate on Julian date values */
 
 extern HB_EXPORT void   hb_dateTimeStr( char * pszTime );
 extern HB_EXPORT void   hb_dateToday( int * piYear, int * piMonth, int * piDay );
@@ -141,6 +141,10 @@ extern HB_EXPORT long   hb_timeUnformat( const char * szTime, const char * szTim
 extern HB_EXPORT void   hb_timeStampUnformat( const char * szDateTime,
                                               const char * szDateFormat, const char * szTimeFormat,
                                               long * plJulian, long * plMilliSec );
+
+extern HB_EXPORT HB_MAXUINT hb_timerGet( void );
+extern HB_EXPORT HB_MAXUINT hb_timerInit( HB_MAXINT nTimeOut );
+extern HB_EXPORT HB_MAXINT  hb_timerTest( HB_MAXINT nTimeOut, HB_MAXUINT * pnTimer );
 
 HB_EXTERN_END
 

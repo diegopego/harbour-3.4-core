@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -151,10 +151,10 @@ METHOD PieChart() CLASS GDChart
 
    /* hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"] */
 
-   // Before sum of values to determine percentual
+   // Before sum of values to determine percentage
    FOR EACH hElement IN aPieDataOfHash
       nTot += hElement[ "VALUE" ]
-      // Check extrution
+      // Check extrusion
       IF ( nExtrude := __HGetValue( hElement, "EXTRUDE" ) ) != NIL
          nTotExtr := Max( nTotExtr, nExtrude )
       ENDIF
@@ -264,7 +264,7 @@ METHOD VerticalBarChart() CLASS GDChart
    CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
    ENDSWITCH
 
-   // Before sum of values to determine percentual
+   // Before sum of values to determine percentage
    nMaxLabel := 0
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
@@ -576,7 +576,7 @@ METHOD LineChart() CLASS GDChart
    CASE "GIANT"  ; ::SetFontGiant()      ; EXIT
    ENDSWITCH
 
-   // Before sum of values to determine percentual
+   // Before sum of values to determine percentage
    nMaxLabel := 0
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
@@ -589,7 +589,7 @@ METHOD LineChart() CLASS GDChart
       nMaxLabel := Max( nMaxLabel, Len( iif( cLabel != NIL, cLabel, "" ) ) )
    NEXT
 
-   // Before sum of values to determine percentual
+   // Before sum of values to determine percentage
    nMinLabel := 0
    nMin      := 0
    FOR EACH hElement IN aDataOfHash

@@ -38,9 +38,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -74,6 +74,7 @@
 
 #define HB_GT_NAME  OS2
 
+#include "hbapi.h"
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbapierr.h"
@@ -223,7 +224,7 @@ static void hb_gt_os2_mouse_Exit( PHB_GT pGT )
 
    if( s_uMouHandle )
    {
-      MouClose( s_uMouHandle );           /* relese mouse handle */
+      MouClose( s_uMouHandle );           /* release mouse handle */
       s_uMouHandle = 0;
    }
 }
@@ -427,7 +428,7 @@ static void hb_gt_os2_GetCursorPosition( int * piRow, int * piCol )
 {
    USHORT y, x;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetCursorPosition(%p, %p)", piRow, piCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetCursorPosition(%p, %p)", ( void * ) piRow, ( void * ) piCol ) );
 
    VioGetCurPos( &y, &x, 0 );
 
@@ -549,7 +550,7 @@ static void hb_gt_os2_GetScreenContents( PHB_GT pGT )
    char * pBufPtr;
    HB_BYTE bxAttr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetScreenContents(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetScreenContents(%p)", ( void * ) pGT ) );
 
    bxAttr = 0;
    cdp = HB_GTSELF_CPTERM( pGT );
@@ -590,7 +591,7 @@ static PVOID hb_gt_os2_allocMem( int iSize )
 
 static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Init(%p,%p,%p,%p)", pGT, ( HB_PTRUINT ) hFilenoStdin, ( HB_PTRUINT ) hFilenoStdout, ( HB_PTRUINT ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Init(%p,%p,%p,%p)", ( void * ) pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    s_vi.cb = sizeof( s_vi );
    VioGetMode( &s_vi, 0 );        /* fill structure with current video mode settings */
@@ -655,7 +656,7 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 static void hb_gt_os2_Exit( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Exit(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Exit(%p)", ( void * ) pGT ) );
 
    HB_GTSUPER_EXIT( pGT );
 
@@ -678,7 +679,7 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int iKey = 0, iFlags = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_ReadKey(%p,%d)", pGT, iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_ReadKey(%p,%d)", ( void * ) pGT, iEventMask ) );
 
    /* zero out keyboard event record */
    memset( s_key, 0, sizeof( *s_key ) );
@@ -741,18 +742,18 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
 
 static HB_BOOL hb_gt_os2_IsColor( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_IsColor(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_IsColor(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
-   return s_vi.fbType != 0;        /* 0 = monochrom-compatible mode */
+   return s_vi.fbType != 0;        /* 0 = monochrome-compatible mode */
 }
 
 static HB_BOOL hb_gt_os2_GetBlink( PHB_GT pGT )
 {
    VIOINTENSITY vi;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetBlink(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetBlink(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -767,7 +768,7 @@ static void hb_gt_os2_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 {
    VIOINTENSITY vi;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_SetBlink(%p,%d)", pGT, ( int ) fBlink ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_SetBlink(%p,%d)", ( void * ) pGT, ( int ) fBlink ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -781,9 +782,7 @@ static void hb_gt_os2_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    ULONG ulDuration;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
-
-   HB_SYMBOL_UNUSED( pGT );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Tone(%p,%lf,%lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
    /* The conversion from Clipper timer tick units to
       milliseconds is * 1000.0 / 18.2. */
@@ -794,17 +793,19 @@ static void hb_gt_os2_Tone( PHB_GT pGT, double dFrequency, double dDuration )
       dFrequency = 32767.0;
    ulDuration = ( ULONG ) ( dDuration * 1000.0 / 18.2 ); /* milliseconds */
 
+   hb_gt_BaseUnlock( pGT );
    while( ulDuration > 0 )
    {
       USHORT temp = ( USHORT ) HB_MIN( ulDuration, USHRT_MAX );
       ulDuration -= temp;
       DosBeep( ( USHORT ) dFrequency, temp );
    }
+   hb_gt_BaseLock( pGT );
 }
 
 static const char * hb_gt_os2_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Version(%p,%d)", pGT, iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Version(%p,%d)", ( void * ) pGT, iType ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -816,7 +817,7 @@ static const char * hb_gt_os2_Version( PHB_GT pGT, int iType )
 
 static HB_BOOL hb_gt_os2_Resize( PHB_GT pGT, int iRows, int iCols )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Resize(%p,%d,%d)", pGT, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Resize(%p,%d,%d)", ( void * ) pGT, iRows, iCols ) );
 
    if( HB_GTSUPER_RESIZE( pGT, iRows, iCols ) )
    {
@@ -839,7 +840,7 @@ static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    HB_BOOL fResult = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_SetMode(%p,%d,%d)", ( void * ) pGT, iRows, iCols ) );
 
    if( iRows > 0 && iCols > 0 )
    {
@@ -869,7 +870,7 @@ static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 
 static HB_BOOL hb_gt_os2_PostExt( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_PostExt(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_PostExt(%p)", ( void * ) pGT ) );
 
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    HB_GTSELF_SETPOS( pGT, s_iCurRow, s_iCurCol );
@@ -880,7 +881,7 @@ static HB_BOOL hb_gt_os2_PostExt( PHB_GT pGT )
 
 static HB_BOOL hb_gt_os2_Resume( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Resume(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Resume(%p)", ( void * ) pGT ) );
 
    s_vi.cb = sizeof( s_vi );
    VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
@@ -903,7 +904,7 @@ static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    HB_UCHAR uc;
    int iLen = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Redraw(%p,%d,%d,%d)", ( void * ) pGT, iRow, iCol, iSize ) );
 
    while( iLen < iSize )
    {
@@ -922,7 +923,7 @@ static void hb_gt_os2_Refresh( PHB_GT pGT )
 {
    int iRow, iCol, iStyle;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Refresh(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Refresh(%p)", ( void * ) pGT ) );
 
    HB_GTSUPER_REFRESH( pGT );
 
@@ -939,7 +940,7 @@ static void hb_gt_os2_Refresh( PHB_GT pGT )
 
 static HB_BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Info(%p,%d,%p)", pGT, iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Info(%p,%d,%p)", ( void * ) pGT, iType, pInfo ) );
 
    switch( iType )
    {
@@ -980,7 +981,7 @@ static HB_BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", ( void * ) pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_os2_Init;
    pFuncTable->Exit                       = hb_gt_os2_Exit;

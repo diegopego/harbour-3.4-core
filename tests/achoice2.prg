@@ -3,7 +3,7 @@
 /* AChoice() bug test */
 
 /* Menu Navigation - <Right> and <Left> arrow keys, <Esc> to exit
-   After some <Right> or <Left> arrow preses */
+   After some <Right> or <Left> arrow presses */
 
 #include "inkey.ch"
 #include "achoice.ch"
@@ -17,7 +17,7 @@ MEMVAR p_lHiLiTest
 PROCEDURE Main()
 
    // NIL, empty, numeric, and "not handled" - items
-   // must be inaccesible and invisible
+   // must be inaccessible and invisible
    LOCAL aMenu1 := { " --Wisky--", "", "not handled" }
    LOCAL aMenu2 := { " --Vodka--", " --Water--", NIL, "not handled" }
    LOCAL aMenu3 := { " --Grapa--", 33, "not handled" }
@@ -31,7 +31,7 @@ PROCEDURE Main()
    LOCAL nKeyPressed
 
    // set to .T. for items (de)highlighting
-   // algoritm in Clipper
+   // algorithm in Clipper
    PUBLIC p_lHiLiTest := .F.
 
    SetColor( "W+/N, BG+/B, , , W/N" )
@@ -52,7 +52,7 @@ PROCEDURE Main()
       CASE nCounter == 3
          AChoice( 2, 25, 3, 35, aMenu3, .T. )
       CASE nCounter == 4
-         // TOFIX: User function cUF2() fill screen with exclamation marks
+         // FIXME: User function cUF2() fill screen with exclamation marks
          //        in Clipper it does not get called in AC_NOITEM mode
          AChoice( 2, 37, 3, 47, aMenu4, .T., "cUF2" )
       CASE nCounter == 5
@@ -73,7 +73,7 @@ PROCEDURE Main()
    RETURN
 
 // Test for current and previous items
-// highliting-dehighliting algoritm
+// highlighting-dehighlighting algoritm
 
 FUNCTION cUF( nMode )  /* must be a public function */
 

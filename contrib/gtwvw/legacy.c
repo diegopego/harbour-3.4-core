@@ -1,6 +1,6 @@
-/* Copyright 2014 Viktor Szakats (vszakats.net/harbour) */
+/* Copyright 2014 Viktor Szakats (vsz.me/hb) */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 /* legacy non-prefixed names mapped to proper local ones and to hbwin */
 #if 1

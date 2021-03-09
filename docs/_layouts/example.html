@@ -1,8 +1,6 @@
 {% include head.html %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400">
-
 {% include header.html %}
-<a href="{{ site.baseurl }}/examples" class="example-list"><i class="fa fa-list img-right" aria-hidden="true"></i></a>
+<a href="{{ site.baseurl }}/examples{{ site.ilink_suffix }}" class="example-list"><span class="img-right">{% include svg/fa-solid-list.svg %}</span></a>
 
 <h1>{{ page.title_long }}</h1>
 <p>{{ page.description }}
@@ -20,5 +18,5 @@
 </div>
 
 <h2>How to build/run:</h2>
-<p>To learn how to build/run this example, see <a href="{{ site.baseurl }}/examples#how-to-buildrun-applications">this</a> page.
-{% include footer.html %}
+<p>To learn how to build/run this example, see <a href="{{ site.baseurl }}/examples{{ site.ilink_suffix }}#how-to-buildrun-applications">this</a> page.
+{% include footer.html -%}

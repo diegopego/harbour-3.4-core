@@ -1,7 +1,7 @@
 /*
  * OpenSSL API (SSL) - Harbour interface.
  *
- * Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2017 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,11 +60,12 @@
    #define _lseek    lseek
 #endif
 
-#include "hbapi.h"
-#include "hbapierr.h"
-#include "hbapiitm.h"
-#include "hbvm.h"
-
+/* This must come before #include "hbssl.h".
+   OpenSSL 1.1.x and upper don't require Windows headers anymore,
+   but if #included, it still must come before its own headers.
+   The Harbour wrapper code doesn't need the Windows headers, so
+   they will be dropped once 1.0.2 is EOLed in 2019-12-31. */
+#include "hbdefs.h"
 #if defined( HB_OS_WIN )
    #include <windows.h>
    #include <wincrypt.h>
@@ -72,13 +73,17 @@
 
 #include "hbssl.h"
 
+#include "hbapiitm.h"
+#include "hbvm.h"
+
 typedef struct _HB_SSL
 {
    SSL * ssl;
    PHB_ITEM pCallbackArg;
 } HB_SSL, * PHB_SSL;
 
-#if defined( HB_OS_WIN ) && \
+#if ! defined( HB_OPENSSL_NO_APPLINK ) && \
+    defined( HB_OS_WIN ) && \
     defined( HB_CPU_X86 ) && \
     OPENSSL_VERSION_NUMBER >= 0x00908000L
    /* Enable this to add support for various scenarios when
@@ -103,40 +108,18 @@ typedef struct _HB_SSL
       Consequently 'hbrun' will fail with operations that require
       C RTL calls internally. Such calls are currently made when
       using BIO_new_fd() BIO_new_file() IO API. */
+   #if defined( HB_GCC_HAS_DIAG ) && defined( __clang__ )
+      #pragma GCC diagnostic push
+      #pragma GCC diagnostic ignored "-Wpedantic"
+   #endif
    #include "openssl/applink.c"
-   #if defined( HB_OPENSSL_STATIC ) && \
-       OPENSSL_VERSION_NUMBER <= 0x1000206fL /* 1.0.2f or lower */
-      extern void * OPENSSL_UplinkTable[];  /* available when OpenSSL was built with -DOPENSSL_USE_APPLINK option */
+   #if defined( HB_GCC_HAS_DIAG ) && defined( __clang__ )
+      #pragma GCC diagnostic pop
    #endif
 #endif
 
 HB_FUNC( SSL_INIT )
 {
-   #if defined( HB_OPENSSL_HAS_APPLINK ) && \
-       defined( HB_OPENSSL_STATIC ) && \
-       OPENSSL_VERSION_NUMBER <= 0x1000206fL /* 1.0.2f or lower */
-   {
-      /* Initialize "applink" function table with C RTL function pointers
-         when OpenSSL is statically linked and the static OpenSSL libraries
-         were built with `-DOPENSSL_USE_APPLINK` option (which is the
-         default in mingw 32-bit). This is required, otherwise the UP_*()
-         macros will resolve to NULL pointers and crash those OpenSSL functions
-         that rely on them, f.e. BIO_write() on a BIO_new_fd(). The
-         hack-free solution would be to build OpenSSL static libraries
-         _without_ OPENSSL_USE_APPLINK option, and build shared libraries
-         (.dlls) _with_ OPENSSL_USE_APPLINK in two separate build pass.
-         Unfortunately there is no way to find out if the OpenSSL build
-         we're linking against was built with or without OPENSSL_USE_APPLINK,
-         so this whole house of cards may fail with non-default configurations,
-         manifesting in an unresolved `OPENSSL_UplinkTable` external. */
-
-      void ** up = OPENSSL_Applink();
-      size_t count = ( size_t ) up[ 0 ];
-      for( ; count; --count )
-         OPENSSL_UplinkTable[ count ] = up[ count ];
-   }
-   #endif
-
    SSL_library_init();
    SSL_load_error_strings();
 }
@@ -1083,7 +1066,7 @@ HB_FUNC( SSL_GET_READ_AHEAD )
 {
    if( hb_SSL_is( 1 ) )
    {
-#if defined( __BORLANDC__ ) /* TOFIX: SSL_get_read_ahead is an unresolved external when trying to link with BCC */
+#if defined( __BORLANDC__ ) /* FIXME: SSL_get_read_ahead is an unresolved external when trying to link with BCC */
       hb_retni( 0 );
 #else
       SSL * ssl = hb_SSL_par( 1 );

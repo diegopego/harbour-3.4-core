@@ -1,7 +1,7 @@
 /*
  * Regression tests for the runtime library (strings)
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -177,6 +177,7 @@ PROCEDURE Main_STR()
    HBTEST Chr( "A" )                      IS "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:C:A F:S"
    HBTEST Chr( "ADDDDDD" )                IS "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:C:ADDDDDD F:S"
    HBTEST Chr( -10000000.0 )              IS Chr( 128 )
+   HBTEST Chr( -10000000 )                IS Chr( 128 )
    HBTEST Chr( -100000 )                  IS Chr( 96 )
    HBTEST Chr( -65 )                      IS Chr( 191 )
    HBTEST Chr( snIntP1 )                  IS "A"
@@ -498,13 +499,13 @@ PROCEDURE Main_STR()
 #ifdef __HARBOUR__
    #pragma -kh-
 #endif
-   HBTEST At( "", "" )                    IS 1  /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
-   HBTEST At( "", "ABCDEF" )              IS 1  /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
+   HBTEST At( "", "" )                    IS 1  /* Bug in CA-Cl*pper compiler optimizer, it should return 0 */
+   HBTEST At( "", "ABCDEF" )              IS 1  /* Bug in CA-Cl*pper compiler optimizer, it should return 0 */
 #ifdef __HARBOUR__
    /* enable Harbour extensions and test correct results results */
    #pragma -kh+
-   HBTEST At( "", "" )                    IS 0  /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
-   HBTEST At( "", "ABCDEF" )              IS 0  /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
+   HBTEST At( "", "" )                    IS 0  /* Bug in CA-Cl*pper compiler optimizer, it should return 0 */
+   HBTEST At( "", "ABCDEF" )              IS 0  /* Bug in CA-Cl*pper compiler optimizer, it should return 0 */
 #endif
    HBTEST At( scStringE, scStringE )      IS 0
    HBTEST At( scStringE, "ABCDEF" )       IS 0

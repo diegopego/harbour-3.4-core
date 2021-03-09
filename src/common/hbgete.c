@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -220,22 +220,22 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
       }
       else
       {
-   #if ( defined( __DJGPP__ ) && \
-         ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ < 4 ) ) ) || \
+#  if ( defined( __DJGPP__ ) && \
+        ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ < 4 ) ) ) || \
       defined( __WATCOMC__ )
          szValue = getenv( szName );
          if( szValue && *szValue )
             fResult = setenv( szName, "", 1 ) == 0;
          else
             fResult = HB_TRUE;
-   #elif defined( __OpenBSD__ ) || defined( HB_OS_QNX ) || \
-         ( defined( __FreeBSD_version ) && __FreeBSD_version < 700050 ) || \
-         ( defined( HB_OS_DARWIN ) && !( defined( __DARWIN_UNIX03 ) && __DARWIN_UNIX03 ) )
+#  elif defined( __OpenBSD__ ) || defined( HB_OS_QNX ) || \
+        ( defined( __FreeBSD_version ) && __FreeBSD_version < 700050 ) || \
+        ( defined( HB_OS_DARWIN ) && !( defined( __DARWIN_UNIX03 ) && __DARWIN_UNIX03 ) )
          unsetenv( szName );
          fResult = HB_TRUE;
-   #else
+#  else
          fResult = unsetenv( szName ) == 0;
-   #endif
+#  endif
       }
 
       if( pszNameFree )

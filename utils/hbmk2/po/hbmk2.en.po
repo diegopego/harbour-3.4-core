@@ -13,7 +13,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:885
 #, c-format
-msgid "Exit code: %1$d: %2$s"
+msgid "Exit status: %1$d: %2$s"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:889
@@ -38,7 +38,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:2019
 #, c-format
-msgid "Warning: Old style HB_COMPILER_VER value (%1$d) detected. Update it to: %2$s"
+msgid "Warning: Old style __HB_COMPILER_VER value (%1$d) detected. Update it to: %2$s"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:2056
@@ -1063,7 +1063,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16739
 #, c-format
-msgid "Hint: Convert them to #pragma/#define or group files with common options into library subprojects."
+msgid "Hint: Convert them to #pragma/#define or group files with common options into library sub-projects."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:16785
@@ -1353,7 +1353,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17463
 #, c-format
-msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added."
+msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a suffix added."
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17463
@@ -1623,7 +1623,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17463
 #, c-format
-msgid "select between UNICODE (WIDE) and ANSI Windows API usage for C/C++ input files (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)"
+msgid "select between UNICODE (WIDE) and ANSI Windows API and C runtime usage for C/C++ input files (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17463
@@ -1798,7 +1798,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17521
 #, c-format
-msgid "enable xhb mode"
+msgid "enable xHarbour mode"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17521
@@ -2053,7 +2053,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17573
 #, c-format
-msgid "Exit codes (\"errorlevels\"):"
+msgid "Exit statuses (\"errorlevels\"):"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17591
@@ -2063,7 +2063,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17591
 #, c-format
-msgid "when -run option is used, the exit code will be the one returned by the target executable"
+msgid "when -run option is used, the exit status will be the one returned by the target executable"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17595
@@ -2118,17 +2118,17 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17618
 #, c-format
-msgid "override C compiler executable directory (gcc compiler families only)"
+msgid "override C compiler executable directory (gcc compiler family only)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17618
 #, c-format
-msgid "override C compiler executable prefix (gcc compiler families only)"
+msgid "override C compiler executable prefix (gcc compiler family only)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17618
 #, c-format
-msgid "override C compiler executable suffix (gcc compiler families only)"
+msgid "override C compiler executable suffix (gcc/clang compiler families only)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17618
@@ -2523,7 +2523,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17738
 #, c-format
-msgid "target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc)"
+msgid "target C compiler belongs to gcc family (gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, clang64, open64, pcc)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17738
@@ -2563,7 +2563,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17738
 #, c-format
-msgid "target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix)"
+msgid "target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, vxworks, linux, darwin, cygwin, minix, aix)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17738
@@ -2588,7 +2588,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17738
 #, c-format
-msgid "xhb mode (see -xhb option)"
+msgid "xHarbour mode (see -xhb option)"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17742
@@ -2983,7 +2983,7 @@ msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17929
 #, c-format
-msgid "Current exit code"
+msgid "Current exit status"
 msgstr ""
 
 #: utils/hbmk2/hbmk2.prg:17929

@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -109,8 +109,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
       case WM_SYSKEYDOWN:
       {
          HB_BOOL bAlt = GetKeyState( VK_MENU ) & 0x8000;
-         int     c    = ( int ) wParam;
-         switch( c )
+         switch( wParam )
          {
             case VK_F1:
                iKey = hb_gt_wvw_JustTranslateKey( K_F1, K_SH_F1, K_ALT_F1, K_CTRL_F1 );
@@ -167,7 +166,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
 
          if( bCtrl && iScanCode == 28 )
             iKey = K_CTRL_RETURN;
-         else if( bCtrl && ( c >= 1 && c <= 26 ) )
+         else if( bCtrl && c >= 1 && c <= 26 )
             iKey = s_K_Ctrl[ c - 1 ];
          else
          {
@@ -198,8 +197,8 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
 
       case WM_SYSCHAR:
       {
-         int c, iScanCode = HB_LOBYTE( HIWORD( lParam ) );
-         switch( iScanCode )
+         int c;
+         switch( HB_LOBYTE( HIWORD( lParam ) ) )
          {
             case  2:
                c = K_ALT_1;
@@ -351,7 +350,6 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
          HB_BOOL bAlt   = GetKeyState( VK_MENU ) & 0x8000;
          HB_BOOL bCtrl  = GetKeyState( VK_CONTROL ) & 0x8000;
          HB_BOOL bShift = GetKeyState( VK_SHIFT ) & 0x8000;
-         int     c      = ( int ) wParam;
          HB_BOOL fMultiline;
 
          if( ! hb_gt_wvw_BufferedKey( ( int ) wParam ) )
@@ -359,7 +357,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
 
          fMultiline = ( ( nEBType & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE );
 
-         switch( c )
+         switch( wParam )
          {
             case VK_F4:
                if( bAlt )
@@ -373,7 +371,7 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
             case VK_RETURN:
                if( fMultiline || bAlt || bShift || bCtrl )
                   break;
-               else if( ! fMultiline )
+               else
                {
                   SetFocus( hWndParent );
                   PostMessage( hWndParent, message, wParam, lParam );
@@ -381,7 +379,6 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
                }
 
             case VK_ESCAPE:
-
                if( bAlt || bShift || bCtrl )
                   break;
                else
@@ -393,7 +390,6 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
 
             case VK_UP:
             case VK_DOWN:
-
             case VK_PRIOR:
             case VK_NEXT:
                if( fMultiline )
@@ -408,7 +404,6 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
             case VK_TAB:
                if( ! bCtrl && ! bAlt )
                {
-
                   SetFocus( hWndParent );
                   PostMessage( hWndParent, message, wParam, lParam );
                   return 0;
@@ -430,19 +425,20 @@ static LRESULT CALLBACK hb_gt_wvw_EBProc( HWND hWnd, UINT message, WPARAM wParam
 
       case WM_CHAR:
       {
-         HB_BOOL bCtrl = GetKeyState( VK_CONTROL ) & 0x8000;
-         switch( ( int ) wParam )
+         switch( wParam )
          {
             case VK_TAB:
                return 0;
-
             case 1:
+            {
+               HB_BOOL bCtrl = GetKeyState( VK_CONTROL ) & 0x8000;
                if( bCtrl )
                {
                   SendMessage( hWnd, EM_SETSEL, 0, ( LPARAM ) -1 );
                   return 0;
                }
                break;
+            }
          }
          break;
       }
@@ -666,8 +662,8 @@ HB_FUNC( WVW_EBISFOCUSED )
 /* wvw_ebEnable( [nWinNum], nEditId, [lEnable] )
  *  enable/disable editbox nEditId on window nWinNum
  * (lEnable defaults to .T., ie. enabling the editbox)
- *  return previous state of the editbox (TRUE:enabled FALSE:disabled)
- * (if nEditId is invalid, this function returns FALSE too)
+ *  return previous state of the editbox (.T.: enabled .F.: disabled)
+ * (if nEditId is invalid, this function returns .F. too)
  */
 HB_FUNC( WVW_EBENABLE )
 {
@@ -691,8 +687,8 @@ HB_FUNC( WVW_EBENABLE )
 /* wvw_ebEditable( [nWinNum], nEditId, [lEditable] )
  *  get/set editability attribute from editbox nEditId on window nWinNum
  * (if lEditable is not specified, no change to editability)
- *  return previous state of the editbox (TRUE:editable FALSE:not editable)
- * (if nEditId is invalid, this function returns FALSE too)
+ *  return previous state of the editbox (.T.: editable .F.: not editable)
+ * (if nEditId is invalid, this function returns .F. too)
  */
 HB_FUNC( WVW_EBEDITABLE )
 {
@@ -840,19 +836,19 @@ HB_FUNC( WVW_EBGETTEXT )
 
    if( wvw_ctl )
    {
-      int    iLen;
+      HB_SIZE nLen;
       LPTSTR szText;
 
       if( hb_parl( 3 ) /* fSoftBreak */ )
          SendMessage( wvw_ctl->hWnd, EM_FMTLINES, ( WPARAM ) TRUE, 0 );
 
-      iLen = ( int ) SendMessage( wvw_ctl->hWnd, WM_GETTEXTLENGTH, 0, 0 ) + 1;
+      nLen = ( HB_SIZE ) SendMessage( wvw_ctl->hWnd, WM_GETTEXTLENGTH, 0, 0 );
 
-      szText = ( LPTSTR ) hb_xgrab( ( iLen + 1 ) * sizeof( TCHAR ) );
+      szText = ( LPTSTR ) hb_xgrab( ( nLen + 1 ) * sizeof( TCHAR ) );
 
-      SendMessage( wvw_ctl->hWnd, WM_GETTEXT, iLen, ( LPARAM ) szText );
+      SendMessage( wvw_ctl->hWnd, WM_GETTEXT, ( WPARAM ) ( nLen + 1 ), ( LPARAM ) szText );
 
-      HB_RETSTRLEN( szText, iLen );
+      HB_RETSTRLEN( szText, nLen );
 
       hb_xfree( szText );
    }
@@ -915,7 +911,7 @@ HB_FUNC( WVW_EBGETSEL )
  * the start selected text (0-based) is in nstart
  * the end selected text (0-based) is in nend
  * notes: nstart may be > nend (flipped selection)
- * notes: to selet all text: wvw_ebSetSel(nwinnum, nebid, 0, -1)
+ * notes: to select all text: wvw_ebSetSel(nwinnum, nebid, 0, -1)
  * returns .T. if operation successful
  * returns .F. if not (eg. nEBid not valid)
  */

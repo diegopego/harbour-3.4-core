@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -165,7 +165,9 @@ STATIC PROCEDURE Logo()
 
    OutStd( ;
       "Harbour i18n .pot/.hbl file manager " + HBRawVersion() + hb_eol() + ;
-      "Copyright (c) 2009-2017, Przemyslaw Czerpak" + hb_eol() + ;
+      "Copyright (c) 2009-" + ;
+         hb_ntos( Year( hb_Version( HB_VERSION_BUILD_DATE ) ) ) + ", " + ;
+         "Przemyslaw Czerpak" + hb_eol() + ;
       hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
       hb_eol() )
 

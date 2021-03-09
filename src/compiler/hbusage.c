@@ -1,7 +1,7 @@
 /*
  * Compile help & info related functions
  *
- * Copyright 1999-2017 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2017 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -241,6 +241,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Randy Portnoff (randy palmasdev.com)\n"
          "Richard Alexandre Cuylen (racuylen altern.org)\n"
          "Robert Arseniuk (roberta jmpolska.com)\n"
+         "Rolf (elchs unitybox.de)\n"
          "Ron Pinkas (ron profit-master.com)\n"
          "Ross Presser (ross_presser imtek.com)\n"
          "Ryszard Glab (rglab imid.med.pl)\n"
@@ -249,7 +250,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Tim Stone (timstone mstrlink.com)\n"
          "Tomaz Zupan (tomaz.zupan orpo.si)\n"
          "Vailton Renato (vailtom gmail com)\n"
-         "Viktor Szakats (vszakats.net/harbour)\n"
+         "Viktor Szakats (vsz.me/hb)\n"
          "Vladimir Kazimirchik (v_kazimirchik yahoo com)\n"
          "Walter Negro (anegro overnet.com.ar)\n"
          "Xavi (jarabal gmail com)\n"
@@ -261,8 +262,7 @@ void hb_compPrintLogo( HB_COMP_DECL )
    char * szVer = hb_verHarbour();
 
    hb_compOutStd( HB_COMP_PARAM, szVer );
-   hb_compOutStd( HB_COMP_PARAM, "\nCopyright (c) 1999-2017, " );
-   hb_compOutStd( HB_COMP_PARAM, HB_VER_ORIGIN_URL );
-   hb_compOutStd( HB_COMP_PARAM, "\n" );
+   hb_compOutStd( HB_COMP_PARAM,
+      "\nCopyright (c) 1999-" HB_VER_COMMIT_YEAR ", " HB_VER_ORIGIN_URL "\n" );
    hb_xfree( szVer );
 }

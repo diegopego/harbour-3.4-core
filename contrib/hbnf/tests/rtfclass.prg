@@ -52,7 +52,7 @@ METHOD new( cFilename ) CLASS TRtf
          "\uc1\pard\lang1033\ulnone\f0\fs20" + hb_eol() )
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 METHOD write( cSource ) CLASS TRtf
 
@@ -89,7 +89,7 @@ METHOD write( cSource ) CLASS TRtf
 
             // TODO: I need function dec2hex()
             // to convert ASCII to 2-characters hex
-            // ie  : dec2hex( "H" ) -> 48
+            // ie  : dec2hex( "H" ) --> 48
             IF cChar == "+" .OR. cChar == "-"
                xAtt := cChar + ;
                   SubStr( cLine, nChar + 1, 1 ) + ;
@@ -125,7 +125,7 @@ METHOD write( cSource ) CLASS TRtf
       ft_FUse()
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 METHOD close() CLASS TRtf
 
@@ -134,4 +134,4 @@ METHOD close() CLASS TRtf
       hb_vfClose( ::hFile )
    ENDIF
 
-   RETURN self
+   RETURN Self

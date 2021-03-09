@@ -1,7 +1,7 @@
 /*
- * xhb hb_BuildInfo() emulation.
+ * xHarbour hb_BuildInfo() emulation.
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -94,9 +94,9 @@ FUNCTION hb_BuildInfo( n )
    v[ _HB_HARBOUR_YYDEBUG        ] := .F. /* Fake value, unlikely it's turned on */
    v[ _HB_SYMBOL_NAME_LEN        ] := 63  /* Constant in Harbour */
    v[ _HB_MULTITHREAD            ] := hb_mtvm()
-   v[ _HB_VM_OPTIMIZATION        ] := 2   /* Emulate xhb */
+   v[ _HB_VM_OPTIMIZATION        ] := 2   /* Emulate xHarbour */
    v[ _HB_LANG_ID                ] := hb_langSelect()
-   v[ _HB_ARRAY_MODE             ] := 0   /* Emulate xhb */
+   v[ _HB_ARRAY_MODE             ] := 0   /* Emulate xHarbour */
    v[ _HB_CREDITS                ] := { "See 'harbour -credits'" }
 
    RETURN iif( HB_ISNUMERIC( n ), iif( n <= Len( v ), v[ n ], NIL ), v )

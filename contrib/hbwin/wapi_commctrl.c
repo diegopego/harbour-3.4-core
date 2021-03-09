@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -405,7 +405,7 @@ HB_FUNC( WAPI_TABCTRL_INSERTITEM )
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
    item.iImage  = hb_parnidef( 4, -1 );
-   item.pszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
+   item.pszText = ( LPTSTR ) HB_UNCONST( HB_PARSTRDEF( 3, &hText, NULL ) );
 
    hbwapi_ret_NI( TabCtrl_InsertItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 3 ), &item ) );
 
@@ -481,7 +481,7 @@ HB_FUNC( WAPI_TABCTRL_SETITEM )
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
    item.iImage  = hb_parnidef( 4, -1 );
-   item.pszText = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
+   item.pszText = ( LPTSTR ) HB_UNCONST( HB_PARSTRDEF( 3, &hText, NULL ) );
 
    hbwapi_ret_L( TabCtrl_SetItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), &item ) );
 
@@ -602,7 +602,9 @@ HB_FUNC( WAPI_TABCTRL_SETCURFOCUS )
 /* (int)SNDMSG((hwnd), TCM_SETMINTABWIDTH, 0, x) */
 HB_FUNC( WAPI_TABCTRL_SETMINTABWIDTH )
 {
-   /* hbwapi_ret_NI( TabCtrl_SetMinTabWidth( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) ); */
+   #if 0
+   hbwapi_ret_NI( TabCtrl_SetMinTabWidth( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) );
+   #endif
    hbwapi_ret_NI( ( int ) SendMessage( hbwapi_par_raw_HWND( 1 ), TCM_SETMINTABWIDTH, 0, ( LPARAM ) hbwapi_par_INT( 2 ) ) );
 }
 
@@ -610,7 +612,9 @@ HB_FUNC( WAPI_TABCTRL_SETMINTABWIDTH )
 /* (void)SNDMSG((hwnd), TCM_DESELECTALL, fExcludeFocus, 0) */
 HB_FUNC( WAPI_TABCTRL_DESELECTALL )
 {
-   /* TabCtrl_DeselectAll( hbwapi_par_raw_HWND( 1 ), hbwapi_par_UINT( 2 ) ); */
+   #if 0
+   TabCtrl_DeselectAll( hbwapi_par_raw_HWND( 1 ), hbwapi_par_UINT( 2 ) );
+   #endif
    SendMessage( hbwapi_par_raw_HWND( 1 ), TCM_DESELECTALL, ( WPARAM ) hbwapi_par_UINT( 2 ), 0 );
 }
 
@@ -689,7 +693,7 @@ HB_FUNC( WAPI_TABCTRL_ADDITEM )
 
    item.mask    = TCIF_TEXT | TCIF_IMAGE;
    item.iImage  = hb_parnidef( 3, -1 );
-   item.pszText = ( LPTSTR ) HB_PARSTRDEF( 2, &hText, NULL );
+   item.pszText = ( LPTSTR ) HB_UNCONST( HB_PARSTRDEF( 2, &hText, NULL ) );
 
    hbwapi_ret_NI( TabCtrl_InsertItem( hbwapi_par_raw_HWND( 1 ), iCount, &item ) );
 
@@ -817,7 +821,9 @@ HB_FUNC( WAPI_TREEVIEW_GETINSERTMARKCOLOR )
 /* BOOL TreeView_GetISearchString( HWND hwndTV, LPTSTR lpsz ); */
 HB_FUNC( WAPI_TREEVIEW_GETISEARCHSTRING )
 {
-   /* hbwapi_ret_( TreeView_GetISearchString( hbwapi_par_raw_HWND( 1 ), LPTSTR ) ); */
+   #if 0
+   hbwapi_ret_( TreeView_GetISearchString( hbwapi_par_raw_HWND( 1 ), LPTSTR ) );
+   #endif
 }
 
 /* BOOL TreeView_GetItem( HWND hwndTV, LPTVITEM pitem );
@@ -858,7 +864,7 @@ HB_FUNC( WAPI_TREEVIEW_GETITEMRECT )
 
    hbwapi_ret_L( TreeView_GetItemRect( hbwapi_par_raw_HWND( 1 ), ( HTREEITEM ) hbwapi_par_raw_HANDLE( 2 ), prc, hbwapi_par_BOOL( 4 ) ) );
 
-   /* TODO: return prc in 3rd param */
+   /* TODO: return prc in 3rd parameter */
 
    hb_xfree( prc );
 }

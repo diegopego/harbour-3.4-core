@@ -21,9 +21,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -265,11 +265,11 @@ HB_FUNC( RATE )
       double dCapital = hb_parnd( 1 );
       double dPayment = hb_parnd( 2 );
       double dTime = hb_parnd( 3 );
-      double dEpsilon = 0.00001;        /* mimimal to consider 2 numbers as equal */
+      double dEpsilon = 0.00001;        /* minimal to consider 2 numbers as equal */
       double dScale = 1.0;      /* fractional step */
       double j = 1.0;           /* index */
 
-      while( j < 1020.0 )       /* maximum anual rate */
+      while( j < 1020.0 )       /* maximum annual rate */
       {
          double dAux;           /* estimated payment to compare for */
          double r;              /* temptative rate */

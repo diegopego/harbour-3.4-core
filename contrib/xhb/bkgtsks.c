@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -142,7 +142,7 @@ static HB_ULONG hb_backgroundAddFunc( PHB_ITEM pBlock, int nMillisec, HB_BOOL bA
             if( bkg->pBackgroundTasks[ iTask ]->ulTaskID == pBkgTask->ulTaskID )
             {
                pBkgTask->ulTaskID++;
-               /* This list is unsorted so we have to scan from the begining again */
+               /* This list is unsorted so we have to scan from the beginning again */
                iTask = 0;
             }
             else
@@ -240,7 +240,7 @@ static PHB_BACKGROUNDTASK hb_backgroundFind( HB_ULONG ulID )
    return NULL;
 }
 
-/* RUN only one tasks, intentionally no check if bacground are active is done */
+/* RUN only one tasks, intentionally no check if background are active is done */
 static void hb_backgroundRunSingle( HB_ULONG ulID )
 {
    PHB_BKG bkg = ( PHB_BKG ) hb_stackGetTSD( &s_bkg );
@@ -306,7 +306,7 @@ static PHB_ITEM hb_backgroundDelFunc( HB_ULONG ulID )
             hb_xfree( bkg->pBackgroundTasks );
             bkg->pBackgroundTasks = NULL;
          }
-         /* Pitem has now a valid value */
+         /* pItem has now a valid value */
          break;
       }
       ++iTask;

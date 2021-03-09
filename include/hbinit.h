@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -163,7 +163,6 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
       defined( __GNUC__ ) || \
       defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) || \
       defined( __DCC__ ) || \
-      defined( __TINYC__ ) /* TOFIX: __TINYC__ */ || \
       defined( __clang__ )
 
    #if defined( HB_PRAGMA_STARTUP ) || defined( HB_DATASEG_STARTUP )
@@ -203,8 +202,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
       }
 
 #elif defined( HB_PRAGMA_STARTUP ) || \
-      defined( __BORLANDC__ ) || defined( __LCC__ ) || \
-      defined( __POCC__ ) || defined( __XCC__ )
+      defined( __BORLANDC__ ) || defined( __POCC__ )
 
    #if ! defined( HB_PRAGMA_STARTUP )
       #define HB_PRAGMA_STARTUP
@@ -265,7 +263,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
       static HB_$INITSYM _s_init_func_##func = func;
 
    /*  After each '*_END' symbol, additional 'hooks' are required
-    *  See the C output of a generated prg for example
+    *  See the C output of a generated .prg for example
     */
 
 #elif defined( __WATCOMC__ )

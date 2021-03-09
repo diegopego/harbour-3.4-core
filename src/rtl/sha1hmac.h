@@ -1,5 +1,5 @@
 /*
- * hmac_sha1.h
+ * WARNING: Outdated, insecure algorithm.
  *
  * Version 1.0.0
  *
@@ -50,9 +50,7 @@
 
 #include "sha1.h"
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 #define HMAC_SHA1_DIGEST_LENGTH 20
 #define HMAC_SHA1_BLOCK_LENGTH  64
@@ -85,8 +83,6 @@ void hb_HMAC_SHA1_EndMessage();
 void hb_HMAC_SHA1_Done();
 #endif
 
-#ifdef  __cplusplus
-}
-#endif
+HB_EXTERN_END
 
 #endif

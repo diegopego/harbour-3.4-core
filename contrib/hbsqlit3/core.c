@@ -1,5 +1,5 @@
 /*
- * SQLite3 library low level (client api) interface code
+ * SQLite3 library low-level (client API) interface code
  *
  * Copyright 2007-2010 P.Chornyj <myorg63@mail.ru>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,15 +46,15 @@
 
 #include "sqlite3.h"
 
-#include "hbvm.h"
 #include "hbapi.h"
+#include "hbvm.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
 #include "hbapistr.h"
 #include "hbstack.h"
 
-/* TOFIX: verify the exact SQLITE3 version */
+/* FIXME: verify the exact SQLITE3 version */
 #if SQLITE_VERSION_NUMBER <= 3004001
 #define sqlite3_int64                       HB_LONGLONG
 #define sqlite3_uint64                      HB_ULONGLONG
@@ -246,7 +246,7 @@ static void * hb_sqlite3_param( int iParam, int iType, HB_BOOL fError )
 }
 
 /**
-   Callbacs helpers:
+   Callback helpers:
       Compile-Time Authorization Callback
       A Callback To Handle SQLITE_BUSY Errors
       Query Progress Callbacks
@@ -505,9 +505,9 @@ static void func( sqlite3_context * ctx, int argc, sqlite3_value ** argv )
 }
 
 /**
-   sqlite3_libversion()         -> cVersion
-   sqlite3_libversion_number()  -> nVersionNumber
-   sqlite3_sourceid()           -> cSourceID
+   sqlite3_libversion()         --> cVersion
+   sqlite3_libversion_number()  --> nVersionNumber
+   sqlite3_sourceid()           --> cSourceID
 
    Returns values equivalent to the header constants
    SQLITE_VERSION, SQLITE_VERSION_NUMBER, SQLITE_SOURCE_ID.
@@ -533,8 +533,8 @@ HB_FUNC( SQLITE3_SOURCEID )
 }
 
 /**
-   sqlite3_initialize() -> nResult
-   sqlite3_shutdown()   -> nResult
+   sqlite3_initialize() --> nResult
+   sqlite3_shutdown()   --> nResult
 
    The sqlite3_initialize() routine initializes the SQLite library.
    The sqlite3_shutdown() routine deallocates any resources that were
@@ -562,7 +562,7 @@ HB_FUNC( SQLITE3_SHUTDOWN )
 /**
    Enable Or Disable Extended Result Codes
 
-   sqlite3_extended_result_codes( db, lOnOff ) -> nResultCode
+   sqlite3_extended_result_codes( db, lOnOff ) --> nResultCode
  */
 
 HB_FUNC( SQLITE3_EXTENDED_RESULT_CODES )
@@ -578,10 +578,10 @@ HB_FUNC( SQLITE3_EXTENDED_RESULT_CODES )
 /**
    Error Codes And Messages
 
-   sqlite3_errcode( db ) -> returns the numeric result code or extended result
-                            code
-   sqlite3_errmsg( db )  -> return English-language text
-                            that describes the error
+   sqlite3_errcode( db ) --> returns the numeric result code or extended result
+                             code
+   sqlite3_errmsg( db )  --> return English-language text
+                             that describes the error
  */
 
 HB_FUNC( SQLITE3_ERRCODE )
@@ -641,7 +641,7 @@ HB_FUNC( SQLITE3_SLEEP )
 /**
    Last Insert Rowid
 
-   sqlite3_last_insert_rowid( db ) -> nROWID
+   sqlite3_last_insert_rowid( db ) --> nROWID
  */
 
 HB_FUNC( SQLITE3_LAST_INSERT_ROWID )
@@ -657,7 +657,7 @@ HB_FUNC( SQLITE3_LAST_INSERT_ROWID )
 /**
    Name Of The Directory Holding Temporary Files
 
-   sqlite3_temp_directory( cDirName ) -> lResult
+   sqlite3_temp_directory( cDirName ) --> lResult
  */
 
 HB_FUNC( SQLITE3_TEMP_DIRECTORY )
@@ -699,9 +699,9 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
 /**
    Opening( creating ) A New Database Connection
 
-   sqlite3_open( cDatabace, lCreateIfNotExist ) -> return pointer to Db
-                                                   or NIL if error occurs
-   sqlite3_open_v2( cDatabace, nOpenMode )      -> return pHbSqlite3 or NIL
+   sqlite3_open( cDatabace, lCreateIfNotExist ) --> return pointer to Db
+                                                    or NIL if error occurs
+   sqlite3_open_v2( cDatabace, nOpenMode )      --> return pHbSqlite3 or NIL
  */
 
 HB_FUNC( SQLITE3_OPEN )
@@ -770,7 +770,7 @@ HB_FUNC( SQLITE3_OPEN_V2 )
 /**
    One-Step Query Execution Interface
 
-   sqlite3_exec( db, cSQLTEXT, [pCallbackFunc | cCallbackFunc] ) -> nResultCode
+   sqlite3_exec( db, cSQLTEXT, [pCallbackFunc | cCallbackFunc] ) --> nResultCode
  */
 
 HB_FUNC( SQLITE3_EXEC )
@@ -808,8 +808,8 @@ HB_FUNC( SQLITE3_EXEC )
 /**
    Compiling An SQL Statement
 
-   sqlite3_prepare( db, cSQLTEXT )
-   -> return pointer to compiled statement or NIL if error occurs
+   sqlite3_prepare( db, cSQLTEXT, [nPrepFlags] )
+   --> return pointer to compiled statement or NIL if error occurs
 
    TODO: pszTail?
  */
@@ -826,8 +826,15 @@ HB_FUNC( SQLITE3_PREPARE )
       const char *  pszSQLText = hb_parstr_utf8( 2, &hSQLText, &nSQLText );
       psqlite3_stmt pStmt;
       const char *  pszTail;
+      int           result;
 
-      if( sqlite3_prepare_v2( pHbSqlite3->db, pszSQLText, ( int ) nSQLText, &pStmt, &pszTail ) == SQLITE_OK )
+#if SQLITE_VERSION_NUMBER >= 3020000
+      result = sqlite3_prepare_v3( pHbSqlite3->db, pszSQLText, ( int ) nSQLText, ( unsigned int ) hb_parnl( 3 ), &pStmt, &pszTail );
+#else
+      result = sqlite3_prepare_v2( pHbSqlite3->db, pszSQLText, ( int ) nSQLText, &pStmt, &pszTail );
+#endif
+
+      if( result == SQLITE_OK )
          hb_retptr( pStmt );
       else
       {
@@ -844,7 +851,7 @@ HB_FUNC( SQLITE3_PREPARE )
 /**
    Determine If An SQL Statement Is Complete
 
-   sqlite3_complete( sqlText ) -> lResult
+   sqlite3_complete( sqlText ) --> lResult
  */
 
 HB_FUNC( SQLITE3_COMPLETE )
@@ -866,12 +873,12 @@ HB_FUNC( SQLITE3_COMPLETE )
    used to create a prepared statement
    if that statement was compiled using either sqlite3_prepare()
 
-   sqlite3_sql( pStmt ) -> cSQLTEXT
+   sqlite3_sql( pStmt ) --> cSQLTEXT
  */
 
 HB_FUNC( SQLITE3_SQL )
 {
-/* TOFIX: verify the exact SQLITE3 version */
+/* FIXME: verify the exact SQLITE3 version */
 #if SQLITE_VERSION_NUMBER > 3004001
    psqlite3_stmt pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
 
@@ -887,7 +894,7 @@ HB_FUNC( SQLITE3_SQL )
 /**
    Prepared Statement Status.
 
-   sqlite3_stmt_status( pStmt, nOp, lResetFlag ) -> nStatus
+   sqlite3_stmt_status( pStmt, nOp, lResetFlag ) --> nStatus
  */
 
 HB_FUNC( SQLITE3_STMT_STATUS )
@@ -905,7 +912,7 @@ HB_FUNC( SQLITE3_STMT_STATUS )
 }
 
 /**
-   sqlite3_stmt_readonly( pStmt ) -> lResult
+   sqlite3_stmt_readonly( pStmt ) --> lResult
 
    Determine If An SQL Statement Writes The Database
  */
@@ -926,7 +933,7 @@ HB_FUNC( SQLITE3_STMT_READONLY )
 /**
    Find The Database Handle Associated With A Prepared Statement
 
-   sqlite3_db_handle( pStmt ) -> pHbSqlite3
+   sqlite3_db_handle( pStmt ) --> pHbSqlite3
  */
 
 #if 0
@@ -946,7 +953,7 @@ HB_FUNC( SQLITE3_DB_HANDLE )
 /**
    Evaluate An Prepared SQL Statement
 
-   sqlite3_step( pStmt ) -> nResultCode
+   sqlite3_step( pStmt ) --> nResultCode
  */
 
 HB_FUNC( SQLITE3_STEP )
@@ -962,7 +969,7 @@ HB_FUNC( SQLITE3_STEP )
 /**
    Reset All Bindings On A Prepared Statement
 
-   sqlite3_clear_bindings( pStmt ) -> nResultCode
+   sqlite3_clear_bindings( pStmt ) --> nResultCode
 
    Contrary to the intuition of many,
    sqlite3_reset() does not reset the bindings on a prepared statement.
@@ -982,7 +989,7 @@ HB_FUNC( SQLITE3_CLEAR_BINDINGS )
 /**
    Reset A Prepared Statement Object
 
-   sqlite3_reset( pStmt ) -> nResultCode
+   sqlite3_reset( pStmt ) --> nResultCode
  */
 
 HB_FUNC( SQLITE3_RESET )
@@ -998,7 +1005,7 @@ HB_FUNC( SQLITE3_RESET )
 /**
    Finalize A Prepared Statement Object
 
-   sqlite3_finalize( pStmt ) -> nResultCode
+   sqlite3_finalize( pStmt ) --> nResultCode
  */
 
 HB_FUNC( SQLITE3_FINALIZE )
@@ -1118,7 +1125,7 @@ HB_FUNC( SQLITE3_BIND_ZEROBLOB )
 /**
    Number Of Host Parameters
 
-   sqlite3_bind_parameter_count( pStmt ) -> nResult
+   sqlite3_bind_parameter_count( pStmt ) --> nResult
  */
 
 HB_FUNC( SQLITE3_BIND_PARAMETER_COUNT )
@@ -1134,7 +1141,7 @@ HB_FUNC( SQLITE3_BIND_PARAMETER_COUNT )
 /**
    Index Of A Parameter With A Given Name
 
-   sqlite3_bind_parameter_index( pStmt, cParameterName ) -> nResult
+   sqlite3_bind_parameter_index( pStmt, cParameterName ) --> nResult
  */
 
 HB_FUNC( SQLITE3_BIND_PARAMETER_INDEX )
@@ -1156,7 +1163,7 @@ HB_FUNC( SQLITE3_BIND_PARAMETER_INDEX )
 /**
    Name Of A Host Parameter
 
-   sqlite3_bind_parameter_name( pStmt, nParameterIndex ) -> cParameterName
+   sqlite3_bind_parameter_name( pStmt, nParameterIndex ) --> cParameterName
  */
 
 HB_FUNC( SQLITE3_BIND_PARAMETER_NAME )
@@ -1172,7 +1179,7 @@ HB_FUNC( SQLITE3_BIND_PARAMETER_NAME )
 /**
    Count The Number Of Rows Modified
 
-   sqlite3_changes( db ) -> nRowCount
+   sqlite3_changes( db ) --> nRowCount
  */
 
 HB_FUNC( SQLITE3_CHANGES )
@@ -1188,7 +1195,7 @@ HB_FUNC( SQLITE3_CHANGES )
 /**
    Total Number Of Rows Modified
 
-   sqlite3_total_changes( db ) -> nRowCount
+   sqlite3_total_changes( db ) --> nRowCount
  */
 
 HB_FUNC( SQLITE3_TOTAL_CHANGES )
@@ -1204,7 +1211,7 @@ HB_FUNC( SQLITE3_TOTAL_CHANGES )
 /**
    Number Of Columns In A Result Set
 
-   sqlite3_column_count( pStmt ) -> nColumnCount
+   sqlite3_column_count( pStmt ) --> nColumnCount
  */
 
 HB_FUNC( SQLITE3_COLUMN_COUNT )
@@ -1218,7 +1225,7 @@ HB_FUNC( SQLITE3_COLUMN_COUNT )
 }
 
 /**
-   sqlite3_column_type( pStmt, nIndex ) -> nColumnType
+   sqlite3_column_type( pStmt, nIndex ) --> nColumnType
    nColumnType is Datatype code for the initial data type of the result column
 
    SQLITE_INTEGER      1
@@ -1229,7 +1236,7 @@ HB_FUNC( SQLITE3_COLUMN_COUNT )
    SQLITE_NULL         5
 
    Declared Datatype Of A Query Result (see doc)
-   sqlite3_column_decltype( pStmt, nIndex ) -> nColumnDeclType
+   sqlite3_column_decltype( pStmt, nIndex ) --> nColumnDeclType
  */
 
 HB_FUNC( SQLITE3_COLUMN_TYPE )
@@ -1255,7 +1262,7 @@ HB_FUNC( SQLITE3_COLUMN_DECLTYPE )
 /**
    Column Names In A Result Set
 
-   sqlite3_column_name( pStmt, columnIndex ) -> columnName
+   sqlite3_column_name( pStmt, columnIndex ) --> columnName
  */
 
 HB_FUNC( SQLITE3_COLUMN_NAME )
@@ -1270,15 +1277,15 @@ HB_FUNC( SQLITE3_COLUMN_NAME )
 
 /**
    sqlite3_column_bytes( pStmt, columnIndex )
-   -> returns the number of bytes in that BLOB or string
+   --> returns the number of bytes in that BLOB or string
 
    Results Values From A Query
 
-   sqlite3_column_blob( pStmt, columnIndex )   -> value as BLOB
-   sqlite3_column_double( pStmt, columnIndex ) -> value as double
-   sqlite3_column_int( pStmt, columnIndex )    -> value as integer
-   sqlite3_column_int64( pStmt, columnIndex )  -> value as long long
-   sqlite3_column_text( pStmt, columnIndex )   -> value as text
+   sqlite3_column_blob( pStmt, columnIndex )   --> value as BLOB
+   sqlite3_column_double( pStmt, columnIndex ) --> value as double
+   sqlite3_column_int( pStmt, columnIndex )    --> value as integer
+   sqlite3_column_int64( pStmt, columnIndex )  --> value as long long
+   sqlite3_column_text( pStmt, columnIndex )   --> value as text
  */
 
 HB_FUNC( SQLITE3_COLUMN_BYTES )
@@ -1375,7 +1382,7 @@ HB_FUNC( SQLITE3_LOAD_EXTENSION )
 /**
    Enable Or Disable Extension Loading
 
-   sqlite3_enable_load_extension( db, lOnOff ) -> prev.state
+   sqlite3_enable_load_extension( db, lOnOff ) --> prev.state
  */
 
 HB_FUNC( SQLITE3_ENABLE_LOAD_EXTENSION )
@@ -1422,7 +1429,7 @@ HB_FUNC( SQLITE3_BUSY_TIMEOUT )
 /**
    Convenience Routines For Running Queries
 
-   sqlite3_get_table( db, sqlText ) -> aResult
+   sqlite3_get_table( db, sqlText ) --> aResult
  */
 
 HB_FUNC( SQLITE3_GET_TABLE )
@@ -1541,9 +1548,9 @@ HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
 /**
    Source Of Data In A Query Result
 
-   sqlite3_column_database_name( pStmt, ColumnIndex ) -> cDatabaseName
-   sqlite3_column_table_name( pStmt, ColumnIndex )    -> cTableName
-   sqlite3_column_origin_name( pStmt, ColumnIndex )   -> cColumnName
+   sqlite3_column_database_name( pStmt, ColumnIndex ) --> cDatabaseName
+   sqlite3_column_table_name( pStmt, ColumnIndex )    --> cTableName
+   sqlite3_column_origin_name( pStmt, ColumnIndex )   --> cColumnName
  */
 
 HB_FUNC( SQLITE3_COLUMN_DATABASE_NAME )
@@ -1730,7 +1737,7 @@ HB_FUNC( SQLITE3_BLOB_WRITE )
 /**
     Test To See If The Database Is In Auto-Commit Mode
 
-    sqlite3_get_autocommit( db ) -> lResult
+    sqlite3_get_autocommit( db ) --> lResult
  */
 
 HB_FUNC( SQLITE3_GET_AUTOCOMMIT )
@@ -1746,7 +1753,7 @@ HB_FUNC( SQLITE3_GET_AUTOCOMMIT )
 /**
    Enable Or Disable Shared Pager Cache
 
-   sqlite3_enable_shared_cache( lOnOff ) -> nResultCode
+   sqlite3_enable_shared_cache( lOnOff ) --> nResultCode
  */
 
 HB_FUNC( SQLITE3_ENABLE_SHARED_CACHE )
@@ -1851,7 +1858,7 @@ HB_FUNC( SQLITE3_BUFF_TO_FILE )
    Causes any pending database operation to abort and return at its
    earliest opportunity.
 
-   sqlite3_interrupt( db ) -> NIL
+   sqlite3_interrupt( db ) --> NIL
  */
 
 HB_FUNC( SQLITE3_INTERRUPT )
@@ -2021,10 +2028,10 @@ HB_FUNC( SQLITE3_SET_AUTHORIZER )
    sqlite3_backup_init( DbDest, cDestName, DbSource, cSourceName ) ->
                return pointer to Backup or NIL if error occurs
 
-   sqlite3_backup_step( pBackup, nPage ) -> nResult
-   sqlite3_backup_finish( pBackup )      -> nResult
-   sqlite3_backup_remaining( pBackup )   -> nResult
-   sqlite3_backup_pagecount( pBackup )   -> nResult
+   sqlite3_backup_step( pBackup, nPage ) --> nResult
+   sqlite3_backup_finish( pBackup )      --> nResult
+   sqlite3_backup_remaining( pBackup )   --> nResult
+   sqlite3_backup_pagecount( pBackup )   --> nResult
  */
 
 HB_FUNC( SQLITE3_BACKUP_INIT )
@@ -2040,7 +2047,7 @@ HB_FUNC( SQLITE3_BACKUP_INIT )
          hb_parc( 2 ), pHbSqlite3Source->db, hb_parc( 4 ) );
 
       if( pBackup )
-         hb_retptr( pBackup );  /* TOFIX: Create GC collected pointer */
+         hb_retptr( pBackup );  /* FIXME: Create GC collected pointer */
       else
          hb_retptr( NULL );
    }
@@ -2054,7 +2061,7 @@ HB_FUNC( SQLITE3_BACKUP_INIT )
 HB_FUNC( SQLITE3_BACKUP_STEP )
 {
 #if SQLITE_VERSION_NUMBER >= 3006011
-   /* TOFIX: Use GC collected pointer */
+   /* FIXME: Use GC collected pointer */
    sqlite3_backup * pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2069,7 +2076,7 @@ HB_FUNC( SQLITE3_BACKUP_STEP )
 HB_FUNC( SQLITE3_BACKUP_FINISH )
 {
 #if SQLITE_VERSION_NUMBER >= 3006011
-   /* TOFIX: Use and free GC collected pointer */
+   /* FIXME: Use and free GC collected pointer */
    sqlite3_backup * pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2084,7 +2091,7 @@ HB_FUNC( SQLITE3_BACKUP_FINISH )
 HB_FUNC( SQLITE3_BACKUP_REMAINING )
 {
 #if SQLITE_VERSION_NUMBER >= 3006011
-   /* TOFIX: Use GC collected pointer */
+   /* FIXME: Use GC collected pointer */
    sqlite3_backup * pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2099,7 +2106,7 @@ HB_FUNC( SQLITE3_BACKUP_REMAINING )
 HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
 {
 #if SQLITE_VERSION_NUMBER >= 3006011
-   /* TOFIX: Use GC collected pointer */
+   /* FIXME: Use GC collected pointer */
    sqlite3_backup * pBackup = ( sqlite3_backup * ) hb_parptr( 1 );
 
    if( pBackup )
@@ -2114,13 +2121,13 @@ HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
 /**
    Memory Allocator Statistics
 
-   sqlite3_memory_used() -> nResult
-   sqlite3_memory_highwater( lResetFlag ) -> nResult
+   sqlite3_memory_used() --> nResult
+   sqlite3_memory_highwater( lResetFlag ) --> nResult
  */
 
 HB_FUNC( SQLITE3_MEMORY_USED )
 {
-/* TOFIX: verify the exact SQLITE3 version */
+/* FIXME: verify the exact SQLITE3 version */
 #if SQLITE_VERSION_NUMBER > 3004001
    hb_retnint( sqlite3_memory_used() );
 #else
@@ -2130,7 +2137,7 @@ HB_FUNC( SQLITE3_MEMORY_USED )
 
 HB_FUNC( SQLITE3_MEMORY_HIGHWATER )
 {
-/* TOFIX: verify the exact SQLITE3 version */
+/* FIXME: verify the exact SQLITE3 version */
 #if SQLITE_VERSION_NUMBER > 3004001
    hb_retnint( sqlite3_memory_highwater( ( int ) hb_parl( 1 ) ) );
 #else
@@ -2139,14 +2146,14 @@ HB_FUNC( SQLITE3_MEMORY_HIGHWATER )
 }
 
 /**
-   Test To See If The Library Is Threadsafe
+   Test to see if the library is thread-safe
 
-   sqlite3_threadsafe() -> nResult
+   sqlite3_threadsafe() --> nResult
  */
 
 HB_FUNC( SQLITE3_THREADSAFE )
 {
-/* TOFIX: verify the exact SQLITE3 version */
+/* FIXME: verify the exact SQLITE3 version */
 #if SQLITE_VERSION_NUMBER > 3004001
    hb_retni( sqlite3_threadsafe() );
 #else
@@ -2157,7 +2164,7 @@ HB_FUNC( SQLITE3_THREADSAFE )
 /**
    SQLite Runtime Status
 
-   sqlite3_status( nOp, @nCurrent, @nHighwater, lResetFlag ) -> nResult
+   sqlite3_status( nOp, @nCurrent, @nHighwater, lResetFlag ) --> nResult
  */
 
 HB_FUNC( SQLITE3_STATUS )
@@ -2203,7 +2210,7 @@ HB_FUNC( SQLITE3_STATUS64 )
 /**
    Database Connection Status
 
-   sqlite3_db_status( pDb, nOp, @nCurrent, @nHighwater, lResetFlag ) -> nResult
+   sqlite3_db_status( pDb, nOp, @nCurrent, @nHighwater, lResetFlag ) --> nResult
  */
 
 HB_FUNC( SQLITE3_DB_STATUS )
@@ -2233,7 +2240,7 @@ HB_FUNC( SQLITE3_DB_STATUS )
 /**
    Run-time Limits
 
-   sqlite3_limit( pDb, nId, nNewVal ) -> nOldVal
+   sqlite3_limit( pDb, nId, nNewVal ) --> nOldVal
  */
 
 HB_FUNC( SQLITE3_LIMIT )
@@ -2253,8 +2260,8 @@ HB_FUNC( SQLITE3_LIMIT )
 /**
    Run-Time Library Compilation Options Diagnostics
 
-   sqlite3_compileoption_used( cOptName ) -> nResult
-   sqlite3_compileoption_get( nOptNum )   -> cResult
+   sqlite3_compileoption_used( cOptName ) --> nResult
+   sqlite3_compileoption_get( nOptNum )   --> cResult
  */
 
 HB_FUNC( SQLITE3_COMPILEOPTION_USED )

@@ -6,7 +6,7 @@
    $ONELINER$
       Convert Lotus style escape codes
    $SYNTAX$
-      ft_EscCode( <cASCII> )  -> <cPrinterFormat>
+      ft_EscCode( <cASCII> ) --> <cPrinterFormat>
    $ARGUMENTS$
       <cASCII> is the ASCII representation of the printer control
       codes in Lotus 123 format (e.g. `"\027E"` for `hb_BChar( 27 ) + "E"`)
@@ -21,7 +21,8 @@
       this function convert that code to the format that the printer
       needs to receive.
    $EXAMPLES$
-      cSetup := "\015"         // default = Epson compressed print
+      // FIXME
+      LOCAL cSetup := "\015"   // default = Epson compressed print
       UserInput( @cSetup )     // Let user modify setup code
       SET DEVICE TO PRINTER    // get ready to print
       ?? ft_EscCode( cSetup )  // Output the converted code

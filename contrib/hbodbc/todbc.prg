@@ -1,7 +1,9 @@
 /*
  * ODBC Access Class
  *
- * Copyright 2006 Marcelo Lombardo <lombardo@uol.com.br> (:SetCnnOptions(), :GetCnnOptions(), :Commit(), :RollBack(), :SetStmtOptions(), :GetStmtOptions(), :SetAutoCommit())
+ * Copyright 2006 Marcelo Lombardo <lombardo@uol.com.br>
+ *   (:SetCnnOptions(), :GetCnnOptions(), :Commit(), :RollBack(),
+ *   :SetStmtOptions(), :GetStmtOptions(), :SetAutoCommit())
  * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -96,7 +98,7 @@ CREATE CLASS TODBC
    VAR lCacheRS              // Do we want to cache recordset in memory
    VAR aRecordSet   INIT {}  // Array to store cached recordset
 
-   VAR lAutoCommit AS LOGICAL INIT .T.  // Autocommit is usually enabled by default
+   VAR lAutoCommit AS LOGICAL INIT .T.  // Auto-commit is usually enabled by default
 
    METHOD New( cODBCStr, cUserName, cPassword, lCache )
    METHOD Destroy()
@@ -496,7 +498,7 @@ METHOD Last() CLASS TODBC
 // Moves the DataSet nSteps from the current record
 METHOD MoveBy( nSteps ) CLASS TODBC
 
-   // TODO: Check if nSteps goes beyond eof
+   // TODO: Check if nSteps goes beyond EOF
    LOCAL nResult := ::Fetch( SQL_FETCH_RELATIVE, nSteps )
 
    IF nResult == SQL_SUCCESS
@@ -530,7 +532,7 @@ METHOD Eof() CLASS TODBC
    // Do we have any data in recordset?
    RETURN ::nRecCount == 0 .OR. ::nRecNo > ::nRecCount
 
-// Checks for Begining of File
+// Checks for Beginning of File
 METHOD Bof() CLASS TODBC
    RETURN ::lBof
 

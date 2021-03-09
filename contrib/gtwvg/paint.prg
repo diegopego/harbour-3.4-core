@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -77,26 +77,26 @@ FUNCTION WvtPaintObjects()
             /* Check parameters against tlbr_ depending upon the
                type of object and attributes contained in aAttr */
             DO CASE
-            CASE blk[ 3, 1 ] == WVT_BLOCK_GRID_V
-               b := blk[ 3, 6 ]
+            CASE blk[ 3 ][ 1 ] == WVT_BLOCK_GRID_V
+               b := blk[ 3 ][ 6 ]
                IF Len( b:aColumnsSep ) == 0
                   lExe := .F.
                ELSE
                   nLeft  := b:aColumnsSep[ 1 ]
                   nRight := ATail( b:aColumnsSep )
-                  IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top    < bottom */
-                     tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ;    /* bottom > top    */
-                     tlbr_[ 2 ] <= nRight + 1 .AND. ;     /* left   < right  */
-                     tlbr_[ 4 ] >= nLeft  - 2 )           /* right  > left   */
+                  IF tlbr_[ 1 ] > blk[ 3 ][ 4 ] .OR. ;  /* top    > bottom */
+                     tlbr_[ 3 ] < blk[ 3 ][ 2 ] .OR. ;  /* bottom < top    */
+                     tlbr_[ 2 ] > nRight + 1 .OR. ;     /* left   > right  */
+                     tlbr_[ 4 ] < nLeft - 2             /* right  < left   */
                      lExe := .F.
                   ENDIF
                ENDIF
 
-            CASE blk[ 3, 1 ] == WVT_BLOCK_GETS
-               IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top    < bottom */
-                  tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ;    /* bottom > top    */
-                  tlbr_[ 2 ] <= blk[ 3, 5 ] .AND. ;    /* left   < right  */
-                  tlbr_[ 4 ] >= blk[ 3, 3 ] )          /* right  > left   */
+            CASE blk[ 3 ][ 1 ] == WVT_BLOCK_GETS
+               IF tlbr_[ 1 ] > blk[ 3 ][ 4 ] .OR. ;  /* top    > bottom */
+                  tlbr_[ 3 ] < blk[ 3 ][ 2 ] .OR. ;  /* bottom < top    */
+                  tlbr_[ 2 ] > blk[ 3 ][ 5 ] .OR. ;  /* left   > right  */
+                  tlbr_[ 4 ] < blk[ 3 ][ 3 ]         /* right  < left   */
                   lExe := .F.
                ENDIF
 
@@ -104,10 +104,10 @@ FUNCTION WvtPaintObjects()
                /* If refreshing rectangle's top is less than objects' bottom
                 * and left is less than objects' right
                 */
-               IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top    <= bottom */
-                  tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ;    /* bottom >= top    */
-                  tlbr_[ 2 ] <= blk[ 3, 5 ] .AND. ;    /* left   <  right  */
-                  tlbr_[ 4 ] >= blk[ 3, 3 ] )          /* right  >  left   */
+               IF tlbr_[ 1 ] > blk[ 3 ][ 4 ] .OR. ;  /* top    > bottom */
+                  tlbr_[ 3 ] < blk[ 3 ][ 2 ] .OR. ;  /* bottom < top    */
+                  tlbr_[ 2 ] > blk[ 3 ][ 5 ] .OR. ;  /* left   > right  */
+                  tlbr_[ 4 ] < blk[ 3 ][ 3 ]         /* right  < left   */
                   lExe := .F.
                ENDIF
             ENDCASE
@@ -145,12 +145,12 @@ FUNCTION wvg_SetPaint( cID, nAction, xData, aAttr )
 
    IF xData != NIL
       IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
-         IF ( n1 := AScan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
-            oldData := t_paint_[ n, 2, n1, 2 ]
-            t_paint_[ n, 2, n1, 2 ] := xData
-            t_paint_[ n, 2, n1, 3 ] := aAttr
+         IF ( n1 := AScan( t_paint_[ n ][ 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
+            oldData := t_paint_[ n ][ 2 ][ n1 ][ 2 ]
+            t_paint_[ n ][ 2 ][ n1 ][ 2 ] := xData
+            t_paint_[ n ][ 2 ][ n1 ][ 3 ] := aAttr
          ELSE
-            AAdd( t_paint_[ n, 2 ], { nAction, xData, aAttr } )
+            AAdd( t_paint_[ n ][ 2 ], { nAction, xData, aAttr } )
          ENDIF
       ELSE
          AAdd( t_paint_, { cID, {} } )
@@ -165,7 +165,7 @@ FUNCTION wvg_GetPaint( cID )
    LOCAL n
 
    IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
-      RETURN t_paint_[ n, 2 ]
+      RETURN t_paint_[ n ][ 2 ]
    ENDIF
 
    RETURN {}
@@ -175,9 +175,9 @@ FUNCTION wvg_DelPaint( cID, nAction )
    LOCAL xData, n1, n
 
    IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
-      IF ( n1 := AScan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
-         xData := t_paint_[ n, 2, n1, 2 ]
-         t_paint_[ n, 2, n1, 2 ] := {|| .T. }
+      IF ( n1 := AScan( t_paint_[ n ][ 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
+         xData := t_paint_[ n ][ 2 ][ n1 ][ 2 ]
+         t_paint_[ n ][ 2 ][ n1 ][ 2 ] := {|| .T. }
       ENDIF
    ENDIF
 
@@ -264,7 +264,7 @@ FUNCTION wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       /* MSDN says DlgBaseUnits and Screen Coordinates has multiplier of 4,8 for X and Y.
        * But in my practice, the values below are 99% accurate.
        * I have tested it on many fonts but on 1280/800 resolution.
-       * Please feel free to experiment if you find thses values inappropriate.
+       * Please feel free to experiment if you find these values inappropriate.
        */
       nXM :=  5.25
       nYM := 10.25
@@ -350,7 +350,7 @@ FUNCTION wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
       nH := nRows
    ENDIF
 
-   aDlg[ 1, 4 ]++      /* item count */
+   aDlg[ 1 ][ 4 ]++  /* item count */
 
    AAdd( aDlg[  2 ], hb_defaultValue( nHelpId, 0 ) )
    AAdd( aDlg[  3 ], hb_defaultValue( nExStyle, 0 ) )
@@ -447,7 +447,7 @@ FUNCTION wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
 
 /* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
- *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
+ *    --> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
    cRet := win_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /* nBufferSize */, cDefName )
 
@@ -488,7 +488,7 @@ FUNCTION wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
 /* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
- *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
+ *    --> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
    cRet := win_GetSaveFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
 
@@ -757,7 +757,7 @@ FUNCTION wvg_FindWindow( cTitle )
    RETURN wapi_FindWindow( , cTitle )
 
 #if 0
-FUNCTION wvg_CreateBrush( ... )  /* TOFIX: causes problems due to the GC collected pointer is returns */
+FUNCTION wvg_CreateBrush( ... )  /* FIXME: causes problems due to the GC collected pointer is returns */
    RETURN wapi_CreateBrushIndirect( { ... } )
 #endif
 
@@ -908,3 +908,22 @@ FUNCTION wvt_ChooseColor( nColor, aColor, nFlags )
    RETURN win_ChooseColor( hWnd,, nColor, ;
       hb_defaultValue( aColor, AFill( Array( 16 ), wapi_GetSysColor( WIN_COLOR_BTNFACE ) ) ), ;
       hb_defaultValue( nFlags, hb_bitOr( WIN_CC_ANYCOLOR, WIN_CC_RGBINIT, WIN_CC_FULLOPEN ) ) )
+
+FUNCTION wvg_PrepareBitmapFromResource( xNameOrID, nExpWidth, nExpHeight, lMap3Dcolors )
+   RETURN wapi_LoadImage( wapi_GetModuleHandle(), xNameOrID, WIN_IMAGE_BITMAP, ;
+      nExpWidth, nExpHeight, ;
+      iif( hb_defaultValue( lMap3Dcolors, .F. ), WIN_LR_LOADMAP3DCOLORS, WIN_LR_DEFAULTCOLOR ) )
+
+#ifdef HB_LEGACY_LEVEL5
+
+FUNCTION wvg_PrepareBitmapFromResourceId( nID, nExpWidth, nExpHeight, lMap3Dcolors )
+   RETURN wapi_LoadImage( wapi_GetModuleHandle(), nID, WIN_IMAGE_BITMAP, ;
+      nExpWidth, nExpHeight, ;
+      iif( hb_defaultValue( lMap3Dcolors, .F. ), WIN_LR_LOADMAP3DCOLORS, WIN_LR_DEFAULTCOLOR ) )
+
+FUNCTION wvg_PrepareBitmapFromResourceName( cName, nExpWidth, nExpHeight, lMap3Dcolors )
+   RETURN wapi_LoadImage( wapi_GetModuleHandle(), cName, WIN_IMAGE_BITMAP, ;
+      nExpWidth, nExpHeight, ;
+      iif( hb_defaultValue( lMap3Dcolors, .F. ), WIN_LR_LOADMAP3DCOLORS, WIN_LR_DEFAULTCOLOR ) )
+
+#endif

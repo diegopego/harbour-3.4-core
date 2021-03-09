@@ -1,21 +1,19 @@
-# currently supporting clang-cl (not clang-gcc)
-
-ifneq ($(HB_BUILD_WARN),no)
-   CFLAGS += -Weverything
-   CFLAGS += -Wno-padded -Wno-cast-align -Wno-float-equal -Wno-missing-prototypes
-   CFLAGS += -Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-variadic-macros -Wno-documentation
-   CFLAGS += -Wno-switch-enum
-   ifeq ($(filter $(HB_COMPILER_VER),0305),)
-      CFLAGS += -Wno-reserved-id-macro
-   endif
-   # These are potentially useful. -Wsign-conversion would require proper HB_SIZE/HB_ISIZ cleanup.
-   CFLAGS += -Wno-sign-conversion -Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast
-   CFLAGS += -Wno-language-extension-token
+ifeq ($(HB_COMPILER),clang64)
+   RCFLAGS += --target=pe-x86-64
 else
-   CFLAGS += -Wmissing-braces -Wreturn-type -Wformat
-   ifneq ($(HB_BUILD_MODE),cpp)
-      CFLAGS += -Wimplicit-int -Wimplicit-function-declaration
-   endif
+   RCFLAGS += --target=pe-i386
 endif
 
-include $(TOP)$(ROOT)config/$(HB_PLATFORM)/msvc.mk
+RC := $(HB_CCPATH)$(HB_CCPREFIX)windres
+RC_OUT := -o$(subst x,x, )
+RCFLAGS += -I. -I$(HB_HOST_INC) -O coff -c65001
+
+ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
+   ARSTRIP = && strip -S $(LIB_DIR)/$@
+endif
+ifneq ($(filter $(HB_BUILD_STRIP),all bin),)
+   LDSTRIP := -s
+   DYSTRIP := -s
+endif
+
+include $(TOP)$(ROOT)config/common/clang.mk

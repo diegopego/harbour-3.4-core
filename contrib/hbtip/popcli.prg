@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -222,7 +222,7 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
          cRet := hb_BLeft( cRet, nPos + 1 )
          ::bEof := .T.
 
-      ELSEIF HB_ISNUMERIC( nLen ) .AND. nLen < hb_BLen( cRet )  /* TOFIX: might break UTF-8 chars */
+      ELSEIF HB_ISNUMERIC( nLen ) .AND. nLen < hb_BLen( cRet )  /* FIXME: might break UTF-8 chars */
          EXIT
       ELSE
          nRetLen += nRead

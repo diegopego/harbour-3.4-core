@@ -25,21 +25,19 @@ PROCEDURE Main()
    hb_rddADSRegister()
 #endif
 
-   CLS
-
    rddSetDefault( "ADSADT" )
    AdsSetServerType( 7 )
    SET FILETYPE TO ADT
 
    ? "Default connection is 0:", AdsConnection()
 
-   vfErase( "harbour.add" )
-   vfErase( "harbour.ai" )
-   vfErase( "harbour.am" )
-   vfErase( "table1.adt" )
-   vfErase( "table1.adi" )
-   vfErase( "table2.adt" )
-   vfErase( "table2.adi" )
+   hb_vfErase( "harbour.add" )
+   hb_vfErase( "harbour.ai" )
+   hb_vfErase( "harbour.am" )
+   hb_vfErase( "table1.adt" )
+   hb_vfErase( "table1.adi" )
+   hb_vfErase( "table2.adt" )
+   hb_vfErase( "table2.adi" )
 
    // now Create a Data dictionary and the files if not exist
    IF ! hb_vfExists( "harbour.add" )

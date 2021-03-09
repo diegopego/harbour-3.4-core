@@ -1,6 +1,6 @@
 #!/usr/bin/env hbmk2
 
-/* Copyright 2013 Viktor Szakats (vszakats.net/harbour) */
+/* Copyright 2013 Viktor Szakats (vsz.me/hb) */
 
 /* Strips VCS id headers from source files */
 
@@ -64,8 +64,7 @@ PROCEDURE Main()
 
       cExt := hb_FNameExt( aFile[ F_NAME ] )
 
-      IF Empty( cExt ) .OR. ;
-         "|" + cExt + "|" $ "|.c|.h|.hb|.prg|.hbm|.hbp|.hbc|.ini|.bat|.sh|.vbs|.def|.api|.ch|.txt|.mk|"
+      IF "|" + cExt + "|" $ "||.c|.h|.hb|.prg|.hbm|.hbp|.hbc|.ini|.bat|.sh|.vbs|.def|.api|.ch|.txt|.mk|"
 
          tmp := hb_StrReplace( MemoRead( aFile[ F_NAME ] ), hReplace )
 

@@ -1,7 +1,7 @@
 /*
  * SuperLib rewritten parts
  *
- * Copyright 2009-2014 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2014 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -86,10 +86,10 @@ PROCEDURE RAT_AREA( nTop, nLeft, nBottom, nRight )
 
    RETURN
 
-FUNCTION RAT_LBHD
+FUNCTION RAT_LBHD()
    RETURN MLeftDown()
 
-FUNCTION RAT_RBHD
+FUNCTION RAT_RBHD()
    RETURN MRightDown()
 
 FUNCTION SHIFTY( f )
@@ -115,7 +115,7 @@ PROCEDURE RAT_NOMOUS()
 PROCEDURE RAT_FORCE()
    RETURN
 
-/* TOFIX: Just an approximation of the original functionality for functions below */
+/* FIXME: Just an approximation of the original functionality for functions below */
 
 FUNCTION RAT_ROWL()
    RETURN MRow()

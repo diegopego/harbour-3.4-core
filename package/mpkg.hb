@@ -1,6 +1,6 @@
 #!/usr/bin/env hbmk2
 
-/* Copyright 2015-2017 Viktor Szakats (vszakats.net/harbour) */
+/* Copyright 2015-2017 Viktor Szakats (vsz.me/hb) */
 
 /* Set timestamps for non-generated (repository) files before including them
    in a distributable package. For reproducible builds. */
@@ -8,20 +8,20 @@
 #include "directry.ch"
 #include "fileio.ch"
 
-// #define DEBUG
+// #define TRACE
 
-#ifdef DEBUG
-   #translate _DEBUG( <x,...> ) => OutStd( __FILE__ + ":", <x> + hb_eol() )
+#ifdef TRACE
+   #translate _TRACE( <x,...> ) => OutStd( __FILE__ + ":", <x> + hb_eol() )
 #else
-   #translate _DEBUG( <x,...> ) =>
+   #translate _TRACE( <x,...> ) =>
 #endif
 
 PROCEDURE Main( cMode )
 
    LOCAL tmp, aFiles, file, cStdOut, tDate, tDateHEAD
-   LOCAL cGitRoot, lShallow, cBinMask
+   LOCAL cGitRoot, lShallow, cBinMask, nUTCOffsetLocal
 
-   _DEBUG( "BEGIN" )
+   _TRACE( "BEGIN" )
 
    SWITCH Lower( cMode := hb_defaultValue( cMode, "" ) )
    CASE "pe"
@@ -42,8 +42,8 @@ PROCEDURE Main( cMode )
       cGitRoot := hb_DirSepAdd( hb_DirSepToOS( hb_defaultValue( hb_PValue( 2 ), "." ) ) ) + ".git"
       IF hb_vfDirExists( cGitRoot )
 
-         _DEBUG( "cwd:", hb_cwd() )
-         _DEBUG( "git:", cGitRoot )
+         _TRACE( "cwd:", hb_cwd() )
+         _TRACE( "git:", cGitRoot )
 
          hb_processRun( "git" + ;
             " " + FNameEscape( "--git-dir=" + cGitRoot ) + ;
@@ -58,17 +58,21 @@ PROCEDURE Main( cMode )
 
          hb_processRun( "git log -1 --format=format:%ci",, @cStdOut )
 
+         _TRACE( "date HEAD (raw):", cStdOut )
+
          tDateHEAD := hb_CToT( cStdOut, "yyyy-mm-dd", "hh:mm:ss" )
+
+         nUTCOffsetLocal := hb_UTCOffset()
 
          IF Empty( tDateHEAD )
             OutStd( "! mpkg.hb: Error: Failed to obtain last commit timestamp." + hb_eol() )
          ELSE
             tDateHEAD -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
                              ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
-                               Val( SubStr( cStdOut, 24, 2 ) ) ) ) - hb_UTCOffset() ) / 86400 )
+                               Val( SubStr( cStdOut, 24, 2 ) ) ) ) - nUTCOffsetLocal ) / 86400 )
          ENDIF
 
-         _DEBUG( "date HEAD:", hb_TToC( tDateHEAD ) )
+         _TRACE( "date HEAD:", hb_TToC( tDateHEAD ) )
 
          IF ! Empty( tDateHEAD ) .OR. ! lShallow
 
@@ -80,7 +84,9 @@ PROCEDURE Main( cMode )
 
             FOR EACH tmp IN { ;
                "bin/*.hb", ;
+               "doc/*.md", ;
                "doc/*.txt", ;
+               "addons/*.md", ;
                "addons/*.txt", ;
                "contrib/", ;
                "extras/", ;
@@ -106,7 +112,7 @@ PROCEDURE Main( cMode )
                      IF ! Empty( tDate )
                         tDate -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
                                      ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
-                                       Val( SubStr( cStdOut, 24, 2 ) ) ) ) - hb_UTCOffset() ) / 86400 )
+                                       Val( SubStr( cStdOut, 24, 2 ) ) ) ) - nUTCOffsetLocal ) / 86400 )
                         hb_vfTimeSet( file, tDate )
                      ENDIF
                   ENDIF
@@ -135,7 +141,7 @@ PROCEDURE Main( cMode )
       OutStd( "! mpkg.hb: Error: Wrong mode:", "'" + cMode + "'" + hb_eol() )
    ENDSWITCH
 
-   _DEBUG( "FINISH" )
+   _TRACE( "FINISH" )
 
    RETURN
 
@@ -291,14 +297,3 @@ STATIC FUNCTION StringEOLConv( cFile )
 
    RETURN iif( hb_eol() == Chr( 10 ), cFile, ;
       StrTran( cFile, Chr( 10 ), Chr( 13 ) + Chr( 10 ) ) )
-
-STATIC FUNCTION FileConvEOL( cFileName )
-
-   LOCAL cFile, tDate
-
-   hb_vfTimeGet( cFileName, @tDate )
-
-   RETURN ;
-      ! ( cFile := hb_MemoRead( cFileName ) ) == "" .AND. ;
-      hb_MemoWrit( cFileName, StringEOLConv( cFile ) ) .AND. ;
-      hb_vfTimeSet( cFileName, tDate )

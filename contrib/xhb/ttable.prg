@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,7 +59,7 @@ THREAD STATIC t_aTables := {}
 /* Network functions */
 STATIC s_nNetDelay    := 30
 STATIC s_lNetOk       := .F.
-STATIC s_cNetMsgColor := "GR+/R"
+STATIC s_xNetMsgColor := 0x4e
 
 FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, lNew, lShared, lReadOnly )
 
@@ -82,7 +82,7 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, lNew, lShared, lReadOnl
             PadC( "Network retry | " + ;
             LTrim( Str( nSeconds, 4, 1 ) ) + " | ESCape : Exit ", ;
             MaxCol() + 1 ), ;
-            s_cNetMsgColor )
+            s_xNetMsgColor )
          lFirstPass := .F.
       ENDIF
 
@@ -185,7 +185,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
 
             hb_DispOutAt( MaxRow(), 0, ;
                PadC( "Network Retry " + cWord + " | " + Str( nSeconds, 3 ) + " | ESC Exit", MaxCol() + 1 ), ;
-               s_cNetMsgColor )
+               s_xNetMsgColor )
 
             nSeconds--
             IF hb_keyStd( Inkey( 1 ) ) == K_ESC
@@ -366,15 +366,16 @@ FUNCTION SetNetDelay( nSecs )
 
    RETURN nTemp
 
-FUNCTION SetNetMsgColor( cColor )
+FUNCTION SetNetMsgColor( xColor )
 
-   LOCAL cTemp := s_cNetMsgColor
+   LOCAL xTemp := s_xNetMsgColor
 
-   IF HB_ISSTRING( cColor )
-      s_cNetMsgColor := cColor
+   IF HB_ISSTRING( xColor ) .OR. ;
+      HB_ISNUMERIC( xColor )
+      s_xNetMsgColor := xColor
    ENDIF
 
-   RETURN cTemp
+   RETURN xTemp
 
 
 /* Utility functions */
@@ -645,7 +646,7 @@ METHOD New( cDbf, cAlias, cOrderBag, cDriver, lNet, cPath, lNew, lReadOnly ) CLA
    ::aOrders     := {}
    ::Area        := 0
    ::Alias       := hb_defaultValue( cAlias, hb_FNameName( cDbf ) )
-   ::nDataOffset := Len( self )
+   ::nDataOffset := Len( Self )
 
    RETURN Self
 
@@ -707,7 +708,7 @@ METHOD FldInit() CLASS HBTable
    LOCAL oNew
    LOCAL nScope := 1
 
-   ::nDataOffset := Len( self ) - 1
+   ::nDataOffset := Len( Self ) - 1
 
    ::Buffer := Array( ( ::Alias )->( FCount() ) )
    IF Empty( ::Buffer )

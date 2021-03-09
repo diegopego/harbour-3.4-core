@@ -5,11 +5,6 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
@@ -19,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,19 +57,19 @@
 #include "hbwinuni.h"
 
 #if defined( HB_OS_WIN )
-   #include <windows.h>
-   #if defined( HB_OS_WIN_CE )
-      #include "hbwince.h"
-   #endif
+#  include <windows.h>
+#  if defined( HB_OS_WIN_CE )
+#     include "hbwince.h"
+#  endif
 #elif defined( HB_OS_OS2 )
-   #include <os2.h>
+#  include <os2.h>
 #elif defined( HB_OS_DOS ) && defined( __WATCOMC__ ) && !defined( HB_CAUSEWAY_DLL )
    /* it's broken in recent OpenWatcom builds so enable it
-      for tests only in harbur.dll [druzus] */
-   #if defined( HB_DYNLIB )
-      #define HB_CAUSEWAY_DLL
-      #include <cwdllfnc.h>
-   #endif
+      for tests only in harbour.dll [druzus] */
+#  if defined( HB_DYNLIB )
+#     define HB_CAUSEWAY_DLL
+#  include <cwdllfnc.h>
+#  endif
 #endif
 
 /* NOTE: VxWorks supports dlopen() functionality only in shared
@@ -86,11 +81,11 @@
       defined( HB_OS_QNX ) || defined( HB_OS_CYGWIN )  || \
       defined( HB_OS_MINIX ) || ( defined( __DJGPP__ ) && \
         ( __DJGPP__ > 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ >= 4 ) ) ) )
-   #define HB_HAS_DLFCN
+#  define HB_HAS_DLFCN
 #endif
 
 #if defined( HB_HAS_DLFCN )
-   #include <dlfcn.h>
+#  include <dlfcn.h>
 #endif
 
 static HB_GARBAGE_FUNC( hb_libRelease )
@@ -273,7 +268,7 @@ HB_FUNC( HB_LIBERROR )
 }
 
 /* Get FUNCTION or PROCEDURE symbol from given library.
- *    hb_libGetFunSym( <pLibHandle>, <cFuncName> ) -> <sFuncSym> | NIL
+ *    hb_libGetFunSym( <pLibHandle>, <cFuncName> ) --> <sFuncSym> | NIL
  */
 HB_FUNC( HB_LIBGETFUNSYM )
 {

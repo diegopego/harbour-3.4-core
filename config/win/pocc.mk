@@ -4,8 +4,6 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
-HB_DYN_COPT := -DHB_DYNLIB
-
 CC := pocc.exe
 CC_IN :=
 CC_OUT := -Fo
@@ -31,11 +29,11 @@ ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi
 endif
 
-ifeq ($(filter $(HB_COMPILER_VER),0450),)
+ifeq ($(filter $(__HB_COMPILER_VER),0450),)
    LDFLAGS += -nxcompat
    DFLAGS += -nxcompat
 endif
-ifeq ($(filter $(HB_COMPILER_VER),0450 0500 0600 0650 0700),)
+ifeq ($(filter $(__HB_COMPILER_VER),0450 0500 0600 0650 0700),)
    LDFLAGS += -dynamicbase -fixed:no
    DFLAGS += -dynamicbase
    ifeq ($(HB_COMPILER),pocc64)
@@ -58,7 +56,8 @@ LDFLAGS += -subsystem:console
 LDFLAGS += $(LIBPATHS)
 
 AR := polib.exe
-AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) -out:$(LIB_DIR)/$@ $(^F)
+AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) \
+   -out:$(LIB_DIR)/$@ $(^F)
 
 DY := $(LD)
 DFLAGS += -nologo -dll $(LIBPATHS)
@@ -73,7 +72,9 @@ endef
 define create_dynlib
    $(if $(wildcard __dyn__.tmp),@$(RM) __dyn__.tmp,)
    $(foreach file,$^,$(dynlib_object))
-   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)" -implib:"$(IMP_FILE)" @__dyn__.tmp $(DLIBS)
+   $(DY) $(DFLAGS) $(HB_USER_DFLAGS) \
+      $(DY_OUT)"$(subst /,$(DIRSEP),$(DYN_DIR)/$@)" \
+      -implib:"$(IMP_FILE)" @__dyn__.tmp -def:$(DEF_FILE) $(DLIBS)
 endef
 
 DY_RULE = $(create_dynlib)

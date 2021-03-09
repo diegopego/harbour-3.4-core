@@ -1,7 +1,7 @@
 /*
  * Windows API functions (winbase)
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009 Viktor Szakats (vsz.me/hb)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,6 +46,7 @@
 
 #include "hbwapi.h"
 #include "hbapierr.h"
+#include "hbapiitm.h"
 
 HB_FUNC( WAPI_GETCOMMANDLINE )
 {
@@ -424,9 +425,47 @@ HB_FUNC( WAPI_QUERYPERFORMANCEFREQUENCY )
    hb_retl( result != 0 );
 }
 
+#define TARGET_PATH_BUFFER_SIZE     4096
+HB_FUNC( WAPI_QUERYDOSDEVICE )
+{
+#if ! defined( HB_OS_WIN_CE )
+   void * hDeviceName;
+   LPTSTR lpTargetPath = ( LPTSTR ) hb_xgrab( TARGET_PATH_BUFFER_SIZE * sizeof( TCHAR ) );
+   DWORD dwResult;
+
+   dwResult = QueryDosDevice( HB_PARSTR( 1, &hDeviceName, NULL ), lpTargetPath, TARGET_PATH_BUFFER_SIZE );
+   hbwapi_SetLastError( GetLastError() );
+   if( dwResult )
+   {
+      PHB_ITEM pArray = hb_itemArrayNew( 0 ), pItem = NULL;
+      DWORD dwPos, dwStart;
+
+      dwPos = dwStart = 0;
+      while( lpTargetPath[ dwPos ] )
+      {
+         if( ! lpTargetPath[ ++dwPos ] )
+         {
+            pItem = HB_ITEMPUTSTRLEN( pItem, lpTargetPath + dwStart, dwPos - dwStart - 1 );
+            hb_arrayAdd( pArray, pItem );
+            dwStart = ++dwPos;
+         }
+      }
+      hb_itemRelease( pItem );
+      hb_itemReturnRelease( pArray );
+   }
+   else
+      hb_reta( 0 );
+
+   hb_strfree( hDeviceName );
+   hb_xfree( lpTargetPath );
+#else
+   hb_reta( 0 );
+#endif
+}
+
 /* wapi_GetVolumeInformation( <cRootPath>, @<cVolumeName>, @<nSerial>,
  *                            @<nMaxComponentLength>, @<nFileSystemFlags>,
- *                            @<cFileSystemName> ) -> <lSuccess>
+ *                            @<cFileSystemName> ) --> <lSuccess>
  */
 
 HB_FUNC( WAPI_GETVOLUMEINFORMATION )
