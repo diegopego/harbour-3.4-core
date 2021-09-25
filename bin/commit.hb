@@ -2,7 +2,7 @@
 /*
  * Commit preparer and source checker/fixer
  *
- * Copyright 2012-2017 Viktor Szakats (vsz.me/hb)
+ * Copyright 2012-2017 Viktor Szakats
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -400,14 +400,10 @@ STATIC FUNCTION GitFileList()
 STATIC FUNCTION GitUser()
 
    LOCAL cName
-   LOCAL cEMail
 
    hb_processRun( Shell() + " " + CmdEscape( "git config user.name" ),, @cName )
-   hb_processRun( Shell() + " " + CmdEscape( "git config user.email" ),, @cEMail )
 
-   RETURN hb_StrFormat( "%s (%s)", ;
-      AllTrim( hb_StrReplace( cName, Chr( 10 ) + Chr( 13 ) ) ), ;
-      StrTran( AllTrim( hb_StrReplace( cEMail, Chr( 10 ) + Chr( 13 ) ) ), "@", " " ) )
+   RETURN AllTrim( hb_StrReplace( cName, Chr( 10 ) + Chr( 13 ) ) )
 
 STATIC FUNCTION GitEditor()
 
